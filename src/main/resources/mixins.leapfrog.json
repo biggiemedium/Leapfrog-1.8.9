@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "dev.px.leapfrog.ASM",
+  "refmap": "mixins.leapfrog.refmap.json",
+  "mixins": [
+    "Game.MixinMinecraft"
+  ]
+}
