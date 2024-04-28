@@ -11,11 +11,15 @@ import me.zero.alpine.fork.listener.Listener;
 public class TestModule extends Module {
 
     Setting<Boolean> setting = create(new Setting<>("Boolean setting", true));
-    Setting<Boolean> setting2 = create(new Setting<>("Boolean setting 2", true));
+    Setting<Boolean> setting2 = create(new Setting<>("Boolean setting 2", true, v -> setting.getValue()));
 
     @EventHandler
     private Listener<PlayerUpdateEvent> onUpdate = new Listener<>(event -> {
 
     });
 
+    @Override
+    public void onEnable() {
+
+    }
 }

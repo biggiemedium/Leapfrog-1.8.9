@@ -4,6 +4,7 @@
   "package": "dev.px.leapfrog.ASM",
   "refmap": "mixins.leapfrog.refmap.json",
   "mixins": [
-    "Game.MixinMinecraft"
+    "Game.MixinMinecraft",
+    "Listeners.IMixinRenderManager"
   ]
 }

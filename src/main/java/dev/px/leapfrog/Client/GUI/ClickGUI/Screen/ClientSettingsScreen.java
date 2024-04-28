@@ -2,13 +2,14 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 
 import java.awt.*;
 
 public class ClientSettingsScreen extends Screen {
 
-    public ClientSettingsScreen(int x, int y, int width, int height) {
-        super("Settings", x, y, width, height);
+    public ClientSettingsScreen(int x, int y, int width, int height, ClickGUI clickGUI) {
+        super("Settings", x, y, width, height, clickGUI);
     }
 
     @Override

@@ -3,8 +3,10 @@ package dev.px.leapfrog.Client.Manager;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.Client.Module.Combat.KillAura;
 import dev.px.leapfrog.Client.Module.Combat.TestModule;
+import dev.px.leapfrog.Client.Module.Misc.FakePlayer;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Movement.Strafe;
+import dev.px.leapfrog.Client.Module.Render.ChinaHat;
 import dev.px.leapfrog.Client.Module.Render.FullBright;
 
 import java.util.ArrayList;
@@ -17,8 +19,11 @@ public class ModuleManager {
         Add(new TestModule());
         Add(new KillAura());
 
+        Add(new FakePlayer());
+
         Add(new Strafe());
 
+        Add(new ChinaHat());
         Add(new FullBright());
     }
 

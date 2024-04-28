@@ -19,4 +19,8 @@ public class FullBright extends Module {
         mc.gameSettings.gammaSetting = 1000;
     });
 
+    @Override
+    public void onDisable() {
+        mc.gameSettings.gammaSetting = 1;
+    }
 }

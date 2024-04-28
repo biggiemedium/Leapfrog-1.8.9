@@ -23,10 +23,11 @@ public class ClickGUI extends GuiScreen {
     private int x, y, width, height;
     private boolean close, dragging;
     private int dragX, dragY;
-    private Animation closeAnimation = new Animation(250, false, Easing.TENACITY_EASEBACKIN);
+    private Animation closeAnimation;
     private ArrayList<Screen> screens;
     private Screen currentScreen;
-
+    private Animation moveAnimation = new Animation(100, false, Easing.LINEAR);
+    private float moveY = 0;
 
     public ClickGUI() {
         this.x = 100;
@@ -38,14 +39,17 @@ public class ClickGUI extends GuiScreen {
         this.dragX = 0;
         this.dragY = 0;
         this.screens = new ArrayList<>();
-        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height));
-        this.screens.add(new ClientSettingsScreen(x + 80, y, width - 80, height));
-        this.screens.add(new ColorsScreen(x + 80, y, width - 80, height));
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, this));
+        this.screens.add(new ClientSettingsScreen(x + 80, y, width - 80, height, this));
+        this.screens.add(new ColorsScreen(x + 80, y, width - 80, height, this));
         this.currentScreen = screens.get(0);
+
+        //this.closeAnimation.setState(true);
     }
 
     @Override
     public void initGui() {
+        this.closeAnimation = new Animation(250, true, Easing.TENACITY_EASEBACKIN);
         this.close = false;
         closeAnimation.setState(true);
 
@@ -85,17 +89,30 @@ public class ClickGUI extends GuiScreen {
             s.setWidth(width - 80);
             s.setHeight(height);
 
-            if(s == currentScreen) {
-                RoundedShader.drawGradientCornerRL(x + 5, y + 30 + offsetY, 70, 15, 4, LeapFrog.colorManager.getClientColor().getMainColor(), LeapFrog.colorManager.getClientColor().getAlternativeColor());
+            if(s == currentScreen) { // getY() + 30 + offsetY
+                /*
+                float tempY = 0;
+                if(moveAnimation.getAnimationFactor() > 0) {
+                    tempY = getY() + 30 + (offsetY * (float) moveAnimation.getAnimationFactor());
+                } else if(moveAnimation.getAnimationFactor() == 1) {
+                    tempY = getY() + 30 + (offsetY);
+                    moveAnimation.setState(false);
+                }
+                 */
+                RoundedShader.drawGradientCornerRL(x + 5, getY() + 30 + (offsetY), 70, 15, 4,
+                        LeapFrog.colorManager.getClientColor().getMainColor(),
+                        LeapFrog.colorManager.getClientColor().getAlternativeColor());
             }
+
 
             FontUtil.regular_bold20.drawString(s.getName(), x + 15, y + 30 + 3 + offsetY, -1);
 
             currentScreen.render(mouseX, mouseY);
             offsetY += 18;
         }
-
-
+        if(moveAnimation.getAnimationFactor() == 1) {
+            moveAnimation.setState(false);
+        }
         GLUtils.stopScale();
     }
 
@@ -114,9 +131,10 @@ public class ClickGUI extends GuiScreen {
             if(isMouseOver(x + 5, y + 30 + offsetY, 70, 15, mouseX, mouseY)) {
                 if(mouseButton == 0) {
                     currentScreen = s;
+                    this.moveAnimation.setState(true);
                 }
             }
-            s.onClick(mouseX, mouseY, mouseButton);
+            currentScreen.onClick(mouseX, mouseY, mouseButton);
             offsetY += 18;
         }
     }

@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
+import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 
 import java.io.IOException;
 
@@ -8,13 +9,15 @@ public class Screen implements Component {
 
     private String name;
     private int x, y, width, height;
+    private ClickGUI clickGUI;
 
-    public Screen(String name, int x, int y, int width, int height) {
+    public Screen(String name, int x, int y, int width, int height, ClickGUI clickGUI) {
         this.name = name;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.clickGUI = clickGUI;
     }
 
     public void initGUI() {
@@ -39,6 +42,14 @@ public class Screen implements Component {
     @Override
     public void onType(char typedChar, int keyCode) throws IOException {
 
+    }
+
+    public ClickGUI getClickGUI() {
+        return clickGUI;
+    }
+
+    public void setClickGUI(ClickGUI clickGUI) {
+        this.clickGUI = clickGUI;
     }
 
     public int getX() {

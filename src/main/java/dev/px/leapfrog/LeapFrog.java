@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.Client.Manager.ColorManager;
 import dev.px.leapfrog.Client.Manager.ModuleManager;
+import dev.px.leapfrog.Client.Manager.SettingsManager;
 import me.zero.alpine.fork.bus.EventBus;
 import me.zero.alpine.fork.bus.EventManager;
 import net.minecraftforge.fml.common.Mod;
@@ -32,6 +33,7 @@ public class LeapFrog {
     public static ModuleManager moduleManager;
     public static EventProcessor eventProcessor;
     public static ColorManager colorManager;
+    public static SettingsManager settingsManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -43,6 +45,7 @@ public class LeapFrog {
         moduleManager = new ModuleManager();
         eventProcessor = new EventProcessor();
         colorManager = new ColorManager();
+        settingsManager = new SettingsManager();
         FontUtil.init();
     }
 
