@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 public class Setting<T> {
 
     private String name;
+    private String description;
 
     private T value;
     private T min;
@@ -19,12 +20,14 @@ public class Setting<T> {
     public Setting(String name, T value) {
         this.name = name;
         this.value = value;
+        this.description = "";
     }
 
     public Setting(String name, T value, T... values) {
         this.name = name;
         this.value = value;
         this.comboBox = new ArrayList<>(Arrays.asList(values));
+        this.description = "";
     }
 
     public Setting(String name, T value, T min, T max) {
@@ -32,12 +35,14 @@ public class Setting<T> {
         this.value = value;
         this.min = min;
         this.max = max;
+        this.description = "";
     }
 
     public Setting(String name, T value, Predicate<T> visibility) {
         this.name = name;
         this.value = value;
         this.visibility = visibility;
+        this.description = "";
     }
 
     public Setting(String name, T value, T min, T max, Predicate<T> visibility) {
@@ -46,6 +51,12 @@ public class Setting<T> {
         this.min = min;
         this.max = max;
         this.visibility = visibility;
+        this.description = "";
+    }
+
+    public Setting setDescription(String message) {
+        this.description = message;
+        return this;
     }
 
     public String getName() {
@@ -78,6 +89,26 @@ public class Setting<T> {
 
     public void setMax(T max) {
         this.max = max;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Predicate<T> getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Predicate<T> visibility) {
+        this.visibility = visibility;
+    }
+
+    public ArrayList<T> getComboBox() {
+        return comboBox;
+    }
+
+    public void setComboBox(ArrayList<T> comboBox) {
+        this.comboBox = comboBox;
     }
 
     public boolean isNumberSetting() {

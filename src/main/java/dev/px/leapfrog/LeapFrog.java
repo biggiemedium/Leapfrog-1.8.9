@@ -18,6 +18,7 @@ public class LeapFrog {
 
     /*
     - GUI (Draggable HUD, Grid system, Client Preferences)
+    - GUI - Fix scrollbar (Module and client settings), Add hud editor
     - Actually good font renderer
     - Notifcation system
     - Event system

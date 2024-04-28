@@ -19,12 +19,18 @@ public class SettingsManager {
     public SettingsManager() {
         this.preferences = new ArrayList<>();
 
-        BACKGROUND = Add(new Setting("Element Background", false));
-        NCPCluster = Add(new Setting<>("NCP Cluster", true));
-        ESPCluster = Add(new Setting<>("ESP Cluster", true));
-        FRIENDS = Add(new Setting("Friends", true));
-        windowModifications = Add(new Setting<>("Window Modifications", true));
-        HACKERDETECTOR = Add(new Setting("Hacker Detector", true));
+        BACKGROUND = Add(new Setting("Element Background", false))
+                .setDescription("Element Background on HUD Elements");
+        NCPCluster = Add(new Setting<>("NCP Cluster", true)
+                .setDescription("Doesnt Render NCP on nametags/ESP"));
+        ESPCluster = Add(new Setting<>("ESP Cluster", true)
+                .setDescription("Reduces amount of Players on ESP"));
+        FRIENDS = Add(new Setting("Friends", true)
+                .setDescription("Initalizes friend system"));
+        windowModifications = Add(new Setting<>("Window Modifications", true)
+                .setDescription("Fixes Fullscreen bug (1.8.9)"));
+        HACKERDETECTOR = Add(new Setting("Hacker Detector", true)
+                .setDescription("Finds other hackers in your lobby"));
     }
 
     public <T> Setting Add(Setting preference) {
