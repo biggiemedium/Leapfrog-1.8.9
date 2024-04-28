@@ -50,7 +50,7 @@ public class ModuleButton implements Component {
         if(this.module.getSettings() != null) {
             for(Setting s : module.getSettings()) {
                 if(s.getValue() instanceof Boolean) {
-                    BooleanButton b = new BooleanButton(this, getX() + 4, getY() + offsetY, s);
+                    BooleanButton b = new BooleanButton(this, getX(), getY() + offsetY, s);
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
                 }
@@ -62,15 +62,18 @@ public class ModuleButton implements Component {
     public void initGUI() {
         this.toggleAnimation.setState(this.module.isToggled());
         this.openAnimation.setState(open);
+
+        for(SettingButton s : this.settingButtons) {
+            s.initGUI();
+        }
     }
 
     @Override
     public void render(int mouseX, int mouseY) {
         hover.setState(isMouseOver(x, y, width, height, mouseX, mouseY));
-        float offsetY = 0;
-        this.featureHeight = (float) offsetY * (float) openAnimation.getAnimationFactor();
+        this.featureHeight = 0;
 
-        RoundedShader.drawRound(getX() + 4, y, getWidth() - 8, height + (featureHeight), 4, color);
+        RoundedShader.drawRound(getX() + 4, y, getWidth() - 8, height + (featureHeight * (float) openAnimation.getAnimationFactor()), 2, color);
         if(hover.getAnimationFactor() > 0) {
             RoundedShader.drawRoundOutline(getX() + 4, y, getWidth() - 8, height, 4, 0.5f, new Color(0, 0, 0, 0), new Color(255, 255, 255, 150));
         }
@@ -86,11 +89,15 @@ public class ModuleButton implements Component {
         FontUtil.regular12.drawString(module.getDescription(), getX() + 8, getY() + (getHeight() - 3) - FontUtil.regular12.getHeight(), new Color(200, 200, 200).getRGB());
 
         if(openAnimation.getAnimationFactor() > 0) {
-            stack.pushScissor((int) getX(), (int) getY(),(int)  getWidth(), (int) getHeight() + ((int) settingOffset * (int) openAnimation.getAnimationFactor()));
-            this.settingOffset = (float) panel.getFeatureOffset();
+            this.settingOffset = (float) 0;
+            RoundedShader.drawRound(getX() + 4, getY() + getHeight(), getWidth() - 8, (settingOffset * (float) openAnimation.getAnimationFactor()) - getHeight(), 4, color);
             this.settingButtons.forEach(settingButton -> {
-                if (settingButton.getX() != this.getX()) {
-                    settingButton.setX(getX()); // fix this
+                if (settingButton.getX() != this.getX() + 4) {
+                    settingButton.setX(getX() + 4); // fix this
+                }
+
+                if(settingButton.getWidth() != getWidth() - 8) {
+                    settingButton.setWidth(getWidth() - 8);
                 }
                 if(settingButton.getY() != getY() + settingOffset) {
                     settingButton.setY(getY() + getHeight() + (settingOffset + 1));
@@ -98,15 +105,13 @@ public class ModuleButton implements Component {
 
                 if (settingButton.getSetting().isVisible()) {
                     settingButton.draw(mouseX, mouseY);
+                    this.featureHeight += (settingButton.getHeight() + 1) * openAnimation.getAnimationFactor();
                     this.settingOffset += settingButton.getHeight() + 1;
-                    this.panel.addFeatureOffset(settingButton.getHeight() * openAnimation.getAnimationFactor());
+                    this.panel.addFeatureOffset(featureHeight * (float) openAnimation.getAnimationFactor());
                 }
             });
-            stack.popScissor();
+             //this.panel.addFeatureOffset(featureHeight);
         }
-
-        this.panel.addFeatureOffset(offsetY);
-
     }
 
     @Override
@@ -120,6 +125,10 @@ public class ModuleButton implements Component {
                 this.open = !this.open;
                 this.openAnimation.setState(open);
             }
+        }
+
+        for(SettingButton b : settingButtons) {
+            b.mouseClicked(mouseX, mouseY, button);
         }
     }
 

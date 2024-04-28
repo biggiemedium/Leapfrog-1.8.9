@@ -18,6 +18,56 @@ public class RenderUtil {
 
     private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
 
+    public static void render(int mode, Runnable render){
+        GL11.glBegin(mode);
+        render.run();
+        GL11.glEnd();
+    }
+
+    public static void setup2DRendering(Runnable f) {
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        f.run();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableBlend();
+    }
+
+    public static void color(int color) {
+        color(color, (float) (color >> 24 & 255) / 255.0F);
+    }
+
+    public static void color(int color, float alpha) {
+        float r = (float) (color >> 16 & 255) / 255.0F;
+        float g = (float) (color >> 8 & 255) / 255.0F;
+        float b = (float) (color & 255) / 255.0F;
+        GlStateManager.color(r, g, b, alpha);
+    }
+
+    public static void fakeCircleGlow(float posX, float posY, float radius, Color color, float maxAlpha) {
+        setAlphaLimit(0);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        setup2DRendering(() -> render(GL11.GL_TRIANGLE_FAN, () -> {
+            color(color.getRGB(), maxAlpha);
+            GL11.glVertex2d(posX, posY);
+            color(color.getRGB(), 0);
+            for (int i = 0; i <= 100; i++) {
+                double angle = (i * .06283) + 3.1415;
+                double x2 = Math.sin(angle) * radius;
+                double y2 = Math.cos(angle) * radius;
+                GL11.glVertex2d(posX + x2, posY + y2);
+            }
+        }));
+        GL11.glShadeModel(GL11.GL_FLAT);
+        setAlphaLimit(1);
+    }
+
+    // This will set the alpha limit to a specified value ranging from 0-1
+    public static void setAlphaLimit(float limit) {
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, (float) (limit * .01));
+    }
+
 
     public static void drawBlurredShadow(float x, float y, float width, float height, int blurRadius, Color color) {
         GL11.glPushMatrix();

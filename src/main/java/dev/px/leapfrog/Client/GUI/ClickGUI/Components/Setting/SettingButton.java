@@ -24,7 +24,7 @@ public class SettingButton<T> {
         this.button = button;
         this.setting = setting;
         this.width = button.getWidth();
-        this.height = 15; // Module button height
+        this.height = 20; // Module button height
         this.color = button.getColor();
     }
 
@@ -36,6 +36,10 @@ public class SettingButton<T> {
         this.width = width;
         this.height = height;
         this.color = button.getColor();
+    }
+
+    public void initGUI() {
+
     }
 
     public void draw(int mouseX, int mouseY) {

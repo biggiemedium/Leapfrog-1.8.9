@@ -50,8 +50,8 @@ public class ModulePanel implements Component {
                 b.setX(getX());
             }
 
-            if(b.getY() != getY() + featureOffset + 5 + offsetY + scrollY) { // im going to shoot myself
-                b.setY(getY() + featureOffset + 5 + offsetY + scrollY);
+            if(b.getY() != getY() + 5 + offsetY + scrollY) { // im going to shoot myself
+                b.setY(getY() + 5 + offsetY + scrollY);
             }
 
             offsetY += b.getHeight() + b.getFeatureHeight() + 4;
