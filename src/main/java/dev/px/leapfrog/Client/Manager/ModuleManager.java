@@ -1,8 +1,11 @@
 package dev.px.leapfrog.Client.Manager;
 
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.Client.Module.Combat.KillAura;
 import dev.px.leapfrog.Client.Module.Combat.TestModule;
 import dev.px.leapfrog.Client.Module.Module;
+import dev.px.leapfrog.Client.Module.Movement.Strafe;
+import dev.px.leapfrog.Client.Module.Render.FullBright;
 
 import java.util.ArrayList;
 
@@ -12,6 +15,11 @@ public class ModuleManager {
 
     public ModuleManager() {
         Add(new TestModule());
+        Add(new KillAura());
+
+        Add(new Strafe());
+
+        Add(new FullBright());
     }
 
     private void Add(Module module) {

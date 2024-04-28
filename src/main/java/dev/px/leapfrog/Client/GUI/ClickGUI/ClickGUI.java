@@ -2,19 +2,16 @@ package dev.px.leapfrog.Client.GUI.ClickGUI;
 
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
-import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Direction;
-import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Impl.EaseBackIn;
-import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.GLUtils;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ClientSettingsScreen;
+import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ColorsScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ModuleScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.Screen;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -30,6 +27,7 @@ public class ClickGUI extends GuiScreen {
     private ArrayList<Screen> screens;
     private Screen currentScreen;
 
+
     public ClickGUI() {
         this.x = 100;
         this.y = 100;
@@ -40,8 +38,9 @@ public class ClickGUI extends GuiScreen {
         this.dragX = 0;
         this.dragY = 0;
         this.screens = new ArrayList<>();
-        this.screens.add(new ModuleScreen(x + 80, y + 15, width - 80, height - 15));
-        this.screens.add(new ClientSettingsScreen(x + 80, y + 15, width - 80, height - 15));
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height));
+        this.screens.add(new ClientSettingsScreen(x + 80, y, width - 80, height));
+        this.screens.add(new ColorsScreen(x + 80, y, width - 80, height));
         this.currentScreen = screens.get(0);
     }
 
@@ -49,6 +48,10 @@ public class ClickGUI extends GuiScreen {
     public void initGui() {
         this.close = false;
         closeAnimation.setState(true);
+
+        for(Screen s : screens) {
+            s.initGUI();
+        }
     }
 
     @Override
@@ -67,28 +70,31 @@ public class ClickGUI extends GuiScreen {
         }
 
         GLUtils.startScale(((this.getX()) + (this.getX() + this.getWidth())) / 2, ((this.getY()) + (this.getY() + this.getHeight())) / 2, (float) closeAnimation.getAnimationFactor());
-        RenderUtil.drawBlurredShadow(x, y, width, height, 20, new Color(30, 30, 30, 150));
+        RenderUtil.drawBlurredShadow(x, y, width, height, 20, new Color(56, 56, 56, 200));
         RoundedShader.drawRound(x, y, width, height, 4, new Color(30, 30, 30));
 
-        RoundedShader.drawRound(x, y, 80, height, 4, new Color(26, 26, 26));
-        RoundedShader.drawRound(x, y, width, 15, 4, new Color(26, 26, 26));
-        FontUtil.regular20.drawStringWithClientColor("LeapFrog", x + 5, y + 5, false);
-       // FontUtil.regular16.drawStringWithClientColor(LeapFrog.VERSION, x + 4 + FontUtil.regular16.getStringWidth("Leapfrog Client") - 5, y + 7 + FontUtil.regular22.getHeight(), false);
+        RoundedShader.drawRound(x, y, 80, height, 4, new Color(28, 28, 28));
+        FontUtil.regular_bold20.drawStringWithClientColor("LeapFrog", x + 6, y + 8, false);
+        FontUtil.regular_bold16.drawStringWithClientColor(LeapFrog.VERSION, x + 8 + FontUtil.regular20.getStringWidth("Leapfrog"), y + 8, false);
+        RoundedShader.drawRound(x + 4, y + 10, 10, 0.2f, 4.0f, new Color(131, 131, 131, 150));
 
         int offsetY = 0;
         for(Screen s : this.screens) {
-
+            s.setX(x + 80); // x + 80, y, width - 80, height
+            s.setY(y);
+            s.setWidth(width - 80);
+            s.setHeight(height);
 
             if(s == currentScreen) {
-                RoundedShader.drawGradientCornerRL(x + 5, y + 30 + offsetY, 75, 15, 4,
-                        LeapFrog.colorManager.getClientColor().getMainColor(), LeapFrog.colorManager.getClientColor().getAlternativeColor());
+                RoundedShader.drawGradientCornerRL(x + 5, y + 30 + offsetY, 70, 15, 4, LeapFrog.colorManager.getClientColor().getMainColor(), LeapFrog.colorManager.getClientColor().getAlternativeColor());
             }
 
-            FontUtil.regular16.drawString(s.getName(), x + 15, y + 30 + 7 + offsetY, -1);
+            FontUtil.regular_bold20.drawString(s.getName(), x + 15, y + 30 + 3 + offsetY, -1);
 
-            s.render(mouseX, mouseY);
-            offsetY += 20 + 2;
+            currentScreen.render(mouseX, mouseY);
+            offsetY += 18;
         }
+
 
         GLUtils.stopScale();
     }
@@ -101,6 +107,17 @@ public class ClickGUI extends GuiScreen {
                 this.dragX = mouseX - this.x;
                 this.dragY = mouseY - this.y;
             }
+        }
+
+        int offsetY = 0;
+        for(Screen s : screens) {
+            if(isMouseOver(x + 5, y + 30 + offsetY, 70, 15, mouseX, mouseY)) {
+                if(mouseButton == 0) {
+                    currentScreen = s;
+                }
+            }
+            s.onClick(mouseX, mouseY, mouseButton);
+            offsetY += 18;
         }
     }
 

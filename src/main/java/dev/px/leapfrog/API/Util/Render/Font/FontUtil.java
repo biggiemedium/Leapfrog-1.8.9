@@ -26,6 +26,7 @@ public class FontUtil {
             regular22,
             regular24,
             regular40,
+            regular_bold16,
             regular_bold18, regular_bold20,
             regular_bold22, regular_bold26,
             regular_bold24,
@@ -38,6 +39,7 @@ public class FontUtil {
             regular20_, regular24_,
             regular22_,
             regular40_,
+            regular_bold16_,
             regular_bold18_, regular_bold20_,
             regular_bold22_, regular_bold26_,
             regular_bold24_,
@@ -69,6 +71,8 @@ public class FontUtil {
             FontUtil.regular40_ = FontUtil.getFont(locationMap, "regular.ttf", 40);
             FontUtil.regular40 = new MinecraftFontRenderer(FontUtil.regular40_);
 
+            FontUtil.regular_bold16_ = FontUtil.getFont(locationMap, "regular_bold.ttf", 16);
+            FontUtil.regular_bold16 = new MinecraftFontRenderer(FontUtil.regular_bold16_);
             FontUtil.regular_bold18_ = FontUtil.getFont(locationMap, "regular_bold.ttf", 18);
             FontUtil.regular_bold18 = new MinecraftFontRenderer(FontUtil.regular_bold18_);
             FontUtil.regular_bold20_ = FontUtil.getFont(locationMap, "regular_bold.ttf", 20);

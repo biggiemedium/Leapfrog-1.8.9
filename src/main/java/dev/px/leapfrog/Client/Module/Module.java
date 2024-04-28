@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.Module;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.lang.annotation.ElementType;
@@ -21,6 +22,7 @@ public class Module implements Listenable {
     private Type type;
 
     public ArrayList<Setting<?>> settings = new ArrayList<>();
+    protected Minecraft mc = Minecraft.getMinecraft();
 
     public Module() {
         this.name = getModule().name();
