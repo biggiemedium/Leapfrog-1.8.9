@@ -1,22 +1,88 @@
 package dev.px.leapfrog.API.Util.Render;
 
 import dev.px.leapfrog.API.Util.Render.Blur.GaussianFilter;
+import dev.px.leapfrog.API.Wrapper;
+import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.io.IOUtils;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class RenderUtil {
 
     private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
+    private static Minecraft mc = Wrapper.getMC();
+
+    public static void drawRect(double x, double y, double width, double height, int color) {
+        double d4;
+
+        if (x < width) {
+            d4 = x;
+            x = width;
+            width = d4;
+        }
+
+        if (y < height) {
+            d4 = y;
+            y = height;
+            height = d4;
+        }
+
+        float f = (float) (color >> 24 & 255) / 255.0F;
+        float f1 = (float) (color >> 16 & 255) / 255.0F;
+        float f2 = (float) (color >> 8 & 255) / 255.0F;
+        float f3 = (float) (color & 255) / 255.0F;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(f1, f2, f3, f);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(x, height, 0.0D).endVertex();
+        worldrenderer.pos(width, height, 0.0D).endVertex();
+        worldrenderer.pos(width, y, 0.0D).endVertex();
+        worldrenderer.pos(x, y, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
+
+    public static void drawRect(float x, float y, float width, float height, Color color) {
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, (float) color.getAlpha() / 255);
+        GL11.glVertex2f(x, y);
+        GL11.glVertex2f(x, y + height);
+        GL11.glVertex2f(x + width, y + height);
+        GL11.glVertex2f(x + width, y);
+        GL11.glColor4f(0, 0, 0, 1);
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
+    }
 
     public static void render(int mode, Runnable render){
         GL11.glBegin(mode);
@@ -149,6 +215,33 @@ public class RenderUtil {
         } else {
             System.err.println("[ MacOS Utils ] Icon file could not be found");
         }
+    }
+
+    public static void setIcon(String path) {
+        InputStream inputstream = RenderUtil.class.getResourceAsStream(path);
+        try {
+            if (inputstream != null) {
+                Display.setIcon(new ByteBuffer[] { readImageToBuffer(inputstream) });
+            }
+        } catch (IOException ioexception) {
+            LeapFrog.LOGGER.error((String)"Couldn\'t set icon", (Throwable)ioexception);}
+        finally {
+            IOUtils.closeQuietly(inputstream);
+        }
+    }
+
+    public static ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException {
+        BufferedImage bufferedimage = ImageIO.read(imageStream);
+        int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), (int[])null, 0, bufferedimage.getWidth());
+        ByteBuffer bytebuffer = ByteBuffer.allocate(4 * aint.length);
+
+        for (int i : aint)
+        {
+            bytebuffer.putInt(i << 8 | i >> 24 & 255);
+        }
+
+        bytebuffer.flip();
+        return bytebuffer;
     }
 
     /**

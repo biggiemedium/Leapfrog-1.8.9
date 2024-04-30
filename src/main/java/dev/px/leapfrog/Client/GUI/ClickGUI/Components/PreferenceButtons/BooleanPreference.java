@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components.PreferenceButtons;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Animation.SimpleAnimation;
+import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -40,9 +41,10 @@ public class BooleanPreference extends PreferenceButton<Boolean> {
         }
 
         if(toggleAnimation.getAnimationFactor() > 0) {
-            RoundedShader.drawGradientCornerRL(getX() + getWidth() - 20 - (5 * (float) toggleAnimation.getAnimationFactor()), getY() + 10 - (5 * (float) toggleAnimation.getAnimationFactor()), 15 * (float) toggleAnimation.getAnimationFactor(), 15 * (float) toggleAnimation.getAnimationFactor(), 2,
-                    new Color(LeapFrog.colorManager.getClientColor().getMainColor().getRed(), LeapFrog.colorManager.getClientColor().getMainColor().getGreen(), LeapFrog.colorManager.getClientColor().getMainColor().getBlue()),
-                    new Color(LeapFrog.colorManager.getClientColor().getAlternativeColor().getRed(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getGreen(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getBlue()));
+           // RoundedShader.drawGradientCornerRL(getX() + getWidth() - 20 - (5 * (float) toggleAnimation.getAnimationFactor()), getY() + 10 - (5 * (float) toggleAnimation.getAnimationFactor()), 15 * (float) toggleAnimation.getAnimationFactor(), 15 * (float) toggleAnimation.getAnimationFactor(), 2,
+           //         new Color(LeapFrog.colorManager.getClientColor().getMainColor().getRed(), LeapFrog.colorManager.getClientColor().getMainColor().getGreen(), LeapFrog.colorManager.getClientColor().getMainColor().getBlue()),
+           //         new Color(LeapFrog.colorManager.getClientColor().getAlternativeColor().getRed(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getGreen(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getBlue()));
+            RoundedShader.drawGradientRound(getX() + getWidth() - 20 - (5 * (float) toggleAnimation.getAnimationFactor()), getY() + 10 - (5 * (float) toggleAnimation.getAnimationFactor()), 15 * (float) toggleAnimation.getAnimationFactor(), 15 * (float) toggleAnimation.getAnimationFactor(), 2, ColorUtil.getClientColor(0, 255), ColorUtil.getClientColor(90, 255), ColorUtil.getClientColor(180, 255), ColorUtil.getClientColor(270, 255));
         }
     }
 

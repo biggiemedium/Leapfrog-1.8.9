@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Color.AccentColor;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
+import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
 import dev.px.leapfrog.LeapFrog;
 
@@ -25,9 +26,6 @@ public class ColorComponent implements Component {
 
     @Override
     public void render(int mouseX, int mouseY) {
-        if(LeapFrog.colorManager.getClientColor().equals(this.color)) {
-            RoundedShader.drawRoundOutline(x, y, width, height, 4, 1, new Color(0, 0, 0, 0), new Color(255, 255, 255));
-        }
 
         Color color1 = ColorUtil.interpolateColorsBackAndForth(15, 0, color.getMainColor(), color.getAlternativeColor(), false);
         Color color2 = ColorUtil.interpolateColorsBackAndForth(15, 90, color.getMainColor(), color.getAlternativeColor(), false);
@@ -36,8 +34,13 @@ public class ColorComponent implements Component {
 
         RoundedShader.drawGradientRound(x, y , width, height, 4, color1, color2, color3, color4); // radius 10
 
-        RoundedShader.drawRound(x, y + getHeight() - 14, width, 14, 4, new Color(23, 23, 23));
+        //RoundedShader.drawRound(x - 1, y + 1 + getHeight() - 13, width + 2, 14, 2, new Color(26, 26, 26));
+        RenderUtil.drawRect(x - 1, y + 1 + getHeight() - 13, width + 2, 14, new Color(26, 26, 26));
         FontUtil.regular_bold16.drawString(this.color.getName(), x + 2, y + getHeight() - 10, -1);
+
+        if(LeapFrog.colorManager.getClientColor().equals(this.color)) {
+            RoundedShader.drawRoundOutline(x - 1, y - 1, width + 2, height + 2, 4, 0.5f, new Color(0, 0, 0, 0), new Color(255, 255, 255, 150));
+        }
     }
 
     @Override

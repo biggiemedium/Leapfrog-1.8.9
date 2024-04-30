@@ -4,6 +4,8 @@ import dev.px.leapfrog.API.Event.Game.KeyPressEvent;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
+import dev.px.leapfrog.Client.GUI.HUD.Element;
+import dev.px.leapfrog.Client.GUI.HUD.TestHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
@@ -29,6 +31,14 @@ public class EventProcessor implements Listenable {
         if(event.type == RenderGameOverlayEvent.ElementType.TEXT) {
             Render2DEvent e = new Render2DEvent(event.partialTicks);
             LeapFrog.EVENT_BUS.post(e);
+
+            for(Element element : LeapFrog.elementManager.getElements()) {
+                if(element.isVisible()) {
+                    element.onRender(e);
+                    element.renderDummy(e);
+                }
+            }
+
         }
     }
 
@@ -49,6 +59,9 @@ public class EventProcessor implements Listenable {
                         }
                         if(keyCode == Keyboard.KEY_RSHIFT) {
                             mc.displayGuiScreen(new ClickGUI());
+                        }
+                        if(keyCode == Keyboard.KEY_P) {
+                            mc.displayGuiScreen(new TestHUDEditor());
                         }
                         KeyPressEvent e = new KeyPressEvent(keyCode);
                         LeapFrog.EVENT_BUS.post(e);

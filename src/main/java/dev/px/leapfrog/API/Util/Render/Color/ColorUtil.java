@@ -8,6 +8,17 @@ import java.awt.image.BufferedImage;
 
 public class ColorUtil {
 
+    public static Color[] getClientColorInterpolation() {
+        AccentColor color = LeapFrog.colorManager.getClientColor();
+        Color color1 = ColorUtil.interpolateColorsBackAndForth(15, 0, color.getMainColor(), color.getAlternativeColor(), false);
+        Color color2 = ColorUtil.interpolateColorsBackAndForth(15, 90, color.getMainColor(), color.getAlternativeColor(), false);
+        Color color3 = ColorUtil.interpolateColorsBackAndForth(15, 180, color.getMainColor(), color.getAlternativeColor(), false);
+        Color color4 = ColorUtil.interpolateColorsBackAndForth(15, 270, color.getMainColor(), color.getAlternativeColor(), false);
+        return new Color[] {
+                color1, color2, color3, color4
+        };
+    }
+
     public static Color getClientColor(int index, int alpha) {
         for(AccentColor c : LeapFrog.colorManager.getColors()) {
             if(c.equals(LeapFrog.colorManager.getClientColor())) {

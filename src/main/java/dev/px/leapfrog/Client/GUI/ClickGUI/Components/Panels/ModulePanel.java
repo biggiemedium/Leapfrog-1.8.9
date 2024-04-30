@@ -57,6 +57,10 @@ public class ModulePanel implements Component {
             offsetY += b.getHeight() + b.getFeatureHeight() + 4;
             b.render(mouseX, mouseY);
         }
+
+        if(Mouse.getEventDWheel() != 0) {
+            // Motion blur here
+        }
         stack.popScissor();
 
         if(isMouseOver(x, y, width, height, mouseX, mouseY)) {

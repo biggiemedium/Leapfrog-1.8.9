@@ -7,7 +7,9 @@ import dev.px.leapfrog.API.Util.Render.SplashScreen;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.Display;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -15,6 +17,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
@@ -54,8 +60,8 @@ public class MixinMinecraft {
             RenderUtil.setDockIcon("/assets/minecraft/Leapfrog/Images/Froggy-transformed.png");
             c.cancel();
         } else if(Util.getOSType() == Util.EnumOS.WINDOWS) {
-            // windows impl
-            //      c.cancel();
+            RenderUtil.setIcon("/assets/minecraft/Leapfrog/Images/Froggy-transformed.png");
+            c.cancel();
         }
     }
 

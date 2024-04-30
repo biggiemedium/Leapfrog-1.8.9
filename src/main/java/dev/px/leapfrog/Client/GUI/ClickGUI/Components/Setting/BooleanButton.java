@@ -17,13 +17,14 @@ public class BooleanButton extends SettingButton<Boolean> {
 
     private Setting<Boolean> setting;
     private boolean toggled;
-    private Animation toggleAnimation = new Animation(300, false, Easing.LINEAR);
+    private Animation toggleAnimation;
     float switchWidth = 13;
 
     public BooleanButton(ModuleButton button, float x, float y, Setting<Boolean> setting) {
         super(button, x, y, button.getWidth(), 20, setting);
         this.setting = setting;
         this.toggled = setting.getValue();
+        this.toggleAnimation = new Animation(300, setting.getValue(), Easing.LINEAR);
     }
 
     @Override

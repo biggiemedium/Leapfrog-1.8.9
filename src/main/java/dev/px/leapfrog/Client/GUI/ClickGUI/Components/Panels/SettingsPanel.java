@@ -59,8 +59,11 @@ public class SettingsPanel implements Component {
             if(b.getY() != getY() + 5 + offset + (int) scrollY) {
                 b.setY(getY() + 5 + offset + (int) scrollY);
             }
-            b.draw(mouseX, mouseY);
-            offset += b.getHeight() + 4;
+
+            if(b.getSetting().isVisible()) {
+                b.draw(mouseX, mouseY);
+                offset += b.getHeight() + 4;
+            }
         }
         stack.popScissor();
 

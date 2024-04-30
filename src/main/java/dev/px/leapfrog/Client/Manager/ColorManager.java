@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.Manager;
 
 import dev.px.leapfrog.API.Util.Render.Color.AccentColor;
+import dev.px.leapfrog.Client.Module.Setting;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,6 +11,16 @@ public class ColorManager {
     private ArrayList<AccentColor> themeColors = new ArrayList<>();
     private ArrayList<AccentColor> accentColors = new ArrayList<>();
     private AccentColor clientColor;
+
+    private Setting<Float> opacity = new Setting<>("Opacity", 0.8f, 0.1f, 1.0f);
+    private Setting<Integer> radius = new Setting<>("Radius", 4, 0, 10);
+    private ColorMode currentMode;
+
+    public enum ColorMode {
+        Client,
+        Glass,
+        Clear,
+    }
 
     public ColorManager() {
         this.themeColors.add(new AccentColor("Light", new Color(245, 233, 233), new Color(196, 192, 192)));
@@ -24,6 +35,7 @@ public class ColorManager {
         Add(new AccentColor("Blaze Orange", new Color(254, 169, 76), new Color(253, 130, 0)));
         Add(new AccentColor("Sunset Pink", new Color(253, 145, 21), new Color(245, 106, 230)));
         clientColor = accentColors.get(0);
+        currentMode = ColorMode.Client;
     }
 
     public void Add(AccentColor accentColor) {
@@ -48,5 +60,25 @@ public class ColorManager {
 
     public AccentColor getAccentColorByClass(Class<AccentColor> modClass) {
         return accentColors.stream().filter(color -> color.getClass().equals(modClass)).findFirst().orElse(null);
+    }
+
+    public ColorMode getCurrentMode() {
+        return currentMode;
+    }
+
+    public Setting<Float> getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(Setting<Float> opacity) {
+        this.opacity = opacity;
+    }
+
+    public Setting<Integer> getRadius() {
+        return radius;
+    }
+
+    public void setRadius(Setting<Integer> radius) {
+        this.radius = radius;
     }
 }

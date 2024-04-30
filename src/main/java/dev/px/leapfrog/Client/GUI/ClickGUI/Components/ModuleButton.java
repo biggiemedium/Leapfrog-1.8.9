@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components;
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
+import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
@@ -71,26 +72,14 @@ public class ModuleButton implements Component {
     @Override
     public void render(int mouseX, int mouseY) {
         hover.setState(isMouseOver(x, y, width, height, mouseX, mouseY));
+        this.toggleAnimation.setState(this.module.isToggled());
+        this.openAnimation.setState(open);
         this.featureHeight = 0;
 
-        RoundedShader.drawRound(getX() + 4, y, getWidth() - 8, height + (featureHeight * (float) openAnimation.getAnimationFactor()), 2, color);
-        if(hover.getAnimationFactor() > 0) {
-            RoundedShader.drawRoundOutline(getX() + 4, y, getWidth() - 8, height, 4, 0.5f, new Color(0, 0, 0, 0), new Color(255, 255, 255, 150));
-        }
-
-        if(toggleAnimation.getAnimationFactor() > 0) {
-            RoundedShader.drawGradientCornerRL(getX() + getWidth() - 20 - (5 * (float) toggleAnimation.getAnimationFactor()), getY() + 10 - (5 * (float) toggleAnimation.getAnimationFactor()), 15 * (float) toggleAnimation.getAnimationFactor(), 15 * (float) toggleAnimation.getAnimationFactor(), 2,
-                    new Color(LeapFrog.colorManager.getClientColor().getMainColor().getRed(), LeapFrog.colorManager.getClientColor().getMainColor().getGreen(), LeapFrog.colorManager.getClientColor().getMainColor().getBlue()),
-                    new Color(LeapFrog.colorManager.getClientColor().getAlternativeColor().getRed(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getGreen(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getBlue()));
-        }
-
-        //FontUtil.regular_bold18.drawString(module.getName(), getX() + 5, getY() + (getHeight() /2 - 3), -1);
-        FontUtil.regular_bold18.drawString(module.getName(), getX() + 8, getY() + 5, -1);
-        FontUtil.regular12.drawString(module.getDescription(), getX() + 8, getY() + (getHeight() - 3) - FontUtil.regular12.getHeight(), new Color(200, 200, 200).getRGB());
+        // Featureheight handler
 
         if(openAnimation.getAnimationFactor() > 0) {
             this.settingOffset = (float) 0;
-            RoundedShader.drawRound(getX() + 4, getY() + getHeight(), getWidth() - 8, (settingOffset * (float) openAnimation.getAnimationFactor()) - getHeight(), 4, color);
             this.settingButtons.forEach(settingButton -> {
                 if (settingButton.getX() != this.getX() + 4) {
                     settingButton.setX(getX() + 4); // fix this
@@ -104,13 +93,51 @@ public class ModuleButton implements Component {
                 }
 
                 if (settingButton.getSetting().isVisible()) {
-                    settingButton.draw(mouseX, mouseY);
                     this.featureHeight += (settingButton.getHeight() + 1) * openAnimation.getAnimationFactor();
-                    this.settingOffset += settingButton.getHeight() + 1;
+                    this.settingOffset += (settingButton.getHeight() + 1);
                     this.panel.addFeatureOffset(featureHeight * (float) openAnimation.getAnimationFactor());
                 }
             });
-             //this.panel.addFeatureOffset(featureHeight);
+        }
+        RoundedShader.drawRound(getX() + 4, y, getWidth() - 8, height + (featureHeight * (float) openAnimation.getAnimationFactor()), 2, color);
+
+
+        if(hover.getAnimationFactor() > 0) {
+            RoundedShader.drawRoundOutline(getX() + 4, y, getWidth() - 8, height, 4, 0.5f, new Color(0, 0, 0, 0), new Color(255, 255, 255, 150));
+        }
+
+        if(toggleAnimation.getAnimationFactor() > 0) {
+          //  RoundedShader.drawGradientCornerRL(getX() + getWidth() - 20 - (5 * (float) toggleAnimation.getAnimationFactor()), getY() + 10 - (5 * (float) toggleAnimation.getAnimationFactor()), 15 * (float) toggleAnimation.getAnimationFactor(), 15 * (float) toggleAnimation.getAnimationFactor(), 2,
+          //          new Color(LeapFrog.colorManager.getClientColor().getMainColor().getRed(), LeapFrog.colorManager.getClientColor().getMainColor().getGreen(), LeapFrog.colorManager.getClientColor().getMainColor().getBlue()),
+          //          new Color(LeapFrog.colorManager.getClientColor().getAlternativeColor().getRed(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getGreen(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getBlue()));
+            RoundedShader.drawGradientRound(getX() + getWidth() - 20 - (5 * (float) toggleAnimation.getAnimationFactor()), getY() + 10 - (5 * (float) toggleAnimation.getAnimationFactor()), 15 * (float) toggleAnimation.getAnimationFactor(), 15 * (float) toggleAnimation.getAnimationFactor(), 2, ColorUtil.getClientColor(0, 255), ColorUtil.getClientColor(90, 255), ColorUtil.getClientColor(180, 255), ColorUtil.getClientColor(270, 255));
+        }
+
+        //FontUtil.regular_bold18.drawString(module.getName(), getX() + 5, getY() + (getHeight() /2 - 3), -1);
+        FontUtil.regular_bold18.drawString(module.getName(), getX() + 8, getY() + 5, -1);
+        FontUtil.regular12.drawString(module.getDescription(), getX() + 8, getY() + (getHeight() - 3) - FontUtil.regular12.getHeight(), new Color(200, 200, 200).getRGB());
+
+        // Button rendering
+        if(openAnimation.getAnimationFactor() > 0) {
+            this.settingButtons.forEach(settingButton -> {
+                /*
+                if (settingButton.getX() != this.getX() + 4) {
+                    settingButton.setX(getX() + 4); // fix this
+                }
+
+                if(settingButton.getWidth() != getWidth() - 8) {
+                    settingButton.setWidth(getWidth() - 8);
+                }
+                if(settingButton.getY() != getY() + settingOffset) {
+                    settingButton.setY(getY() + getHeight() + (settingOffset + 1));
+                }
+
+                 */
+
+                if (settingButton.getSetting().isVisible()) {
+                    settingButton.draw(mouseX, mouseY);
+                }
+            });
         }
     }
 
@@ -265,4 +292,33 @@ public class ModuleButton implements Component {
     public void setSettingButtons(ArrayList<SettingButton<?>> settingButtons) {
         this.settingButtons = settingButtons;
     }
+
+            /*
+        if(openAnimation.getAnimationFactor() > 0) {
+            //stack.pushScissor((int) getX() + 4, (int) (getY()), (int) getWidth() - 8, (int)getHeight() + (int) getFeatureHeight());
+            this.settingOffset = (float) 0;
+            RoundedShader.drawRound(getX() + 4, getY() + getHeight(), getWidth() - 8, (settingOffset * (float) openAnimation.getAnimationFactor()) - getHeight(), 4, color);
+            this.settingButtons.forEach(settingButton -> {
+                if (settingButton.getX() != this.getX() + 4) {
+                    settingButton.setX(getX() + 4); // fix this
+                }
+
+                if(settingButton.getWidth() != getWidth() - 8) {
+                    settingButton.setWidth(getWidth() - 8);
+                }
+                if(settingButton.getY() != getY() + settingOffset) {
+                    settingButton.setY(getY() + getHeight() + (settingOffset + 1));
+                }
+
+                if (settingButton.getSetting().isVisible()) {
+                    settingButton.draw(mouseX, mouseY);
+                    this.featureHeight += (settingButton.getHeight() + 1) * openAnimation.getAnimationFactor();
+                    this.settingOffset += (settingButton.getHeight() + 1);
+                    this.panel.addFeatureOffset(featureHeight * (float) openAnimation.getAnimationFactor());
+                }
+            });
+            //this.panel.addFeatureOffset(featureHeight);
+             //stack.popScissor();
+        }
+         */
 }

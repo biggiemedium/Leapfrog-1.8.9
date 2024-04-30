@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
+import dev.px.leapfrog.API.Util.Render.Animation.SimpleAnimation;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ public class Screen implements Component {
     private String name;
     private int x, y, width, height;
     private ClickGUI clickGUI;
+    public SimpleAnimation selectedAnimation = new SimpleAnimation(0.0f);
 
     public Screen(String name, int x, int y, int width, int height, ClickGUI clickGUI) {
         this.name = name;

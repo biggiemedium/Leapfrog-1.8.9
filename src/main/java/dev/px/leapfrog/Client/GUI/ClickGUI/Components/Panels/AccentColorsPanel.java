@@ -2,6 +2,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Color.AccentColor;
+import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.ColorComponent;
@@ -13,7 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ColorsPanel implements Component {
+public class AccentColorsPanel implements Component {
 
     private int x, y, width, height;
     private ArrayList<ColorComponent> components;
@@ -22,7 +23,7 @@ public class ColorsPanel implements Component {
     private double scrollX = 0;
     private ColorsScreen screen;
 
-    public ColorsPanel(int x, int y, int width, int height, Color color, ColorsScreen screen) {
+    public AccentColorsPanel(int x, int y, int width, int height, Color color, ColorsScreen screen) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -47,13 +48,14 @@ public class ColorsPanel implements Component {
         }
 
         stack.pushScissor(getX(), getY(), getWidth() * (int) screen.getClickGUI().getCloseAnimation().getAnimationFactor(), getHeight() * (int) screen.getClickGUI().getCloseAnimation().getAnimationFactor());
+        FontUtil.regular_bold18.drawString("Accent Colors", getX() + 5, getY() + 4, -1);
         for(ColorComponent c : this.components) {
-            if(c.getX() != getX() + 6 + offsetX + scrollX) {
-                c.setX(getX() + 6 + offsetX + (int) scrollX);
+            if(c.getX() != getX() + 5 + offsetX + scrollX) {
+                c.setX(getX() + 5 + offsetX + (int) scrollX);
             }
 
-            if(c.getY() != getY() + 6) {
-                c.setY(getY() + 6);
+            if(c.getY() != getY() + 16) {
+                c.setY(getY() + 16);
             }
             offsetX += c.getWidth() + 6;
             c.render(mouseX, mouseY);
