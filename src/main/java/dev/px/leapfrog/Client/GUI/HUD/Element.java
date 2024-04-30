@@ -3,11 +3,14 @@ package dev.px.leapfrog.Client.GUI.HUD;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
+import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
+import dev.px.leapfrog.API.Util.Render.Font.MinecraftFontRenderer;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
 import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.lang.annotation.ElementType;
@@ -27,6 +30,7 @@ public class Element {
 
     private ArrayList<Setting<?>> settings = new ArrayList<>();
     protected Minecraft mc = Wrapper.getMC();
+    protected MinecraftFontRenderer font = FontUtil.regular_bold18;
 
     public Element(int x, int y, int width, int height) {
         this.name = getElement().name();
@@ -41,12 +45,27 @@ public class Element {
         this.scaling = false;
     }
 
+    public Element(int x, int y) {
+        this.name = getElement().name();
+        this.description = getElement().description();
+        this.x = x;
+        this.y = y;
+        this.width = (float) font.getStringWidth(getElement().name());
+        this.height = (float) font.getHeight();
+        this.visible = getElement().visible();
+        this.scale = 1.0f;
+        this.dragging = false;
+        this.scaling = false;
+    }
+
     protected Element.ElementInterface getElement() {
         return getClass().getAnnotation(Element.ElementInterface.class);
     }
 
     public void onRender(Render2DEvent event) {
-
+        if(LeapFrog.settingsManager.BACKGROUND.getValue()) {
+            this.drawBackground(getX(), getY(), getWidth(), getHeight());
+        }
     }
 
     public String renderDummy(Render2DEvent event) {
@@ -62,8 +81,25 @@ public class Element {
         if (dragging) {
             x = dragX + mouseX;
             y = dragY + mouseY;
+            FontUtil.regular12.drawString("x " + getX() + " y " + getY(), getX() - 2, getY() + getHeight() + 5, -1);
         }
 
+        RoundedShader.drawRoundOutline(getX() - 1, getY() - 1, getWidth() + 2, getHeight() + 2, 4, 0.1f, new Color(0, 0, 0, 0), new Color(255, 255, 255));
+
+        // ill do this stuff later
+        if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
+            if(Mouse.getEventDWheel() != 0) {
+                scaling = true;
+            }
+            if(scaling) {
+                if(scale <= 1) {
+                    scale = 1;
+                } else if(scale <= 5) {
+                    scale = 5; // cannot be bigger than 5x what the element is
+                }
+                scale += Mouse.getDWheel() * 0.01d;
+            }
+        }
 
     }
 
@@ -80,34 +116,21 @@ public class Element {
             if(isHovered(mouseX, mouseY)) {
                 if(mc.currentScreen != null) {
                     this.visible = !this.visible;
-                    //ChatFormatting togglecolor = this.toggled ? ChatFormatting.GREEN : ChatFormatting.RED;
-                   // Util.sendClientSideMessage(this.getName() + togglecolor + " Toggled" + ChatFormatting.RESET, true);
                 }
-            }
-        }
-
-        if(button == 1) {
-            if(isMouseOver(getX() + getWidth() - 1, getY() + getHeight() - 1, 5, 5, mouseX, mouseY)) {
-                scaling = true;
             }
         }
     }
 
-    public void drawBackground() {
+    public void drawBackground(float x, float y, float width, float height) {
         int radius = LeapFrog.colorManager.getRadius().getValue();
-        float opacity = LeapFrog.colorManager.getOpacity().getValue();
+        int opacity = (int) LeapFrog.colorManager.getOpacity().getValue().doubleValue() * 255;
+
         switch (LeapFrog.colorManager.getCurrentMode()) {
             case Client:
-                RoundedShader.drawGradientRound(getX(), getY(), getWidth(), getHeight(), radius,
-                        ColorUtil.getClientColorInterpolation()[0],
-                        ColorUtil.getClientColorInterpolation()[1],
-                        ColorUtil.getClientColorInterpolation()[2],
-                        ColorUtil.getClientColorInterpolation()[3]);
-                break;
-
-            case Glass:
+                RoundedShader.drawGradientRound(x, y, width, height, radius, ColorUtil.getClientColor(0, (int) opacity), ColorUtil.getClientColor(90, (int) opacity), ColorUtil.getClientColor(180, (int) opacity), ColorUtil.getClientColor(270, (int) opacity));
                 break;
         }
+
     }
 
     public void mouseRelease(int mouseX, int mouseY, int state) {

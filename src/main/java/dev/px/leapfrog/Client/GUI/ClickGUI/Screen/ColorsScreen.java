@@ -33,6 +33,7 @@ public class ColorsScreen extends Screen {
         // Top bar
         RoundedShader.drawRound(getX() + 8, getY() + 8, getWidth() - 16, 22, 2, new Color(26, 26, 26));
         FontUtil.regular_bold26.drawString("Themes", getX() + 12, getY() + 13, -1);
+        froggy.renderT(getX() + getWidth() - 38, getY() + 4, 30, 30);
 
         RoundedShader.drawRound(getX() + 8, getY() + 36, getWidth() - 16, 45, 4, new Color(26 ,26, 26));
         AccentColor color = LeapFrog.colorManager.getClientColor();

@@ -28,6 +28,7 @@ public class ModuleScreen extends Screen {
         // Top bar
         RoundedShader.drawRound(getX() + 8, getY() + 8, getWidth() - 16, 22, 2, new Color(26, 26, 26));
         FontUtil.regular_bold26.drawString("Modules", getX() + 12, getY() + 13, -1);
+        froggy.renderT(getX() + getWidth() - 38, getY() + 4, 30, 30);
 
         // Module buttons retigga
         //RoundedShader.drawRound(getX() + 8, getY() + 36, getWidth() - 16, getHeight() - 45, 4, new Color(26, 26, 26));

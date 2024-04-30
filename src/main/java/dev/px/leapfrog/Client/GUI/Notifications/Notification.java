@@ -20,7 +20,19 @@ public class Notification {
     }
 
     public void render() {
+        switch (type) {
+            case INFO:
 
+                break;
+
+            case Warning:
+
+                break;
+
+            case Error:
+
+                break;
+        }
     }
 
     public enum NotificationType {

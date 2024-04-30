@@ -1,18 +1,16 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI;
 
+import dev.px.leapfrog.API.Util.Render.*;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.API.Util.Render.GLUtils;
-import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
-import dev.px.leapfrog.API.Util.Render.StencilUtil;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ClientSettingsScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ColorsScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ModuleScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.Screen;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -77,7 +75,7 @@ public class ClickGUI extends GuiScreen {
 
 
         GLUtils.startScale(((this.getX()) + (this.getX() + this.getWidth())) / 2, ((this.getY()) + (this.getY() + this.getHeight())) / 2, (float) closeAnimation.getAnimationFactor());
-        RenderUtil.drawBlurredShadow(x, y, width, height, 20, new Color(56, 56, 56, 200));
+        RenderUtil.drawBlurredShadow(x - 1, y, width + 2, height, 20, new Color(56, 56, 56, 200));
         RoundedShader.drawRound(x, y, width, height, 4, new Color(30, 30, 30));
 
         RoundedShader.drawRound(x, y, 80, height, 4, new Color(28, 28, 28));

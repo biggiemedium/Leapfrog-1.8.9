@@ -2,10 +2,7 @@ package dev.px.leapfrog;
 
 import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.Client.Manager.ColorManager;
-import dev.px.leapfrog.Client.Manager.ElementManager;
-import dev.px.leapfrog.Client.Manager.ModuleManager;
-import dev.px.leapfrog.Client.Manager.SettingsManager;
+import dev.px.leapfrog.Client.Manager.*;
 import me.zero.alpine.fork.bus.EventBus;
 import me.zero.alpine.fork.bus.EventManager;
 import net.minecraftforge.fml.common.Mod;
@@ -20,9 +17,9 @@ import org.apache.logging.log4j.Logger;
 public class LeapFrog {
 
     /*
-    - GUI (Draggable HUD, Grid system)
     - GUI - Fix scrollbar (Module and client settings), Add hud editor
     - Notifcation system
+    - HUD (Draggable HUD, Grid system)
     -
      */
 
@@ -38,6 +35,7 @@ public class LeapFrog {
     public static ColorManager colorManager;
     public static SettingsManager settingsManager;
     public static ElementManager elementManager;
+    public static CapeManager capeManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -46,12 +44,13 @@ public class LeapFrog {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        FontUtil.init();
         moduleManager = new ModuleManager();
         eventProcessor = new EventProcessor();
         colorManager = new ColorManager();
         settingsManager = new SettingsManager();
         elementManager = new ElementManager();
-        FontUtil.init();
+        capeManager = new CapeManager();
     }
 
     @EventHandler

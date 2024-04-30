@@ -2,7 +2,9 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Animation.SimpleAnimation;
+import dev.px.leapfrog.API.Util.Render.Texture;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 
@@ -12,6 +14,8 @@ public class Screen implements Component {
     private int x, y, width, height;
     private ClickGUI clickGUI;
     public SimpleAnimation selectedAnimation = new SimpleAnimation(0.0f);
+    protected Texture froggy = new Texture(new ResourceLocation("Leapfrog/Images/Froggy.png"));
+
 
     public Screen(String name, int x, int y, int width, int height, ClickGUI clickGUI) {
         this.name = name;

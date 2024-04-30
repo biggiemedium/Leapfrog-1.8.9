@@ -5,7 +5,7 @@ import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
-import dev.px.leapfrog.Client.GUI.HUD.TestHUDEditor;
+import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
@@ -33,9 +33,11 @@ public class EventProcessor implements Listenable {
             LeapFrog.EVENT_BUS.post(e);
 
             for(Element element : LeapFrog.elementManager.getElements()) {
-                if(element.isVisible()) {
-                    element.onRender(e);
-                    element.renderDummy(e);
+                if(!(mc.currentScreen instanceof GuiHUDEditor)) {
+                    if (element.isVisible()) {
+                        element.onRender(e);
+                        element.renderDummy(e);
+                    }
                 }
             }
 
@@ -61,7 +63,7 @@ public class EventProcessor implements Listenable {
                             mc.displayGuiScreen(new ClickGUI());
                         }
                         if(keyCode == Keyboard.KEY_P) {
-                            mc.displayGuiScreen(new TestHUDEditor());
+                            mc.displayGuiScreen(new GuiHUDEditor());
                         }
                         KeyPressEvent e = new KeyPressEvent(keyCode);
                         LeapFrog.EVENT_BUS.post(e);

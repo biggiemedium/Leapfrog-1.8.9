@@ -5,6 +5,7 @@
   "refmap": "mixins.leapfrog.refmap.json",
   "mixins": [
     "Game.MixinMinecraft",
-    "Listeners.IMixinRenderManager"
+    "Listeners.IMixinRenderManager",
+    "Entity.MixinAbstractClientPlayer"
   ]
 }

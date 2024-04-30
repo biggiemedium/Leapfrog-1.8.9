@@ -9,12 +9,12 @@ import dev.px.leapfrog.Client.Module.Module;
 public class TestElement extends Element {
 
     public TestElement() {
-        super(1, 1, 25, 25);
+        super(1, 1);
     }
 
     @Override
     public void onRender(Render2DEvent event) {
-        FontUtil.regular_bold20.drawString("Balls", getX(), getY(), -1);
+        font.drawString("Balls", getX(), getY(), -1);
     }
 
 

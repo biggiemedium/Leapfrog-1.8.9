@@ -19,7 +19,7 @@ public class SettingsManager {
     public SettingsManager() {
         this.preferences = new ArrayList<>();
 
-        BACKGROUND = Add(new Setting("Element Background", false))
+        BACKGROUND = Add(new Setting("Element Background", true))
                 .setDescription("Element Background on HUD Elements");
         NCPCluster = Add(new Setting<>("NCP Cluster", true)
                 .setDescription("Doesnt Render NCP on nametags/ESP"));

@@ -44,11 +44,11 @@ public class ElementColorsPanel implements Component {
 
         // Sliders
         opacity.setX(getX() + getWidth() - 90);
-        opacity.setY(getY() + getHeight() - (opacity.getHeight() + 5));
+        opacity.setY(getY() + getHeight() - (opacity.getHeight() + 8));
         opacity.render(mouseX, mouseY);
 
         radius.setX(getX() + getWidth() - 90);
-        radius.setY(getY() + getHeight() - (opacity.getHeight() * 4 + 5));
+        radius.setY(getY() + getHeight() - (opacity.getHeight() * 4 + 8));
         radius.render(mouseX, mouseY);
 
         stack.popScissor();

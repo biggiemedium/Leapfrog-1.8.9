@@ -49,7 +49,7 @@ public class BooleanButton extends SettingButton<Boolean> {
 
         RoundedShader.drawRound((getX() + getWidth() - 27) + (switchWidth * (float) toggleAnimation.getAnimationFactor()), getY() + 8f, 8f, 8f, 4, new Color(255, 255, 255));
         if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
-            RenderUtil.drawBlurredShadow((getX() + getWidth() - 27) + (switchWidth * (float) toggleAnimation.getAnimationFactor()), getY() + 8f, 8f, 8f, 4, new Color(255, 255, 255, 220));
+            RenderUtil.drawBlurredShadow((getX() + getWidth() - 24) + (switchWidth * (float) toggleAnimation.getAnimationFactor()), getY() + 8f, 4f, 4f, 12, new Color(255, 255, 255, 220));
         }
         FontUtil.regular16.drawString(setting.getName(), getX() + 5, getY() + (getHeight() / 2 - 3), -1);
     }
