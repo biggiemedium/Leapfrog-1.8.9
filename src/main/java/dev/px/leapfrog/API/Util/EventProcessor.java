@@ -7,6 +7,7 @@ import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
+import dev.px.leapfrog.Client.NewGUI.FreeFlowGUI;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
 import net.minecraft.client.Minecraft;
@@ -64,6 +65,9 @@ public class EventProcessor implements Listenable {
                         }
                         if(keyCode == Keyboard.KEY_P) {
                             mc.displayGuiScreen(new GuiHUDEditor());
+                        }
+                        if(keyCode == Keyboard.KEY_M) {
+                            mc.displayGuiScreen(new FreeFlowGUI());
                         }
                         KeyPressEvent e = new KeyPressEvent(keyCode);
                         LeapFrog.EVENT_BUS.post(e);

@@ -10,9 +10,6 @@ public class AccentColor {
     private Color mainColor;
     private Color alternativeColor;
 
-    public SimpleAnimation opactiy = new SimpleAnimation(0.0f);
-    public SimpleAnimation zoom = new SimpleAnimation(0.0f);
-
     public AccentColor(String name, Color mainColor, Color alternativeColor) {
         this.name = name;
         this.mainColor = mainColor;
@@ -41,14 +38,6 @@ public class AccentColor {
 
     public void setAlternativeColor(Color alternativeColor) {
         this.alternativeColor = alternativeColor;
-    }
-
-    public SimpleAnimation getOpactiy() {
-        return opactiy;
-    }
-
-    public void setOpactiy(SimpleAnimation opactiy) {
-        this.opactiy = opactiy;
     }
 
 }

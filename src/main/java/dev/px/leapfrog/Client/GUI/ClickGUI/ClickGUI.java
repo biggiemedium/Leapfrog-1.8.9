@@ -90,7 +90,7 @@ public class ClickGUI extends GuiScreen {
             s.setWidth(width - 80);
             s.setHeight(height);
 
-            s.selectedAnimation.setAnimation(currentScreen.equals(s) ? 0 : 30, 20);
+            s.selectedAnimation.setAnimation(currentScreen.equals(s) ? 0 : 10, 20);
             GLUtils.startTranslate(0, s.selectedAnimation.getValue());
             if(s == currentScreen) {
                 currentScreen.render(mouseX, mouseY);
@@ -99,9 +99,10 @@ public class ClickGUI extends GuiScreen {
 
             if(s == currentScreen) { // getY() + 30 + offsetY
                 this.moveY = offsetY;
+                RenderUtil.drawBlurredShadow(x + 5, getY() + 30 + (offsetY), 70, 15, 6, new Color(255, 255, 255, 100));
                 RoundedShader.drawGradientCornerRL(x + 5, getY() + 30 + (offsetY), 70, 15, 4,
-                        LeapFrog.colorManager.getClientColor().getMainColor(),
-                        LeapFrog.colorManager.getClientColor().getAlternativeColor());
+                        new Color(LeapFrog.colorManager.getClientColor().getMainColor().getRed(), LeapFrog.colorManager.getClientColor().getMainColor().getGreen(), LeapFrog.colorManager.getClientColor().getMainColor().getBlue(), 190),
+                        new Color(LeapFrog.colorManager.getClientColor().getAlternativeColor().getRed(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getGreen(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getBlue(), 190));
             }
 
             FontUtil.regular_bold20.drawString(s.getName(), x + 15, y + 30 + 3 + offsetY, -1);

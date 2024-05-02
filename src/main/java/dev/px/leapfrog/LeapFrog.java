@@ -1,6 +1,7 @@
 package dev.px.leapfrog;
 
 import dev.px.leapfrog.API.Util.EventProcessor;
+import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.Client.Manager.*;
 import me.zero.alpine.fork.bus.EventBus;
@@ -28,7 +29,7 @@ public class LeapFrog {
     public static final String NAME = "LeapFrog";
 
     public static EventBus EVENT_BUS = new EventManager();
-    public static Logger LOGGER = LogManager.getLogger("[" + NAME + "]");
+    public static Logger LOGGER = LogManager.getLogger(NAME);
 
     public static ModuleManager moduleManager;
     public static EventProcessor eventProcessor;
@@ -36,25 +37,28 @@ public class LeapFrog {
     public static SettingsManager settingsManager;
     public static ElementManager elementManager;
     public static CapeManager capeManager;
+    public static SpotifyManager spotifyManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
+        spotifyManager = new SpotifyManager();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         FontUtil.init();
+        FontRenderer.init();
         moduleManager = new ModuleManager();
+        settingsManager = new SettingsManager(); // Settings manager before event processor
         eventProcessor = new EventProcessor();
-        colorManager = new ColorManager();
-        settingsManager = new SettingsManager();
+        colorManager = new ColorManager(); // Color manager before element manager
         elementManager = new ElementManager();
         capeManager = new CapeManager();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        spotifyManager = new SpotifyManager();
 
     }
 }
