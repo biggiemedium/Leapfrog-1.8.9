@@ -60,19 +60,10 @@ public class EventProcessor implements Listenable {
                                 m.toggle();
                             }
                         }
-                        if(keyCode == Keyboard.KEY_RSHIFT) {
-                            mc.displayGuiScreen(new ClickGUI());
-                        }
-                        if(keyCode == Keyboard.KEY_P) {
-                            mc.displayGuiScreen(new GuiHUDEditor());
-                        }
-                        if(keyCode == Keyboard.KEY_M) {
-                            mc.displayGuiScreen(new FreeFlowGUI());
-                        }
+
                         KeyPressEvent e = new KeyPressEvent(keyCode);
                         LeapFrog.EVENT_BUS.post(e);
                     }
-
                 }
             }
         } catch (Exception q) { q.printStackTrace(); }

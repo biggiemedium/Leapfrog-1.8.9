@@ -38,6 +38,7 @@ public class LeapFrog {
     public static ElementManager elementManager;
     public static CapeManager capeManager;
     public static SpotifyManager spotifyManager;
+    public static InputManager inputManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -54,11 +55,13 @@ public class LeapFrog {
         colorManager = new ColorManager(); // Color manager before element manager
         elementManager = new ElementManager();
         capeManager = new CapeManager();
+
+        // way down
+        inputManager = new InputManager();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         spotifyManager = new SpotifyManager();
-
     }
 }

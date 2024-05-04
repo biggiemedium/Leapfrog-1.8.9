@@ -37,25 +37,27 @@ public class SpotifyHandler implements Component {
 
         if(LeapFrog.spotifyManager.getAPI().isPlaying()) {
             //RenderUtil.drawBlurredShadow((float) (getX() + (80 / 2) - (FontUtil.icon24.getStringWidth((LeapFrog.spotifyManager.getAPI().isPlaying() ? "B" : "C")) / 2)) + 2, getY() + 12, 7, 7, 14, new Color(255, 255, 255, 100));
-            FontRenderer.sans20_bold.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getName(), (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()),   new Color(255, 255, 255).getRGB());
-            FontRenderer.sans16.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getArtist(), (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
+            FontRenderer.sans18_bold.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getName(), (getX() + 80) + 5, getY() + (3 + (FontRenderer.sans18_bold.getHeight() / 2)),   new Color(255, 255, 255).getRGB());
+            FontRenderer.sans12.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getArtist(), (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
         } else {
-            FontRenderer.sans20_bold.drawString("--/--", (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()), new Color(255, 255, 255).getRGB());
-            FontRenderer.sans16.drawString("--/--", (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
+            FontRenderer.sans18_bold.drawString("--/--", (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()), new Color(255, 255, 255).getRGB());
+            FontRenderer.sans12.drawString("--/--", (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
         }
 
-        RenderUtil.drawBlurredShadow(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, 120, 2, 5, ColorUtil.interpolateColorC(
+
+        RoundedShader.drawRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, 120, 2, 1, color.darker());
+
+        double completionPercentage = (double) LeapFrog.spotifyManager.getAPI().getPosition() / LeapFrog.spotifyManager.getAPI().getTrack().getLength();
+        int progressBarWidth = (int) (completionPercentage * 120);
+
+        RenderUtil.drawBlurredShadow(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 5, ColorUtil.interpolateColorC(
                 ColorUtil.getClientColor(0, 190), ColorUtil.getClientColor(180, 190), 0.5f));
 
-        RoundedShader.drawGradientRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, 120, 2, 1,
+        RoundedShader.drawGradientRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 1,
                 ColorUtil.getClientColor(0, 190),
                 ColorUtil.getClientColor(90, 190),
                 ColorUtil.getClientColor(180, 190),
                 ColorUtil.getClientColor(270, 190));
-
-        double completionPercentage = (double) LeapFrog.spotifyManager.getAPI().getPosition() / LeapFrog.spotifyManager.getAPI().getTrack().getLength();
-        int progressBarWidth = (int) (completionPercentage * 120);
-        RoundedShader.drawRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 1, color.darker());
 
         // Rewind
         FontUtil.icon24.drawString("E", getX() + 10, getY() + 12, -1);

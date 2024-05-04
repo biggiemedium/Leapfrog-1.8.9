@@ -59,7 +59,6 @@ public class ClickGUI extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-
         if(close) {
             this.closeAnimation.setState(false);
             if(closeAnimation.getAnimationFactor() <= 0) {
@@ -71,8 +70,6 @@ public class ClickGUI extends GuiScreen {
             this.x = mouseX - dragX;
             this.y = mouseY - dragY;
         }
-
-
 
         GLUtils.startScale(((this.getX()) + (this.getX() + this.getWidth())) / 2, ((this.getY()) + (this.getY() + this.getHeight())) / 2, (float) closeAnimation.getAnimationFactor());
         RenderUtil.drawBlurredShadow(x - 1, y, width + 2, height, 20, new Color(56, 56, 56, 200));
