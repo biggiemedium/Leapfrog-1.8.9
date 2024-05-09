@@ -25,12 +25,14 @@ public class Module implements Listenable {
     protected Minecraft mc = Minecraft.getMinecraft();
 
     public Module() {
-        this.name = getModule().name();
-        this.description = getModule().description();
-        this.keyBind = getModule().keyBind();
-        this.toggled = getModule().toggled();
-        this.drawn = getModule().drawn();
-        this.type = getModule().type();
+        if(this.getClass().isAnnotationPresent(ModuleInterface.class)) {
+            this.name = getModule().name();
+            this.description = getModule().description();
+            this.keyBind = getModule().keyBind();
+            this.toggled = getModule().toggled();
+            this.drawn = getModule().drawn();
+            this.type = getModule().type();
+        } else {throw new RuntimeException("Not annotation in class " + this.getClass().getName());}
     }
 
     protected ModuleInterface getModule() {

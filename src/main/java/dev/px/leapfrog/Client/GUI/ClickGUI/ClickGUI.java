@@ -19,6 +19,15 @@ import java.util.ArrayList;
 
 public class ClickGUI extends GuiScreen {
 
+    /*
+    Categories TODO:
+    Module,
+    Client Settings,
+    Theme,
+    Friends/Socials,
+    Configs
+     */
+
     private int x, y, width, height;
     private boolean close, dragging;
     private int dragX, dragY;

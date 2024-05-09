@@ -29,7 +29,6 @@ public class ColorManager {
         Add(new AccentColor("Froggy", new Color(173, 247, 115), new Color(128, 243, 147)));
         Add(new AccentColor("Tenacity", new Color(39, 179, 206), new Color(236, 133, 209)));
         Add(new AccentColor("Dark Blue", new Color(61, 79, 143), new Color(1, 19, 63)));
-        Add(new AccentColor("Angry birds", new Color(225, 37, 46), new Color(164, 27, 43)));
         Add(new AccentColor("Pank", new Color(226, 0, 70), new Color(255, 166, 200)));
         Add(new AccentColor("Sunset", new Color(253, 145, 21), new Color(245, 106, 230)));
         clientColor = accentColors.get(0);

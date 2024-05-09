@@ -4,18 +4,15 @@ import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
-import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.GLUtils;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
-import dev.px.leapfrog.API.Util.Render.Texture;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.Screen;
-import dev.px.leapfrog.Client.NewGUI.Screens.ModuleScreen;
+import dev.px.leapfrog.Client.NewGUI.Screens.ModuleScreen.ModuleScreen;
+import dev.px.leapfrog.Client.NewGUI.Screens.SettingsScreen;
 import dev.px.leapfrog.Client.NewGUI.Screens.ThemeScreen;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -25,7 +22,7 @@ import java.util.ArrayList;
 public class FreeFlowGUI extends GuiScreen {
 
     private int x, y, width, height;
-    private Animation closeAnimation = new Animation(300, false, Easing.TENACITY_EASEBACKIN);
+    private Animation closeAnimation;
     private boolean dragging, close;
     private int dragX, dragY;
 
@@ -47,25 +44,41 @@ public class FreeFlowGUI extends GuiScreen {
         this.height = 260 + 30; // Old 260
         this.close = false;
         this.dragging = false;
+        this.closeAnimation = new Animation(250, true, Easing.TENACITY_EASEBACKIN);
 
         this.spotifyHandler = new SpotifyHandler(getX(), getY() - 25, getWidth(), 25, new Color(23, 23, 23));
         this.screens = new ArrayList<>();
 
         this.screens.add(new ModuleScreen(getX() + 100, getY(), getWidth() - 100, getHeight(), this, ScreenHandler.ScreenType.Game));
+        this.screens.add(new SettingsScreen(getX() + 100, getY(), getWidth() - 100, getHeight(), this, ScreenHandler.ScreenType.Game));
         this.screens.add(new ThemeScreen(getX() + 100, getY(), getWidth() - 100, getHeight(), this, ScreenHandler.ScreenType.Appearance));
         this.currentScreen = screens.get(0);
+    }
+
+    @Override
+    public void initGui() {
+        this.closeAnimation = new Animation(250, true, Easing.TENACITY_EASEBACKIN);
+        this.close = false;
+        closeAnimation.setState(true);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.spotifyAnimation.setState(LeapFrog.spotifyManager.getAPI() != null && LeapFrog.spotifyManager.getAPI().isPlaying());
 
+        if(close) {
+            this.closeAnimation.setState(false);
+            if(closeAnimation.getAnimationFactor() <= 0) {
+                mc.displayGuiScreen(null);
+            }
+        }
 
         if(dragging) {
             this.x = mouseX - dragX;
             this.y = mouseY - dragY;
         }
 
+        GLUtils.startScale(((this.getX()) + (this.getX() + this.getWidth())) / 2, ((this.getY()) + (this.getY() + this.getHeight())) / 2, (float) closeAnimation.getAnimationFactor());
         // Entire GUI
         RenderUtil.drawBlurredShadow(getX(), getY(), getWidth(), getHeight(), 10, new Color(30, 30, 30));
         RoundedShader.drawRound(getX(), getY(), getWidth(), getHeight(), 4, new Color(30, 30, 30));
@@ -95,7 +108,7 @@ public class FreeFlowGUI extends GuiScreen {
             s.setX(x + 80);
             s.setY(y + 25);
             s.setWidth(width - 80);
-            s.setHeight(height - 25);
+            s.setHeight(height - 50);
 
             if(s == currentScreen) {
                // RoundedShader.drawGradientCornerRL(getX() + 5, getY() + 45 + offsetY, 70, 14, 4,
@@ -109,17 +122,24 @@ public class FreeFlowGUI extends GuiScreen {
                         ColorUtil.getClientColor(270, 190));
             }
 
+            currentScreen.render(mouseX, mouseY);
+
             FontRenderer.sans20_bold.drawString(s.getName(), getX() + 8, getY() + 50 + offsetY, -1);
             GL11.glPushMatrix();
             GL11.glColor3d(1, 1, 1);
+
+            /*
             Texture t = new Texture(s.getIcon());
             if(t.getLocation() != null) {
                 t.renderT(getX() + 55, getY() + 45 + offsetY, 15, 15);
             }
+             */
 
             GL11.glPopMatrix();
             offsetY += 18;
         }
+
+        GLUtils.stopScale();
 
     }
 
@@ -127,6 +147,17 @@ public class FreeFlowGUI extends GuiScreen {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.spotifyHandler.onClick(mouseX, mouseY, mouseButton);
+
+        int offsetY = 0;
+        for(ScreenHandler s : screens) {
+            if(isMouseOver(x + 5, y + 45 + offsetY, 70, 15, mouseX, mouseY)) {
+                if(mouseButton == 0) {
+                    currentScreen = s;
+                }
+            }
+            currentScreen.onClick(mouseX, mouseY, mouseButton);
+            offsetY += 18;
+        }
 
         if(isMouseOver(x, y, width, 25, mouseX, mouseY)) {
             if(mouseButton == 0) {
@@ -141,6 +172,22 @@ public class FreeFlowGUI extends GuiScreen {
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
         this.dragging = false;
+        for(ScreenHandler s : screens) {
+            currentScreen.onRelease(mouseX, mouseY, state);
+        }
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if(keyCode == Keyboard.KEY_ESCAPE) {
+            close = true;
+        }
+        if(keyCode == Keyboard.KEY_UP) {
+
+        }
+        if(keyCode == Keyboard.KEY_DOWN) {
+
+        }
     }
 
     @Override

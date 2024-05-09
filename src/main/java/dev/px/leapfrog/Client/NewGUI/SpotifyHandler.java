@@ -7,6 +7,7 @@ import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.Client.Manager.SpotifyManager;
 import dev.px.leapfrog.LeapFrog;
 
 import javax.imageio.ImageIO;
@@ -20,6 +21,7 @@ public class SpotifyHandler implements Component {
     private int x, y, width, height;
     private Color color;
     private RenderUtil.ScissorStack stack = new RenderUtil.ScissorStack();
+    private RenderUtil.ScissorStack stack2 = new RenderUtil.ScissorStack();
     private boolean hoverRW = false, hoverFF = false;
 
     public SpotifyHandler(int x, int y, int width, int height, Color color) {
@@ -37,11 +39,19 @@ public class SpotifyHandler implements Component {
 
         if(LeapFrog.spotifyManager.getAPI().isPlaying()) {
             //RenderUtil.drawBlurredShadow((float) (getX() + (80 / 2) - (FontUtil.icon24.getStringWidth((LeapFrog.spotifyManager.getAPI().isPlaying() ? "B" : "C")) / 2)) + 2, getY() + 12, 7, 7, 14, new Color(255, 255, 255, 100));
-            FontRenderer.sans18_bold.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getName(), (getX() + 80) + 5, getY() + (3 + (FontRenderer.sans18_bold.getHeight() / 2)),   new Color(255, 255, 255).getRGB());
+            stack2.pushScissor(getX() + 80, getY(), (int) (((getWidth()) - 120) / 2 - (20 + FontRenderer.sans12.getStringWidth(SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition())))), getHeight());
+            FontRenderer.sans18_bold.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getName(), (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()),   new Color(255, 255, 255).getRGB());
             FontRenderer.sans12.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getArtist(), (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
+            stack2.popScissor();
+            FontRenderer.sans12.drawString("" + SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getTrack().getLength()), getX() + 40 + ((getWidth()) - 80) / 2 + 130, getY() + getHeight() - 10, -1);
+            FontRenderer.sans12.drawString("" + SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition()),
+                    getX() + 40 + ((getWidth()) - 80) / 2 - (10 + FontRenderer.sans12.getStringWidth(SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition()))),
+                    getY() + getHeight() - 10, -1);
         } else {
             FontRenderer.sans18_bold.drawString("--/--", (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()), new Color(255, 255, 255).getRGB());
             FontRenderer.sans12.drawString("--/--", (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
+            FontRenderer.sans12.drawString("--", getX() + 40 + ((getWidth()) - 80) / 2 + 130, getY() + getHeight() - 10, -1);
+            FontRenderer.sans12.drawString("--", getX() + 40 + ((getWidth()) - 80) / 2 - 10, getY() + getHeight() - 10, -1);
         }
 
 
@@ -58,6 +68,12 @@ public class SpotifyHandler implements Component {
                 ColorUtil.getClientColor(90, 190),
                 ColorUtil.getClientColor(180, 190),
                 ColorUtil.getClientColor(270, 190));
+
+        stack.pushScissor(getX() + 40 + ((getWidth()) - 80) / 2, getY(), 120, getHeight());
+        FontRenderer.sans20_bold.drawString(
+                LeapFrog.spotifyManager.getAPI().isPlaying() ? LeapFrog.spotifyManager.getAPI().getTrack().getName() : "",
+                getX() + 40 + ((getWidth()) - 80) / 2, getY() + getHeight() - (12 + FontRenderer.sans24_bold.getHeight()), -1);
+        stack.popScissor();
 
         // Rewind
         FontUtil.icon24.drawString("E", getX() + 10, getY() + 12, -1);

@@ -48,7 +48,7 @@ minecraft {
     runDir = "run"
     coreMod = "dev.px.leapfrog.ASM.Loader"
     mappings = "stable_20"
-    // makeObfSourceJar = false
+    makeObfSourceJar = true
 }
 
 dependencies {
@@ -59,10 +59,8 @@ dependencies {
         exclude module: 'commons-io'
     }
     compile "com.github.biggiemedium:Alpine:1.9"
-
-    // Gradle does not work just use the jar file for simplicity
+    // Gradle does not work, just use the jar file for simplicity
     compile fileTree(dir: "Libs", include: "java-spotify-api-1.2.0-all.jar")
-
 }
 
 processResources {

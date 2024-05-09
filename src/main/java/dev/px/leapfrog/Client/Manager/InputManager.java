@@ -6,10 +6,11 @@ import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.NewGUI.FreeFlowGUI;
-import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
@@ -18,7 +19,6 @@ import org.lwjgl.input.Mouse;
 public class InputManager implements Listenable {
 
     public InputManager() {
-        LeapFrog.EVENT_BUS.post(this);
         MinecraftForge.EVENT_BUS.register(this);
         this.freeFlowGUI = new FreeFlowGUI();
         this.clickGUI = new ClickGUI();
@@ -27,6 +27,17 @@ public class InputManager implements Listenable {
     private Minecraft mc = Wrapper.getMC();
     private FreeFlowGUI freeFlowGUI;
     private ClickGUI clickGUI;
+
+    public static KeyBinding guiKey;
+    public static KeyBinding guiKey2;
+
+    public static void register() {
+        guiKey = new KeyBinding("HUD Mod Compact GUI Key", Keyboard.KEY_RSHIFT, "Hud Mod");
+        ClientRegistry.registerKeyBinding(guiKey);
+
+        guiKey = new KeyBinding("HUD Mod Full GUI Key", Keyboard.KEY_P, "Hud Mod");
+        ClientRegistry.registerKeyBinding(guiKey2);
+    }
 
 
     @SubscribeEvent

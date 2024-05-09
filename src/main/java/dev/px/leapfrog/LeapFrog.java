@@ -42,6 +42,7 @@ public class LeapFrog {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        InputManager.register();
         spotifyManager = new SpotifyManager();
     }
 
@@ -57,7 +58,7 @@ public class LeapFrog {
         capeManager = new CapeManager();
 
         // way down
-        inputManager = new InputManager();
+        inputManager = new InputManager(); // put this after everything bc it calls on ColorManager, Module Manager, Settings Manager, Element Manager
     }
 
     @EventHandler
