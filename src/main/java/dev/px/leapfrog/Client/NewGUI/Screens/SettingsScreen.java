@@ -10,4 +10,9 @@ public class SettingsScreen extends ScreenHandler {
         super("Settings", x, y, width, height, clickGUI, screenType, null);
     }
 
+    @Override
+    public void render(int mouseX, int mouseY) {
+
+    }
+
 }

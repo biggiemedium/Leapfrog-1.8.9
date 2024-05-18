@@ -18,6 +18,7 @@ public class MixinNetHandlerPlayClient {
     @ModifyArgs(method = "handleJoinGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkManager;sendPacket(Lnet/minecraft/network/Packet;)V"))
     public void setArgs(Args args) {
         if(LeapFrog.moduleManager.getModule(ClientSpoofer.class).isToggled()) {
+            LeapFrog.LOGGER.info("Handling login...");
             switch (LeapFrog.moduleManager.getModuleByClass(ClientSpoofer.class).type.getValue()) {
                 case Vanilla:
                 args.set(0, new C17PacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString("vanilla")));

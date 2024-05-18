@@ -12,8 +12,6 @@ import dev.px.leapfrog.LeapFrog;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-
-
 public class SpotifyManager {
 
     private SpotifyAPI API;

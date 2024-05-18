@@ -5,9 +5,8 @@ import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Animation.SimpleAnimation;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.Module.Setting;
-import dev.px.leapfrog.LeapFrog;
 
 import java.awt.*;
 import java.io.IOException;

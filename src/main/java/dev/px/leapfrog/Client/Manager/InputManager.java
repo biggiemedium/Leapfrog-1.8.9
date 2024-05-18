@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.Manager;
 
 import dev.px.leapfrog.API.Event.Game.KeyPressEvent;
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;

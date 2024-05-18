@@ -1,7 +1,7 @@
 package dev.px.leapfrog.Client.NewGUI.Screens.ModuleScreen.Impl;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.Module.Module;
 
 import java.awt.*;

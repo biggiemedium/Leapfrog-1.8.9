@@ -1,5 +1,6 @@
 package dev.px.leapfrog.API.Util.Render;
 
+import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -47,8 +48,9 @@ public class SplashScreen {
             GlStateManager.disableDepth();
             GlStateManager.enableTexture2D();
 
-            if (splash == null)
-                splash = new ResourceLocation("/assets/minecraft/Leapfrog/Images/SplashScreen.png");
+            if (splash == null) {
+                splash = new ResourceLocation("Leapfrog/Images/CreditSplash.png");
+            }
 
             mcTextureManager.bindTexture(splash);
 
@@ -63,7 +65,7 @@ public class SplashScreen {
 
             mc.updateDisplay();
         } catch (Exception ignored) {
-
+            LeapFrog.LOGGER.info(ignored.getMessage());
         }
     }
 

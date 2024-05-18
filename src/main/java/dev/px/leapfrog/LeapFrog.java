@@ -11,8 +11,13 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 @Mod(modid = LeapFrog.MODID, version = LeapFrog.VERSION)
 public class LeapFrog {
@@ -43,13 +48,13 @@ public class LeapFrog {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         InputManager.register();
+        FontUtil.init();
+        FontRenderer.init();
         spotifyManager = new SpotifyManager();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FontUtil.init();
-        FontRenderer.init();
         moduleManager = new ModuleManager();
         settingsManager = new SettingsManager(); // Settings manager before event processor
         eventProcessor = new EventProcessor();

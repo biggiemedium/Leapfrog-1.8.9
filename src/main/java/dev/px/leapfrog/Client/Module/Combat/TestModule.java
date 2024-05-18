@@ -20,6 +20,6 @@ public class TestModule extends Module {
 
     @Override
     public void onEnable() {
-
+        String s;
     }
 }

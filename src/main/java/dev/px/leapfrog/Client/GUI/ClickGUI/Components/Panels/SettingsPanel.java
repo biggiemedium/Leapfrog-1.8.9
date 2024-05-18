@@ -2,8 +2,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
-import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.PreferenceButtons.BooleanPreference;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.PreferenceButtons.PreferenceButton;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ClientSettingsScreen;

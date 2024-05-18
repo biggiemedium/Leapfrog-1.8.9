@@ -1,11 +1,10 @@
 package dev.px.leapfrog.Client.GUI.HUD;
 
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
-import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Font.MinecraftFontRenderer;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;

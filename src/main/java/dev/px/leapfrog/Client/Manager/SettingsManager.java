@@ -10,6 +10,8 @@ public class SettingsManager {
 
     // Preferences static
     public Setting<Boolean> BACKGROUND;
+    public Setting<Boolean> CHATANIMATIONS;
+    public Setting<Boolean> CHATCLEAR;
     public Setting<Boolean> NCPCluster;
     public Setting<Boolean> ESPCluster;
     public Setting<Boolean> FRIENDS;
@@ -21,6 +23,8 @@ public class SettingsManager {
 
         BACKGROUND = Add(new Setting("Element Background", true))
                 .setDescription("Element Background on HUD Elements");
+        CHATANIMATIONS = Add(new Setting("Chat Animation", true)).setDescription("Chat Animations");
+        CHATCLEAR = Add(new Setting("Clear Chat", true)).setDescription("No text background");
         NCPCluster = Add(new Setting<>("NCP Cluster", true)
                 .setDescription("Doesnt Render NCP on nametags/ESP"));
         ESPCluster = Add(new Setting<>("ESP Cluster", true)

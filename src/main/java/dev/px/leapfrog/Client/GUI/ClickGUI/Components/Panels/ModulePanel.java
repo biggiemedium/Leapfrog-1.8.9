@@ -2,7 +2,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.ModuleButton;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.LeapFrog;

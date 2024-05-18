@@ -1,6 +1,7 @@
-package dev.px.leapfrog.API.Util.Render;
+package dev.px.leapfrog.API.Util.Render.Shaders;
 
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
+import dev.px.leapfrog.API.Util.Render.ShaderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;

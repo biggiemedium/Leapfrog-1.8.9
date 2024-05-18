@@ -14,6 +14,7 @@ public class ChatUtil {
     public static void sendMessageGlobal(String message) {
         mc.thePlayer.sendChatMessage(message);
     }
+
     public static void sendClientSideMessage(String message) {
         if(mc.thePlayer != null && mc.theWorld != null) {
             mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(prefix + message));

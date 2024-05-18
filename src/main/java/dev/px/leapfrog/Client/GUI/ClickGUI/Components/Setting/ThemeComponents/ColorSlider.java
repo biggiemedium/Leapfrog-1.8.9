@@ -3,12 +3,10 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting.ThemeComponents;
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Math.MathUtil;
 import dev.px.leapfrog.API.Util.Render.Animation.SimpleAnimation;
-import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
-import net.minecraft.util.MathHelper;
 
 import java.awt.*;
 import java.io.IOException;

@@ -6,13 +6,12 @@ import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels.ModulePanel;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting.BooleanButton;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting.SettingButton;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
-import dev.px.leapfrog.LeapFrog;
 
 import java.awt.*;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels.ModulePanel;
 

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -218,6 +219,7 @@ public class RenderUtil {
     }
 
     public static void setIcon(String path) {
+        if (net.minecraft.util.Util.getOSType() != Util.EnumOS.WINDOWS) return;  // Redundant check
         InputStream inputstream = RenderUtil.class.getResourceAsStream(path);
         try {
             if (inputstream != null) {

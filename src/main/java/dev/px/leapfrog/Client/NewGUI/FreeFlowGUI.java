@@ -6,7 +6,7 @@ import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.GLUtils;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.NewGUI.Screens.ModuleScreen.ModuleScreen;
 import dev.px.leapfrog.Client.NewGUI.Screens.SettingsScreen;
 import dev.px.leapfrog.Client.NewGUI.Screens.ThemeScreen;

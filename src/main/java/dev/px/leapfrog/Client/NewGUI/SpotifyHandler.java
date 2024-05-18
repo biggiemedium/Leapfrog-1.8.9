@@ -6,7 +6,7 @@ import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.Manager.SpotifyManager;
 import dev.px.leapfrog.LeapFrog;
 
@@ -32,42 +32,52 @@ public class SpotifyHandler implements Component {
         this.color = color;
     }
 
+    private void renderNull() {
+        FontRenderer.sans18_bold.drawString("--/--", (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()), new Color(255, 255, 255).getRGB());
+        FontRenderer.sans12.drawString("--/--", (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
+        FontRenderer.sans12.drawString("--", getX() + 40 + ((getWidth()) - 80) / 2 + 130, getY() + getHeight() - 10, -1);
+        FontRenderer.sans12.drawString("--", getX() + 40 + ((getWidth()) - 80) / 2 - 10, getY() + getHeight() - 10, -1);
+    }
+
     @Override
     public void render(int mouseX, int mouseY) {
         //stack.pushScissor(getX(), getY(), getWidth(), getHeight());
         RoundedShader.drawRound(getX(), getY(), getWidth(), getHeight(), 4, color);
 
-        if(LeapFrog.spotifyManager.getAPI().isPlaying()) {
-            //RenderUtil.drawBlurredShadow((float) (getX() + (80 / 2) - (FontUtil.icon24.getStringWidth((LeapFrog.spotifyManager.getAPI().isPlaying() ? "B" : "C")) / 2)) + 2, getY() + 12, 7, 7, 14, new Color(255, 255, 255, 100));
-            stack2.pushScissor(getX() + 80, getY(), (int) (((getWidth()) - 120) / 2 - (20 + FontRenderer.sans12.getStringWidth(SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition())))), getHeight());
-            FontRenderer.sans18_bold.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getName(), (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()),   new Color(255, 255, 255).getRGB());
-            FontRenderer.sans12.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getArtist(), (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
-            stack2.popScissor();
-            FontRenderer.sans12.drawString("" + SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getTrack().getLength()), getX() + 40 + ((getWidth()) - 80) / 2 + 130, getY() + getHeight() - 10, -1);
-            FontRenderer.sans12.drawString("" + SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition()),
-                    getX() + 40 + ((getWidth()) - 80) / 2 - (10 + FontRenderer.sans12.getStringWidth(SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition()))),
-                    getY() + getHeight() - 10, -1);
-        } else {
-            FontRenderer.sans18_bold.drawString("--/--", (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()), new Color(255, 255, 255).getRGB());
-            FontRenderer.sans12.drawString("--/--", (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
-            FontRenderer.sans12.drawString("--", getX() + 40 + ((getWidth()) - 80) / 2 + 130, getY() + getHeight() - 10, -1);
-            FontRenderer.sans12.drawString("--", getX() + 40 + ((getWidth()) - 80) / 2 - 10, getY() + getHeight() - 10, -1);
+        if(LeapFrog.spotifyManager.getAPI().isInitialized() && LeapFrog.spotifyManager.getAPI().isConnected()) {
+            if(LeapFrog.spotifyManager.getAPI().hasPosition()) {
+                try {
+                    stack2.pushScissor(getX() + 80, getY(), (int) (((getWidth()) - 120) / 2 - (20 + FontRenderer.sans12.getStringWidth(SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition())))), getHeight());
+                    FontRenderer.sans18_bold.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getName(), (getX() + 80) + 5, getY() + (3 + FontRenderer.sans18_bold.getHeight()),   new Color(255, 255, 255).getRGB());
+                    FontRenderer.sans12.drawString(LeapFrog.spotifyManager.getAPI().getTrack().getArtist(), (getX() + 80) + 5, getY() + getHeight() - (2 + FontRenderer.sans18.getHeight()), new Color(162, 161, 161, 240).getRGB());
+                    stack2.popScissor();
+                    FontRenderer.sans12.drawString("" + SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getTrack().getLength()), getX() + 40 + ((getWidth()) - 80) / 2 + 130, getY() + getHeight() - 10, -1);
+                    FontRenderer.sans12.drawString("" + SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition()),
+                            getX() + 40 + ((getWidth()) - 80) / 2 - (10 + FontRenderer.sans12.getStringWidth(SpotifyManager.formatDuration(LeapFrog.spotifyManager.getAPI().getPosition()))),
+                            getY() + getHeight() - 10, -1);
+                } catch (IllegalStateException ignored) {
+                    ignored.printStackTrace();
+                }
+            } else {
+                renderNull();
+            }
         }
-
 
         RoundedShader.drawRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, 120, 2, 1, color.darker());
 
-        double completionPercentage = (double) LeapFrog.spotifyManager.getAPI().getPosition() / LeapFrog.spotifyManager.getAPI().getTrack().getLength();
-        int progressBarWidth = (int) (completionPercentage * 120);
+        if(LeapFrog.spotifyManager.getAPI().hasPosition()) {
+            double completionPercentage = (double) LeapFrog.spotifyManager.getAPI().getPosition() / LeapFrog.spotifyManager.getAPI().getTrack().getLength();
+            int progressBarWidth = (int) (completionPercentage * 120);
 
-        RenderUtil.drawBlurredShadow(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 5, ColorUtil.interpolateColorC(
-                ColorUtil.getClientColor(0, 190), ColorUtil.getClientColor(180, 190), 0.5f));
+            RenderUtil.drawBlurredShadow(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 5, ColorUtil.interpolateColorC(
+                    ColorUtil.getClientColor(0, 190), ColorUtil.getClientColor(180, 190), 0.5f));
 
-        RoundedShader.drawGradientRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 1,
-                ColorUtil.getClientColor(0, 190),
-                ColorUtil.getClientColor(90, 190),
-                ColorUtil.getClientColor(180, 190),
-                ColorUtil.getClientColor(270, 190));
+            RoundedShader.drawGradientRound(getX() + 40 + ((getWidth() - 80) / 2), getY() + getHeight() - 10, progressBarWidth, 2, 1,
+                    ColorUtil.getClientColor(0, 190),
+                    ColorUtil.getClientColor(90, 190),
+                    ColorUtil.getClientColor(180, 190),
+                    ColorUtil.getClientColor(270, 190));
+        }
 
         stack.pushScissor(getX() + 40 + ((getWidth()) - 80) / 2, getY(), 120, getHeight());
         FontRenderer.sans20_bold.drawString(
