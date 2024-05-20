@@ -1,6 +1,9 @@
 package dev.px.leapfrog.ASM.GUI.Chat;
 
 import dev.px.leapfrog.API.Event.Game.ChatReceiveEvent;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
+import dev.px.leapfrog.Client.Module.Module;
+import dev.px.leapfrog.Client.Module.Render.ChatModification;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
@@ -22,7 +25,6 @@ import java.util.List;
 
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat extends Gui {
-
     @Shadow
     @Final
     private Minecraft mc;
@@ -42,11 +44,9 @@ public abstract class MixinGuiNewChat extends Gui {
     private float animationPercent;
     private int lineBeingDrawn;
 
-    private int updateSpeed = 5; // change this down the line once impl integer client settings
-
     private void updatePercentage(long diff) {
         if (percentComplete < 1) {
-            percentComplete += (5 / 1000) * (float) diff;
+            percentComplete += (4 / 1000) * (float) diff;
         }
         percentComplete = clamp(percentComplete, 0, 1);
     }
@@ -72,7 +72,7 @@ public abstract class MixinGuiNewChat extends Gui {
     @Inject(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;pushMatrix()V", ordinal = 0, shift = At.Shift.AFTER))
     private void translate(CallbackInfo ci) {
         float y = 0;
-        if(LeapFrog.settingsManager.CHATANIMATIONS.getValue() && !this.isScrolled) {
+        if(LeapFrog.moduleManager.isModuleToggled(ChatModification.class) && LeapFrog.moduleManager.getModuleByClass(ChatModification.class).animations.getValue() && !this.isScrolled) {
             y += (9 - 9 * animationPercent) * this.getChatScale();
         }
         GlStateManager.translate(0, y, 0);
@@ -91,7 +91,7 @@ public abstract class MixinGuiNewChat extends Gui {
 
     @ModifyArg(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;FFI)I"), index = 3)
     private int modifyTextOpacity(int original) {
-        if(LeapFrog.settingsManager.CHATANIMATIONS.getValue() && lineBeingDrawn <= newLines) {
+        if(LeapFrog.moduleManager.isModuleToggled(ChatModification.class) && LeapFrog.moduleManager.getModuleByClass(ChatModification.class).animations.getValue() && lineBeingDrawn <= newLines) {
             int opacity = (original >> 24) & 0xFF;
             opacity *= animationPercent;
             return (original & ~(0xFF << 24)) | (opacity << 24);
@@ -114,7 +114,7 @@ public abstract class MixinGuiNewChat extends Gui {
 
     @Redirect(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiNewChat;drawRect(IIIII)V", ordinal = 0))
     private void overrideChatBackgroundColour(int left, int top, int right, int bottom, int color) {
-            if(LeapFrog.settingsManager.CHATCLEAR.getValue()) {
+            if(LeapFrog.moduleManager.getModuleByClass(ChatModification.class).chatMode.getValue() == ChatModification.ChatLookMode.Clear) {
                 Gui.drawRect(left, top, right, bottom, new Color(0, 0, 0, 0).getRGB());
             } else {
                 Gui.drawRect(left, top, right, bottom, color);

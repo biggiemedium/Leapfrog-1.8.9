@@ -1,14 +1,17 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI;
 
+import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Render.*;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
+import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ClientSettingsScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ColorsScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ModuleScreen;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.Screen;
+import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -47,7 +50,12 @@ public class ClickGUI extends GuiScreen {
         this.dragX = 0;
         this.dragY = 0;
         this.screens = new ArrayList<>();
-        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, this));
+
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Combat, this));
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Misc, this));
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Movement, this));
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Visual, this));
+
         this.screens.add(new ClientSettingsScreen(x + 80, y, width - 80, height, this));
         this.screens.add(new ColorsScreen(x + 80, y, width - 80, height, this));
         this.currentScreen = screens.get(0);
@@ -109,12 +117,22 @@ public class ClickGUI extends GuiScreen {
                 RoundedShader.drawGradientCornerRL(x + 5, getY() + 30 + (offsetY), 70, 15, 4,
                         new Color(LeapFrog.colorManager.getClientColor().getMainColor().getRed(), LeapFrog.colorManager.getClientColor().getMainColor().getGreen(), LeapFrog.colorManager.getClientColor().getMainColor().getBlue(), 190),
                         new Color(LeapFrog.colorManager.getClientColor().getAlternativeColor().getRed(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getGreen(), LeapFrog.colorManager.getClientColor().getAlternativeColor().getBlue(), 190));
+
             }
 
             FontUtil.regular_bold20.drawString(s.getName(), x + 15, y + 30 + 3 + offsetY, -1);
 
             offsetY += 18;
         }
+
+        //RoundedShader.drawRound(getX() + 5, getY() + (getHeight() - 15), 70, 15, 4, new Color(200, 100, 100));
+        RoundedShader.drawGradientRound(getX() + 5, getY() + (getHeight() - 25), 70, 15, 4,
+                ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[0], 120),
+                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[1], 120),
+                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[2], 120),
+                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[3], 120)
+        );
+        FontUtil.regular_bold20.drawString("HUD", getX() + (70 / 2) - (FontUtil.regular_bold20.getStringWidth("HUD") / 2), getY() + (getHeight() - 18) - (FontUtil.regular_bold20.getHeight() / 2), -1);
         GLUtils.stopScale();
     }
 
@@ -128,6 +146,10 @@ public class ClickGUI extends GuiScreen {
             }
         }
 
+        if(isMouseOver(getX() + 15, getY() + (getHeight() - 25), 70, 15, mouseX, mouseY)) {
+            mc.displayGuiScreen(new GuiHUDEditor());
+        }
+
         int offsetY = 0;
         for(Screen s : screens) {
             if(isMouseOver(x + 5, y + 30 + offsetY, 70, 15, mouseX, mouseY)) {
@@ -136,9 +158,10 @@ public class ClickGUI extends GuiScreen {
                     this.moveAnimation.setState(true);
                 }
             }
-            currentScreen.onClick(mouseX, mouseY, mouseButton);
             offsetY += 18;
         }
+        currentScreen.onClick(mouseX, mouseY, mouseButton);
+
     }
 
     @Override
@@ -146,8 +169,9 @@ public class ClickGUI extends GuiScreen {
         this.dragging = false;
 
         for(Screen s : screens) {
-            currentScreen.onRelease(mouseX, mouseY, state);
+
         }
+        currentScreen.onRelease(mouseX, mouseY, state);
     }
 
     private boolean isMouseOver(float x, float y, float width, float height, int mouseX, int mouseY) {
@@ -159,7 +183,7 @@ public class ClickGUI extends GuiScreen {
         if(keyCode == Keyboard.KEY_ESCAPE) {
             this.close = true;
         }
-
+        currentScreen.onType(typedChar, keyCode);
     }
 
     public int getX() {

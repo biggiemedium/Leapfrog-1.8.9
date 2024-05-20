@@ -3,7 +3,9 @@ package dev.px.leapfrog;
 import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.Client.Manager.*;
+import dev.px.leapfrog.Client.Manager.Structures.*;
+import dev.px.leapfrog.Client.Manager.Other.CapeManager;
+import dev.px.leapfrog.Client.Manager.Other.InputManager;
 import me.zero.alpine.fork.bus.EventBus;
 import me.zero.alpine.fork.bus.EventManager;
 import net.minecraftforge.fml.common.Mod;
@@ -11,22 +13,19 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 
 @Mod(modid = LeapFrog.MODID, version = LeapFrog.VERSION)
 public class LeapFrog {
 
     /*
-    - GUI - Fix scrollbar (Module and client settings), Add hud editor
     - Notifcation system
     - HUD (Draggable HUD, Grid system)
-    -
+    - Improve HUD Editor screen
+    - Fix Main Menu
+    - Rotation, anticheat, speed, position manager
+    - Fix Keybinding
      */
 
     public static final String MODID = "leapfrog";
@@ -47,14 +46,13 @@ public class LeapFrog {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        InputManager.register();
-        FontUtil.init();
-        FontRenderer.init();
         spotifyManager = new SpotifyManager();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        FontUtil.init();
+        FontRenderer.init();
         moduleManager = new ModuleManager();
         settingsManager = new SettingsManager(); // Settings manager before event processor
         eventProcessor = new EventProcessor();

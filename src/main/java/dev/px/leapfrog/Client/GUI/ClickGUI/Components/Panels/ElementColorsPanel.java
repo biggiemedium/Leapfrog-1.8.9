@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels;
 
 import dev.px.leapfrog.API.Util.Listener.Component;
+import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
@@ -19,7 +20,7 @@ public class ElementColorsPanel implements Component {
     private double scrollX = 0;
     private ColorsScreen screen;
 
-    private ColorSlider<Float> opacity;
+    private ColorSlider<Integer> opacity;
     private ColorSlider<Integer> radius;
 
     public ElementColorsPanel(int x, int y, int width, int height, Color color, ColorsScreen screen) {
@@ -41,6 +42,7 @@ public class ElementColorsPanel implements Component {
 
         //RoundedShader.drawRound(getX() + getWidth() - 60, getY() + (getHeight() / 2), 55, 30, 4, new Color(30, 30, 30));
         FontUtil.regular_bold18.drawString("HUD Colors", getX() + 5, getY() + 4, -1);
+        FontUtil.regular_bold18.drawString("Adjustments", getX() + (getWidth() - (FontUtil.regular_bold18.getStringWidth("Adjustments") + 5)) - 10, getY() + 4, -1);
 
         // Sliders
         opacity.setX(getX() + getWidth() - 90);
@@ -50,6 +52,12 @@ public class ElementColorsPanel implements Component {
         radius.setX(getX() + getWidth() - 90);
         radius.setY(getY() + getHeight() - (opacity.getHeight() * 4 + 8));
         radius.render(mouseX, mouseY);
+
+        RoundedShader.drawGradientRound(getX() + 5, getY() + 20, 45, 45, 4,
+                ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[0], LeapFrog.colorManager.getOpacity().getValue()),
+                ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[1], LeapFrog.colorManager.getOpacity().getValue()),
+                ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[2], LeapFrog.colorManager.getOpacity().getValue()),
+                ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[3], LeapFrog.colorManager.getOpacity().getValue()));
 
         stack.popScissor();
     }

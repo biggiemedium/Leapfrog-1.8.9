@@ -5,9 +5,23 @@ import me.zero.alpine.fork.listener.Listenable;
 
 public class Event extends Cancellable implements Listenable {
 
-    public Event() {
+    private Stage stage;
 
+    public Event() {
+        this.stage = Stage.Pre;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public enum Stage {
+        Pre,
+        Post
+    }
 
 }

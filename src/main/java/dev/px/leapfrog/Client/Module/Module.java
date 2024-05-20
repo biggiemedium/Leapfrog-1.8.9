@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.Module;
 
+import dev.px.leapfrog.API.Module.Bind;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
@@ -22,6 +23,7 @@ public class Module implements Listenable {
     private Type type;
 
     public ArrayList<Setting<?>> settings = new ArrayList<>();
+    public Setting<Bind> keybind = create(new Setting<>("Keybind", new Bind(-1)));
     protected Minecraft mc = Minecraft.getMinecraft();
 
     public Module() {

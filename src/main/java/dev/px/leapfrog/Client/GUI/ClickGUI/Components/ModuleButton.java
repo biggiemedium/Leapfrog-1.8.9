@@ -1,21 +1,23 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Components;
 
+import dev.px.leapfrog.API.Module.Bind;
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels.ModulePanel;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting.BooleanButton;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting.SettingButton;
+import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting.*;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ModuleButton implements Component {
 
@@ -54,9 +56,29 @@ public class ModuleButton implements Component {
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
                 }
+                if(s.getValue() instanceof Number) {
+                    SliderButton b = new SliderButton(this, getX(), getY() + offsetY, s);
+                    this.settingButtons.add(b);
+                    offsetY += b.getHeight();
+                }
+                if(s.getValue() instanceof Enum) {
+                    EnumButton b = new EnumButton(this, getX(), getY() + offsetY, s);
+                    this.settingButtons.add(b);
+                    offsetY += b.getHeight();
+                }
+
+
+                // Keybind
+                if(s.getValue() instanceof Bind) {
+                    KeybindButton b = new KeybindButton(this, getX(), getY() + offsetY, s);
+                    this.settingButtons.add(b);
+                    offsetY += b.getHeight();
+                }
             }
         }
-
+        DrawnButton b = new DrawnButton(this, getX(), getY() + offsetY, new Setting<>("Drawn", new AtomicBoolean(true)));
+        this.settingButtons.add(b);
+        offsetY += b.getHeight();
     }
 
     public void initGUI() {
@@ -160,12 +182,16 @@ public class ModuleButton implements Component {
 
     @Override
     public void onRelease(int mouseX, int mouseY, int button) {
-
+        for(SettingButton b : settingButtons) {
+            b.mouseReleased(mouseX, mouseY);
+        }
     }
 
     @Override
     public void onType(char typedChar, int keyCode) throws IOException {
-
+        for(SettingButton b : settingButtons) {
+            b.keyTyped(typedChar, keyCode);
+        }
     }
 
     private boolean isMouseOver(float x, float y, float width, float height, int mouseX, int mouseY) {

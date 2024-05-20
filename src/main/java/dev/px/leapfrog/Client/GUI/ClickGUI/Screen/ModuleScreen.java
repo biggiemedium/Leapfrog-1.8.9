@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
+import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
@@ -11,10 +12,12 @@ import java.io.IOException;
 public class ModuleScreen extends Screen {
 
     private ModulePanel panel;
+    private Type type;
 
-    public ModuleScreen(int x, int y, int width, int height, ClickGUI clickGUI) {
-        super("Mods", x, y, width, height, clickGUI);
-        this.panel = new ModulePanel(getX() + 8, getY() + 36, getWidth() - 16, getHeight() - 45);
+    public ModuleScreen(int x, int y, int width, int height, Type type, ClickGUI clickGUI) {
+        super(type.name(), x, y, width, height, clickGUI);
+        this.type = type;
+        this.panel = new ModulePanel(getX() + 8, getY() + 36, getWidth() - 16, getHeight() - 45, type);
     }
 
     @Override
@@ -27,7 +30,7 @@ public class ModuleScreen extends Screen {
 
         // Top bar
         RoundedShader.drawRound(getX() + 8, getY() + 8, getWidth() - 16, 22, 2, new Color(26, 26, 26));
-        FontUtil.regular_bold26.drawString("Modules", getX() + 12, getY() + 13, -1);
+        FontUtil.regular_bold26.drawString(type.name(), getX() + 12, getY() + 13, -1);
         froggy.renderT(getX() + getWidth() - 38, getY() + 4, 30, 30);
 
         // Module buttons retigga
@@ -45,5 +48,10 @@ public class ModuleScreen extends Screen {
     @Override
     public void onRelease(int mouseX, int mouseY, int button) {
         panel.onRelease(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void onType(char typedChar, int keyCode) throws IOException {
+        panel.onType(typedChar, keyCode);
     }
 }

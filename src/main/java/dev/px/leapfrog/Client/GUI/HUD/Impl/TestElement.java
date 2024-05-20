@@ -14,8 +14,8 @@ public class TestElement extends Element {
 
     @Override
     public void onRender(Render2DEvent event) {
+        this.drawBackground(getX(), getY(), getWidth(), getHeight());
         font.drawString("Balls", getX(), getY(), -1);
     }
-
 
 }

@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
+import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
@@ -51,7 +52,7 @@ public class BooleanButton extends SettingButton<Boolean> {
         if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
             RenderUtil.drawBlurredShadow((getX() + getWidth() - 24) + (switchWidth * (float) toggleAnimation.getAnimationFactor()), getY() + 8f, 4f, 4f, 12, new Color(255, 255, 255, 220));
         }
-        FontUtil.regular16.drawString(setting.getName(), getX() + 5, getY() + (getHeight() / 2 - 3), -1);
+        FontRenderer.sans16_bold.drawString(setting.getName(), getX() + 5, getY() + (getHeight() / 2 - 3), -1);
     }
 
     @Override

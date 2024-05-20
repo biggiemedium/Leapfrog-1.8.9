@@ -1,6 +1,8 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels;
 
+import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Listener.Component;
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.ModuleButton;
@@ -16,19 +18,25 @@ public class ModulePanel implements Component {
 
     private int x, y, width, height;
     private ArrayList<ModuleButton> buttons;
+    private ModuleButton current = null;
     private int scrollY = 0;
     private float featureOffset;
     private RenderUtil.ScissorStack stack = new RenderUtil.ScissorStack();
+    private Type type;
 
-    public ModulePanel(int x, int y, int width, int height) {
+    public ModulePanel(int x, int y, int width, int height, Type type) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.buttons = new ArrayList<>();
+        this.type = type;
 
+        buttons.clear();
         for(Module m : LeapFrog.moduleManager.getModules()) {
-            buttons.add(new ModuleButton(m, x + 8, y, width - 8, new Color(35, 35, 35), this));
+            if(m.getType() == type) {
+                buttons.add(new ModuleButton(m, x + 8, y, width - 8, new Color(35, 35, 35), this));
+            }
         }
     }
 
@@ -76,7 +84,9 @@ public class ModulePanel implements Component {
     @Override
     public void onClick(int mouseX, int mouseY, int button) throws IOException {
         for(ModuleButton b : buttons) {
-            b.onClick(mouseX, mouseY, button);
+            if(b.getModule().getType() == this.type) {
+                b.onClick(mouseX, mouseY, button);
+            }
         }
     }
 

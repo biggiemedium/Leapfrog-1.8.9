@@ -6,10 +6,17 @@
   "mixins": [
     "Game.MixinMinecraft",
     "Listeners.IMixinRenderManager",
+    "Listeners.IMixinMinecraft",
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntityPlayer",
     "Entity.MixinEntityPlayerSP",
     "GUI.Chat.MixinGuiNewChat",
-    "GUI.Chat.MixinGuiChat"
+    "GUI.Chat.MixinGuiChat",
+    "GUI.Menu.MixinSplashScreen",
+    "GUI.Game.MixinGuiInGame",
+    "Network.MixinNetHandlerPlayClient",
+    "Network.MixinNetworkManager",
+    "Render.MixinEntityRenderer",
+    "Render.MixinRenderEntityItem"
   ]
 }

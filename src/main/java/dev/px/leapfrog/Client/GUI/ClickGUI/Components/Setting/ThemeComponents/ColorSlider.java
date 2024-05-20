@@ -70,7 +70,7 @@ public class ColorSlider<T extends Number> implements Component {
         RoundedShader.drawGradientCornerRL((float) getX() + 1, (float) getY(), (float) (renderWidth2) + 2, 4, 2, LeapFrog.colorManager.getClientColor().getMainColor(), LeapFrog.colorManager.getClientColor().getAlternativeColor());
         RoundedShader.drawRound((float) getX() + slide.getValue(), (float) getY() - 1.5f, 7, 7, 3.5f, new Color(200, 200, 200));
 
-        FontUtil.regular12.drawString(setting.getName() + ": " + (setting.getValue() instanceof Integer ? Math.round(setting.getValue().doubleValue()) : MathUtil.roundToPlace(setting.getValue().doubleValue(), 1)), (int) getX() + 5,(int) getY() + 8, -1);
+        FontUtil.regular16.drawString(setting.getName() + ": " + (setting.getValue() instanceof Integer ? Math.round(setting.getValue().doubleValue()) : MathUtil.roundToPlace(setting.getValue().doubleValue(), 1)), (int) getX() + 5,(int) getY() + 8, -1);
     }
 
 

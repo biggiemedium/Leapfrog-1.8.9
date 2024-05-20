@@ -26,13 +26,14 @@ import java.io.IOException;
 public class CustomMainMenu extends GuiScreen {
 
     private GLSLSandboxShader backgroundShader;
-    private ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
     private MenuButton modButton;
     private long time = -1;
 
     public CustomMainMenu() {
         try {
-            this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/background.fsh");
+            //this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/background.fsh");
+            this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/wave.fsh");
+
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load background shader", e);
         }
@@ -42,6 +43,11 @@ public class CustomMainMenu extends GuiScreen {
     public void initGui() {
         time = System.currentTimeMillis();
         int y = this.height / 4 + 55;
+
+        ScaledResolution sr = new ScaledResolution(this.mc);
+        this.width = sr.getScaledWidth();
+        this.height = sr.getScaledHeight();
+
         this.buttonList.clear();
         this.buttonList.add(new MenuButton(0, this.width / 2 - 100, y, I18n.format("menu.singleplayer")));
         this.buttonList.add(new MenuButton(1, this.width / 2 - 100, y + 26 * 1, I18n.format("menu.multiplayer")));
@@ -52,8 +58,10 @@ public class CustomMainMenu extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        int y = this.height / 4 + 55;
+        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
         GlStateManager.disableCull();
-        this.backgroundShader.useShader(this.width*2, this.height*2, mouseX*2, mouseY*2, (System.currentTimeMillis() - time) / 1000f);
+        this.backgroundShader.useShader((int) (sr.getScaledWidth() * 2.0f), (int) (sr.getScaledHeight() * 2.0f), (float) mouseX, (float) mouseY, (float) (System.currentTimeMillis() - time) / 1000.0F);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glVertex2f(-1f, -1f);
         GL11.glVertex2f(-1f, 1f);
@@ -62,6 +70,7 @@ public class CustomMainMenu extends GuiScreen {
         GL11.glEnd();
         GL20.glUseProgram(0);
         super.drawScreen(mouseX, mouseY, partialTicks);
+        //FontRenderer.sans40_bold.drawString("LeapFrog", this.width / 2 - FontRenderer.sans40_bold.getStringWidth("LeapFrog"), y - FontRenderer.sans40_bold.getHeight(), -1);
     }
 
     @Override

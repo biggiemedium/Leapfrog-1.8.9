@@ -2,6 +2,7 @@ package dev.px.leapfrog.Client.GUI.HUD;
 
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
+import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Font.MinecraftFontRenderer;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
@@ -29,7 +30,7 @@ public class Element {
 
     private ArrayList<Setting<?>> settings = new ArrayList<>();
     protected Minecraft mc = Wrapper.getMC();
-    protected MinecraftFontRenderer font = FontUtil.regular_bold18;
+    protected MinecraftFontRenderer font = FontRenderer.sans20_bold;
 
     public Element(int x, int y, int width, int height) {
         this.name = getElement().name();
@@ -49,8 +50,8 @@ public class Element {
         this.description = getElement().description();
         this.x = x;
         this.y = y;
-        this.width = (float) font.getStringWidth(getElement().name());
-        this.height = (float) font.getHeight();
+        this.width = (float) font.getStringWidth(getElement().name()) + 3;
+        this.height = (float) font.getHeight() + 3;
         this.visible = getElement().visible();
         this.scale = 1.0f;
         this.dragging = false;
@@ -62,9 +63,7 @@ public class Element {
     }
 
     public void onRender(Render2DEvent event) {
-        if(LeapFrog.settingsManager.BACKGROUND.getValue()) {
-            this.drawBackground(getX(), getY(), getWidth(), getHeight());
-        }
+
     }
 
     public String renderDummy(Render2DEvent event) {
@@ -111,7 +110,7 @@ public class Element {
             }
         }
 
-        if(button == 2 || button == 1) {
+        if(button == 1) {
             if(isHovered(mouseX, mouseY)) {
                 if(mc.currentScreen != null) {
                     this.visible = !this.visible;
@@ -122,14 +121,15 @@ public class Element {
 
     public void drawBackground(float x, float y, float width, float height) {
         int radius = LeapFrog.colorManager.getRadius().getValue();
-        int opacity = (int) LeapFrog.colorManager.getOpacity().getValue().doubleValue() * 255;
+        int opacity = LeapFrog.colorManager.getOpacity().getValue();
 
-        switch (LeapFrog.colorManager.getCurrentMode()) {
-            case Client:
-                RoundedShader.drawGradientRound(x, y, width, height, radius, ColorUtil.getClientColor(0, (int) opacity), ColorUtil.getClientColor(90, (int) opacity), ColorUtil.getClientColor(180, (int) opacity), ColorUtil.getClientColor(270, (int) opacity));
-                break;
+        if(LeapFrog.settingsManager.BACKGROUND.getValue()) {
+            RoundedShader.drawGradientRound(x, y, width, height, radius,
+                    ColorUtil.getClientColor(0, opacity),
+                    ColorUtil.getClientColor(90, opacity),
+                    ColorUtil.getClientColor(180, opacity),
+                    ColorUtil.getClientColor(270, opacity));
         }
-
     }
 
     public void mouseRelease(int mouseX, int mouseY, int state) {

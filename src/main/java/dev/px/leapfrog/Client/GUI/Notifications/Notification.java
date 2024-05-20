@@ -11,12 +11,15 @@ public class Notification {
     private TimerUtil timer;
     private NotificationType type;
 
-    public Notification(String title, String message, NotificationType type, float time) {
+    public Notification(String title, String message, NotificationType type, int time) {
         this.title = title;
         this.message = message;
         this.type = type;
         this.timer = new TimerUtil();
         this.time = (float) (time * 1000);
+    }
+
+    public void update() {
     }
 
     public void render() {
