@@ -1,12 +1,9 @@
 package dev.px.leapfrog.API.Util;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import dev.px.leapfrog.API.Event.Client.SettingUpdateEvent;
 import dev.px.leapfrog.API.Event.Game.KeyPressEvent;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
-import dev.px.leapfrog.API.Event.Render.RenderScoreboardEvent;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
@@ -15,20 +12,15 @@ import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listenable;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
-
-import java.util.Collection;
-import java.util.List;
 
 public class EventProcessor implements Listenable {
 
@@ -91,4 +83,34 @@ public class EventProcessor implements Listenable {
         LeapFrog.EVENT_BUS.post(render3dEvent);
         mc.mcProfiler.endSection();
     }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Unload event) {
+        LeapFrog.EVENT_BUS.post(event);
+    }
+
+    @SubscribeEvent
+    public void renderPlayerPre(RenderPlayerEvent.Pre event) {
+        LeapFrog.EVENT_BUS.post(event);
+    }
+
+    @SubscribeEvent
+    public void renderTickEvent(TickEvent.RenderTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        LeapFrog.EVENT_BUS.post(event);
+    }
+
+    @EventHandler
+    private Listener<SettingUpdateEvent> settingUpdateEventListener = new Listener<>(event -> {
+        if(event.getSetting() == LeapFrog.settingsManager.RPC) {
+            if(LeapFrog.settingsManager.RPC.getValue()) {
+                LeapFrog.discordManager.start();
+            } else {
+                LeapFrog.discordManager.shutDown();
+            }
+        }
+    });
+
 }

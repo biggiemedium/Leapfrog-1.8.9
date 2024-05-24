@@ -17,4 +17,9 @@ public class NoShake extends Module {
     private Listener<CameraShakeEvent> shakeListener = new Listener<>(event -> {
         event.cancel();
     });
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+    }
 }

@@ -30,7 +30,9 @@ public class ModuleManager {
         Add(new FullBright());
         Add(new HotbarModification());
         Add(new ItemPhysics());
+        Add(new NameTags());
         Add(new NoShake());
+        Add(new ThanosSnapEffect());
     }
 
     private void Add(Module module) {

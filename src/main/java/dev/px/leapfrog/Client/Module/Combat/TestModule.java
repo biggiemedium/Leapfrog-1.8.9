@@ -39,6 +39,11 @@ public class TestModule extends Module {
         }
     });
 
+    @Override
+    public void onDisable() {
+        ((IMixinMinecraft) mc).timer().timerSpeed = 1.0f;
+    }
+
     private void AAC() {
 
     }

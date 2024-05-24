@@ -2,6 +2,7 @@ package dev.px.leapfrog.API.Util.Render;
 
 import dev.px.leapfrog.API.Util.Render.Blur.GaussianFilter;
 import dev.px.leapfrog.API.Wrapper;
+import dev.px.leapfrog.ASM.Listeners.IMixinRenderManager;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
@@ -29,6 +31,13 @@ public class RenderUtil {
 
     private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
     private static Minecraft mc = Wrapper.getMC();
+
+    public static double[] renderInterpolations(EntityPlayer player, float ticks) {
+        double pX = player.lastTickPosX + (player.posX - player.lastTickPosX) * ticks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosX();
+        double pY = player.lastTickPosY + (player.posY - player.lastTickPosY) * ticks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosY();
+        double pZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * ticks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosZ();
+        return new double[] { pX, pY, pZ };
+    }
 
     public static void drawRect(double x, double y, double width, double height, int color) {
         double d4;

@@ -98,7 +98,7 @@ public class ModuleButton implements Component {
         this.featureHeight = 0;
 
         // Featureheight handler
-
+        // SettingButton position must be handled before ModuleButton rendering
         if(openAnimation.getAnimationFactor() > 0) {
             this.settingOffset = (float) 0;
             this.settingButtons.forEach(settingButton -> {
@@ -120,6 +120,7 @@ public class ModuleButton implements Component {
                 }
             });
         }
+        // Setting background
         RoundedShader.drawRound(getX() + 4, y, getWidth() - 8, height + (featureHeight * (float) openAnimation.getAnimationFactor()), 2, color);
 
 
@@ -139,22 +140,9 @@ public class ModuleButton implements Component {
         FontUtil.regular12.drawString(module.getDescription(), getX() + 8, getY() + (getHeight() - 3) - FontUtil.regular12.getHeight(), new Color(200, 200, 200).getRGB());
 
         // Button rendering
+        // Button position handling must come before
         if(openAnimation.getAnimationFactor() > 0) {
             this.settingButtons.forEach(settingButton -> {
-                /*
-                if (settingButton.getX() != this.getX() + 4) {
-                    settingButton.setX(getX() + 4); // fix this
-                }
-
-                if(settingButton.getWidth() != getWidth() - 8) {
-                    settingButton.setWidth(getWidth() - 8);
-                }
-                if(settingButton.getY() != getY() + settingOffset) {
-                    settingButton.setY(getY() + getHeight() + (settingOffset + 1));
-                }
-
-                 */
-
                 if (settingButton.getSetting().isVisible()) {
                     settingButton.draw(mouseX, mouseY);
                 }

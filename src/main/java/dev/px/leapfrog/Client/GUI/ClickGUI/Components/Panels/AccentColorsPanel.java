@@ -47,7 +47,7 @@ public class AccentColorsPanel implements Component {
             scrollX = 0;
         }
 
-        stack.pushScissor(getX(), getY(), getWidth() * (int) screen.getClickGUI().getCloseAnimation().getAnimationFactor(), getHeight() * (int) screen.getClickGUI().getCloseAnimation().getAnimationFactor());
+        stack.pushScissor(getX(), getY(), getWidth() * (int) screen.getClickGUI().getOpenAnimation().getAnimationFactor(), getHeight() * (int) screen.getClickGUI().getOpenAnimation().getAnimationFactor());
         FontUtil.regular_bold18.drawString("Accent Colors", getX() + 5, getY() + 4, -1);
         for(ColorComponent c : this.components) {
             if(c.getX() != getX() + 5 + offsetX + scrollX) {

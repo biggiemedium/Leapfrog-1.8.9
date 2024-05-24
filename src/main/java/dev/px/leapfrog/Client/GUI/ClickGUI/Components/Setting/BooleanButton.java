@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting;
 
+import dev.px.leapfrog.API.Event.Client.SettingUpdateEvent;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;

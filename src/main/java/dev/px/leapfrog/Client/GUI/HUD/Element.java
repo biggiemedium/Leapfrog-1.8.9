@@ -132,6 +132,10 @@ public class Element {
         }
     }
 
+    public int getFontColor() {
+        return LeapFrog.colorManager.getFontColor().getValue().getRGB();
+    }
+
     public void mouseRelease(int mouseX, int mouseY, int state) {
         this.dragging = false;
         this.scaling = false;

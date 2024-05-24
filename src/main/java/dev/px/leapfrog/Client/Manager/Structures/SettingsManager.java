@@ -12,8 +12,10 @@ public class SettingsManager {
     public Setting<Boolean> BACKGROUND;
     public Setting<Boolean> BLUR;
     public Setting<Boolean> FRIENDS;
-    public Setting<Boolean> windowModifications;
+    public Setting<Boolean> RPC;
+    public Setting<Boolean> WINDOWMODIFICATIONS;
     public Setting<Boolean> SCOREBOARD;
+    public Setting<Boolean> TNTTIMER;
     public Setting<Boolean> HACKERDETECTOR;
 
     public SettingsManager() {
@@ -25,9 +27,14 @@ public class SettingsManager {
                 .setDescription("Blurs Minecrafts backgrounds");
         FRIENDS = Add(new Setting("Friends", true)
                 .setDescription("Initalizes friend system"));
-        windowModifications = Add(new Setting<>("Window Modifications", true)
+        RPC = Add(new Setting("DiscordRPC", false)
+                .setDescription("Displays Discord Rich Presence"));
+        WINDOWMODIFICATIONS = Add(new Setting<>("Window Modifications", true)
                 .setDescription("Fixes Fullscreen bug (1.8.9)"));
-        SCOREBOARD = Add(new Setting("ScoreBoard", true)).setDescription("Scoreboard Modifcations");
+        SCOREBOARD = Add(new Setting("ScoreBoard", true))
+                .setDescription("Scoreboard Modifcations");
+        TNTTIMER = Add(new Setting("TNT Timer", true)
+                .setDescription("Displays TNT Timer coundown above entity"));
         HACKERDETECTOR = Add(new Setting("Hacker Detector", true)
                 .setDescription("Finds other hackers in your lobby"));
     }

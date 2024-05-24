@@ -2,6 +2,7 @@ package dev.px.leapfrog.Client.Module.Render;
 
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.Client.Module.Module;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
@@ -16,11 +17,18 @@ public class FullBright extends Module {
 
     @EventHandler
     private Listener<PlayerUpdateEvent> event = new Listener<>(event -> {
-        mc.gameSettings.gammaSetting = 1000;
+        mc.gameSettings.gammaSetting = 100;
     });
 
     @Override
+    public void onEnable() {
+        super.onEnable();
+        mc.gameSettings.gammaSetting = 100;
+    }
+
+    @Override
     public void onDisable() {
+        super.onDisable();
         mc.gameSettings.gammaSetting = 0;
     }
 }

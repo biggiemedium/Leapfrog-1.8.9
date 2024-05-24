@@ -1,5 +1,8 @@
 package dev.px.leapfrog.Client.Module;
 
+import dev.px.leapfrog.API.Event.Client.SettingUpdateEvent;
+import dev.px.leapfrog.LeapFrog;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,6 +76,8 @@ public class Setting<T> {
 
     public void setValue(T value) {
         this.value = value;
+        SettingUpdateEvent event = new SettingUpdateEvent(this);
+        LeapFrog.EVENT_BUS.post(event);
     }
 
     public T getMin() {

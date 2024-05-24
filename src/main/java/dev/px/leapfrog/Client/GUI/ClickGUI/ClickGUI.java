@@ -34,7 +34,7 @@ public class ClickGUI extends GuiScreen {
     private int x, y, width, height;
     private boolean close, dragging;
     private int dragX, dragY;
-    private Animation closeAnimation;
+    private Animation openAnimation;
     private ArrayList<Screen> screens;
     private Screen currentScreen;
     private Animation moveAnimation = new Animation(100, false, Easing.LINEAR);
@@ -65,9 +65,9 @@ public class ClickGUI extends GuiScreen {
 
     @Override
     public void initGui() {
-        this.closeAnimation = new Animation(250, true, Easing.TENACITY_EASEBACKIN);
+        this.openAnimation = new Animation(250, true, Easing.TENACITY_EASEBACKIN);
         this.close = false;
-        closeAnimation.setState(true);
+        openAnimation.setState(true);
 
         for(Screen s : screens) {
             s.initGUI();
@@ -77,8 +77,8 @@ public class ClickGUI extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if(close) {
-            this.closeAnimation.setState(false);
-            if(closeAnimation.getAnimationFactor() <= 0) {
+            this.openAnimation.setState(false);
+            if(openAnimation.getAnimationFactor() <= 0) {
                 mc.displayGuiScreen(null);
             }
         }
@@ -88,7 +88,7 @@ public class ClickGUI extends GuiScreen {
             this.y = mouseY - dragY;
         }
 
-        GLUtils.startScale(((this.getX()) + (this.getX() + this.getWidth())) / 2, ((this.getY()) + (this.getY() + this.getHeight())) / 2, (float) closeAnimation.getAnimationFactor());
+        GLUtils.startScale(((this.getX()) + (this.getX() + this.getWidth())) / 2, ((this.getY()) + (this.getY() + this.getHeight())) / 2, (float) openAnimation.getAnimationFactor());
         RenderUtil.drawBlurredShadow(x - 1, y, width + 2, height, 20, new Color(56, 56, 56, 200));
         RoundedShader.drawRound(x, y, width, height, 4, new Color(30, 30, 30));
 
@@ -147,7 +147,8 @@ public class ClickGUI extends GuiScreen {
         }
 
         if(isMouseOver(getX() + 15, getY() + (getHeight() - 25), 70, 15, mouseX, mouseY)) {
-            mc.displayGuiScreen(new GuiHUDEditor());
+            this.close = true;
+            mc.displayGuiScreen(new GuiHUDEditor(true));
         }
 
         int offsetY = 0;
@@ -226,12 +227,12 @@ public class ClickGUI extends GuiScreen {
         this.close = close;
     }
 
-    public Animation getCloseAnimation() {
-        return closeAnimation;
+    public Animation getOpenAnimation() {
+        return openAnimation;
     }
 
-    public void setCloseAnimation(Animation closeAnimation) {
-        this.closeAnimation = closeAnimation;
+    public void setOpenAnimation(Animation openAnimation) {
+        this.openAnimation = openAnimation;
     }
 
     @Override

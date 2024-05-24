@@ -16,4 +16,13 @@ public interface IMixinRenderManager {
     @Accessor(value = "renderPosZ")
     double getRenderPosZ();
 
+    @Accessor(value = "viewerPosX")
+    double getViewerPosX();
+
+    @Accessor(value = "viewerPosY")
+    double getViewerPosY();
+
+    @Accessor(value = "viewerPosZ")
+    double getViewerPosZ();
+
 }

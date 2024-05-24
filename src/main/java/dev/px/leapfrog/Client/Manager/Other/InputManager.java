@@ -56,7 +56,7 @@ public class InputManager implements Listenable {
                         }
 
                         if(keyCode == Keyboard.KEY_P) {
-                            mc.displayGuiScreen(new GuiHUDEditor());
+                            mc.displayGuiScreen(new GuiHUDEditor(false));
                         }
 
                         if(keyCode == Keyboard.KEY_M) {

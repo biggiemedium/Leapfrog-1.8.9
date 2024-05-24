@@ -17,6 +17,12 @@ public class ClientSpoofer extends Module {
     @Override
     public void onEnable() {
         ChatUtil.sendClientSideMessage("Leave server and rejoin to use");
+        super.onEnable();
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
     }
 
     public enum ClientType {

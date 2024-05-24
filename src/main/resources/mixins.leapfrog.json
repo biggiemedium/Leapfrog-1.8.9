@@ -7,6 +7,7 @@
     "Game.MixinMinecraft",
     "Listeners.IMixinRenderManager",
     "Listeners.IMixinMinecraft",
+    "Listeners.IMixinSkinManager",
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntityPlayer",
     "Entity.MixinEntityPlayerSP",
@@ -17,6 +18,9 @@
     "Network.MixinNetHandlerPlayClient",
     "Network.MixinNetworkManager",
     "Render.MixinEntityRenderer",
-    "Render.MixinRenderEntityItem"
+    "Render.MixinRenderEntityItem",
+    "Render.MixinRenderLivingEntity",
+    "Render.MixinRenderGlobal",
+    "Render.MixinRenderTNTPrimed"
   ]
 }

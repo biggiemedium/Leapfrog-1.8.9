@@ -3,9 +3,8 @@ package dev.px.leapfrog;
 import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
+import dev.px.leapfrog.Client.Manager.Other.*;
 import dev.px.leapfrog.Client.Manager.Structures.*;
-import dev.px.leapfrog.Client.Manager.Other.CapeManager;
-import dev.px.leapfrog.Client.Manager.Other.InputManager;
 import me.zero.alpine.fork.bus.EventBus;
 import me.zero.alpine.fork.bus.EventManager;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +21,7 @@ public class LeapFrog {
     /*
     - Notifcation system
     - HUD (Draggable HUD, Grid system)
+    - GUI Theme - HUD font color picker
     - Improve HUD Editor screen
     - Fix Main Menu
     - Rotation, anticheat, speed, position manager
@@ -43,10 +43,15 @@ public class LeapFrog {
     public static CapeManager capeManager;
     public static SpotifyManager spotifyManager;
     public static InputManager inputManager;
+    public static DiscordManager discordManager;
+    public static MultiThreadingManager threadManager;
+    public static ServerManager serverManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        threadManager = new MultiThreadingManager();
         spotifyManager = new SpotifyManager();
+        discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
     }
 
     @EventHandler
@@ -59,6 +64,7 @@ public class LeapFrog {
         colorManager = new ColorManager(); // Color manager before element manager
         elementManager = new ElementManager();
         capeManager = new CapeManager();
+        serverManager = new ServerManager();
 
         // way down
         inputManager = new InputManager(); // put this after everything bc it calls on ColorManager, Module Manager, Settings Manager, Element Manager
@@ -66,6 +72,12 @@ public class LeapFrog {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        spotifyManager = new SpotifyManager();
+    }
+
+    public static void shutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            discordManager.shutDown();
+            threadManager.shutDown();
+        }));
     }
 }

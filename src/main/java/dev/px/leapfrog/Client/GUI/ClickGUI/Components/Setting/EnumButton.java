@@ -35,8 +35,8 @@ public class EnumButton extends SettingButton<Enum> {
             int in = values.indexOf(setting.getValue());
             if(button == 0) {
                 setting.setValue(in + 1 < values.size() ? values.get(in + 1) : values.get(0));
-            } else if(button == 1) {
-            }
+            } else if(button == 1) {}
+
         }
     }
 

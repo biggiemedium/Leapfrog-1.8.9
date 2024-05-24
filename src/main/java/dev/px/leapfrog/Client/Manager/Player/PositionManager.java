@@ -1,9 +1,13 @@
 package dev.px.leapfrog.Client.Manager.Player;
 
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
+import dev.px.leapfrog.API.Util.Math.MathUtil;
+import dev.px.leapfrog.ASM.Listeners.IMixinRenderManager;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Vec3;
 
 public class PositionManager {
 
@@ -26,5 +30,4 @@ public class PositionManager {
         this.y = y;
         this.z = z;
     }
-
 }

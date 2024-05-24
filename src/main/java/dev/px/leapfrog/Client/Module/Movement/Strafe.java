@@ -23,19 +23,7 @@ public class Strafe extends Module {
 
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
-        if(PlayerUtil.isMoving()) {
-            if(event.isOnGround()) {
-                mc.thePlayer.jump();
-                stage = 0;
-                speed = 1.10D;
-            } else {
-                speed -= 0.004;
-                PlayerUtil.setSpeed(PlayerUtil.getBaseMoveSpeed() * speed, mc.thePlayer.rotationYaw, mc.thePlayer.movementInput.moveStrafe, mc.thePlayer.movementInput.moveForward);
-            }
-        } else {
-            mc.thePlayer.motionX = 0.0d;
-            mc.thePlayer.motionZ = 0.0d;
-        }
+
     });
 
     private void AAC() {

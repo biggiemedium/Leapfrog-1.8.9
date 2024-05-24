@@ -8,17 +8,14 @@ import java.util.ArrayList;
 
 public class ColorManager {
 
-    private ArrayList<AccentColor> themeColors = new ArrayList<>();
     private ArrayList<AccentColor> accentColors = new ArrayList<>();
     private AccentColor clientColor;
 
     private Setting<Integer> opacity = new Setting<>("Opacity", 150, 0, 255);
     private Setting<Integer> radius = new Setting<>("Radius", 4, 0, 8);
+    private Setting<Color> fontColor = new Setting<>("Font Color", new Color(255, 255, 255));
 
     public ColorManager() {
-        this.themeColors.add(new AccentColor("Light", new Color(245, 233, 233), new Color(196, 192, 192)));
-        this.themeColors.add(new AccentColor("Dark", new Color(31, 27, 27), new Color(70, 69, 69)));
-
         Add(new AccentColor("Froggy", new Color(173, 247, 115), new Color(128, 243, 147)));
         Add(new AccentColor("Tenacity", new Color(39, 179, 206), new Color(236, 133, 209)));
         Add(new AccentColor("Dark Blue", new Color(61, 79, 143), new Color(1, 19, 63)));
@@ -65,5 +62,13 @@ public class ColorManager {
 
     public void setRadius(Setting<Integer> radius) {
         this.radius = radius;
+    }
+
+    public Setting<Color> getFontColor() {
+        return fontColor;
+    }
+
+    public void setFontColor(Setting<Color> fontColor) {
+        this.fontColor = fontColor;
     }
 }

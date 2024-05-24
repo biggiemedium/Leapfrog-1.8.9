@@ -10,8 +10,6 @@ import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.ModuleButton;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
-import net.minecraft.client.gui.FontRenderer;
-import sun.java2d.loops.FontInfo;
 
 import java.awt.*;
 import java.io.IOException;
