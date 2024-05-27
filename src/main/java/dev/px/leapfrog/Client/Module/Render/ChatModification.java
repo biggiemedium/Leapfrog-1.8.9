@@ -12,8 +12,8 @@ public class ChatModification extends Module {
 
     }
 
-    public Setting<Boolean> animations = create(new Setting<>("Animations", true));
     public Setting<ChatLookMode> chatMode = create(new Setting<>("Chat Mode", ChatLookMode.Clear));
+    public Setting<Double> chatSpeed = create(new Setting<>("Speed", 4D, 1D, 10D));
 
     public enum ChatLookMode {
         Default,

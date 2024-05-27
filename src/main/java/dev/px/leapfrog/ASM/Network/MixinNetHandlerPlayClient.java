@@ -26,9 +26,9 @@ public class MixinNetHandlerPlayClient {
                 case Forge:
                     args.set(0, new C17PacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString(ClientBrandRetriever.getClientModName())));
                 break;
-                //case Lunar: // fix this - I don't actually know the name of lunars custom payloads
-                //    args.set(0, new C17PacketCustomPayload("MC|Lunar", (new PacketBuffer(Unpooled.buffer())).writeString("Lunar")));
-                //break;
+                case Lunar:
+                    args.set(0, new C17PacketCustomPayload("REGISTER", (new PacketBuffer(Unpooled.buffer())).writeString("Lunar-Client")));
+                break;
             }
         }
     }

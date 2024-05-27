@@ -111,7 +111,7 @@ public class Element {
         }
 
         if(button == 1) {
-            if(isHovered(mouseX, mouseY)) {
+            if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
                 if(mc.currentScreen != null) {
                     this.visible = !this.visible;
                 }

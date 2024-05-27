@@ -5,14 +5,15 @@
   "refmap": "mixins.leapfrog.refmap.json",
   "mixins": [
     "Game.MixinMinecraft",
+    "Game.MixinScoreboard",
     "Listeners.IMixinRenderManager",
     "Listeners.IMixinMinecraft",
     "Listeners.IMixinSkinManager",
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntityPlayer",
     "Entity.MixinEntityPlayerSP",
-    "GUI.Chat.MixinGuiNewChat",
     "GUI.Chat.MixinGuiChat",
+    "GUI.Chat.MixinGuiNewChat",
     "GUI.Menu.MixinSplashScreen",
     "GUI.Game.MixinGuiInGame",
     "Network.MixinNetHandlerPlayClient",
@@ -21,6 +22,7 @@
     "Render.MixinRenderEntityItem",
     "Render.MixinRenderLivingEntity",
     "Render.MixinRenderGlobal",
-    "Render.MixinRenderTNTPrimed"
+    "Render.MixinRenderTNTPrimed",
+    "World.MixinBlock"
   ]
 }

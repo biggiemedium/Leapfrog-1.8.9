@@ -46,7 +46,7 @@ public abstract class MixinGuiNewChat extends Gui {
 
     private void updatePercentage(long diff) {
         if (percentComplete < 1) {
-            percentComplete += (4 / 1000) * (float) diff;
+            percentComplete += (LeapFrog.moduleManager.getModuleByClass(ChatModification.class).chatSpeed.getValue() / 1000) * (float) diff;
         }
         percentComplete = clamp(percentComplete, 0, 1);
     }
@@ -72,7 +72,7 @@ public abstract class MixinGuiNewChat extends Gui {
     @Inject(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;pushMatrix()V", ordinal = 0, shift = At.Shift.AFTER))
     private void translate(CallbackInfo ci) {
         float y = 0;
-        if(LeapFrog.moduleManager.isModuleToggled(ChatModification.class) && LeapFrog.moduleManager.getModuleByClass(ChatModification.class).animations.getValue() && !this.isScrolled) {
+        if(LeapFrog.moduleManager.isModuleToggled(ChatModification.class) && !this.isScrolled) {
             y += (9 - 9 * animationPercent) * this.getChatScale();
         }
         GlStateManager.translate(0, y, 0);
@@ -91,7 +91,7 @@ public abstract class MixinGuiNewChat extends Gui {
 
     @ModifyArg(method = "drawChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;FFI)I"), index = 3)
     private int modifyTextOpacity(int original) {
-        if(LeapFrog.moduleManager.isModuleToggled(ChatModification.class) && LeapFrog.moduleManager.getModuleByClass(ChatModification.class).animations.getValue() && lineBeingDrawn <= newLines) {
+        if(LeapFrog.moduleManager.isModuleToggled(ChatModification.class) && lineBeingDrawn <= newLines) {
             int opacity = (original >> 24) & 0xFF;
             opacity *= animationPercent;
             return (original & ~(0xFF << 24)) | (opacity << 24);

@@ -29,9 +29,9 @@ public abstract class MixinAbstractClientPlayer {
     public void leapfrogCapes(CallbackInfoReturnable<ResourceLocation> cir) {
         UUID uuid = Objects.requireNonNull(getPlayerInfo()).getGameProfile().getId();
 
-        if(getPlayerInfo().getGameProfile().getName().equalsIgnoreCase(Minecraft.getMinecraft().thePlayer.getName()) || LeapFrog.capeManager.hasDevCape(uuid)) {
-     //       cir.setReturnValue(new ResourceLocation("minecraft", "/Leapfrog/Images/user-dev.png"));
-        }
+        // my capes are too big :(
+        //cir.setReturnValue(new ResourceLocation("minecraft", "/Leapfrog/Images/user-dev.png"));
+
 
     }
 

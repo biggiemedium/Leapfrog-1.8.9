@@ -28,7 +28,7 @@ public class ClientSpoofer extends Module {
     public enum ClientType {
         Vanilla,
         Forge,
-        //Lunar
+        Lunar
     }
 }
 

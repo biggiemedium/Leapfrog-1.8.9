@@ -2,6 +2,7 @@ package dev.px.leapfrog.Client.Module.Render;
 
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
@@ -28,6 +29,7 @@ public class NameTags extends Module {
     }
 
     public Setting<Integer> range = create(new Setting<>("Range", 30, 5, 100));
+    public Setting<Float> scale = create(new Setting<>("Scale", 0.5f, 0.1f, 2.0f));
 
     /**
      * @see net.minecraft.client.renderer.entity.RendererLivingEntity#renderName(EntityLivingBase, double, double, double)
@@ -63,12 +65,12 @@ public class NameTags extends Module {
         super.onDisable();
     }
 
-    private void renderTag(double x, double y, double z, Entity entity) {
+    private void renderTag(double x, double y, double z, EntityPlayer entity) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float)x, (float)y + entity.height + 0.5F + (entity.isSneaking() ? 0.5F : 0.7F), (float)z);
+        GlStateManager.translate((float)x, (float)y + entity.height + (entity.isSneaking() ? 0.5F : 0.7F), (float) z);
         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
         GlStateManager.rotate((float) -((IMixinRenderManager) mc.getRenderManager()).getViewerPosY(), 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate((float) -((IMixinRenderManager) mc.getRenderManager()).getViewerPosX(), 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate((float) -((IMixinRenderManager) mc.getRenderManager()).getViewerPosX(), mc.gameSettings.thirdPersonView == 2 ? -1.0f : 1.0f, 0.0F, 0.0F);
         GlStateManager.scale(-0.02666667F, -0.02666667F, 0.02666667F);
         GlStateManager.translate(0.0F, 9.374999F, 0.0F);
         GlStateManager.disableLighting();
@@ -76,7 +78,7 @@ public class NameTags extends Module {
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        int i = (int) FontRenderer.sans18.getStringWidth(displayName()) / 2;
+        int i = (int) FontRenderer.sans18.getStringWidth(displayName(entity)) / 2;
 
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -89,17 +91,19 @@ public class NameTags extends Module {
 
         GlStateManager.enableTexture2D();
         GlStateManager.depthMask(true);
-        FontRenderer.sans18.drawString(displayName(), -FontRenderer.sans18.getStringWidth(displayName()) / 2, 0, 553648127);
+        FontRenderer.sans18.drawString(displayName(entity), -FontRenderer.sans18.getStringWidth(displayName(entity)) / 2, 0, 553648127);
         GlStateManager.enableLighting();
         GlStateManager.disableBlend();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.popMatrix();
     }
 
-    private String displayName() {
+    private String displayName(EntityPlayer player) {
         String name = "";
 
-        name += mc.thePlayer.getName();
+        name += player.getName();
+        name += " | ";
+        name += PlayerUtil.getHealth(player);
 
         return name;
     }

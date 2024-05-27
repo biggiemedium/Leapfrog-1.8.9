@@ -3,9 +3,12 @@ package dev.px.leapfrog.Client.Manager.Structures;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.Client.Module.Combat.KillAura;
 import dev.px.leapfrog.Client.Module.Combat.TestModule;
+import dev.px.leapfrog.Client.Module.Combat.Velocity;
 import dev.px.leapfrog.Client.Module.Misc.ClientSpoofer;
 import dev.px.leapfrog.Client.Module.Misc.FakePlayer;
 import dev.px.leapfrog.Client.Module.Module;
+import dev.px.leapfrog.Client.Module.Movement.NoSlow;
+import dev.px.leapfrog.Client.Module.Movement.PacketSneak;
 import dev.px.leapfrog.Client.Module.Movement.Strafe;
 import dev.px.leapfrog.Client.Module.Render.*;
 
@@ -18,10 +21,13 @@ public class ModuleManager {
     public ModuleManager() {
         Add(new TestModule());
         Add(new KillAura());
+        Add(new Velocity());
 
         Add(new ClientSpoofer());
         Add(new FakePlayer());
 
+        Add(new NoSlow());
+        Add(new PacketSneak());
         Add(new Strafe());
 
         Add(new ChatModification());

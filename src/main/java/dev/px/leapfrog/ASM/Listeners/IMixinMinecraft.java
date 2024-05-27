@@ -11,4 +11,9 @@ public interface IMixinMinecraft {
     @Accessor("timer")
     Timer timer();
 
+    @Accessor("rightClickDelayTimer")
+    int getRightClickDelayTimer();
+
+    @Accessor("rightClickDelayTimer")
+    void setRightClickDelayTimer(int value);
 }

@@ -1,5 +1,6 @@
 package dev.px.leapfrog.ASM.Game;
 
+import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Gui.CustomMainMenu;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
@@ -50,11 +51,16 @@ public abstract class MixinMinecraft {
 
     private ResourceLocation shaders = new ResourceLocation("minecraft", "shaders/post/blur" + ".json");
 
+    @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/FMLCommonHandler;onPreClientTick()V", shift = At.Shift.AFTER))
+    public void onTickPre(CallbackInfo ci) {
+        PlayerUpdateEvent event = new PlayerUpdateEvent(Event.Stage.Pre);
+        LeapFrog.EVENT_BUS.post(event);
+    }
+
     @Inject(method = "runTick", at = @At("TAIL"))
     private void onTick(final CallbackInfo ci) {
-        PlayerUpdateEvent event = new PlayerUpdateEvent();
+        PlayerUpdateEvent event = new PlayerUpdateEvent(Event.Stage.Post);
         LeapFrog.EVENT_BUS.post(event);
-
         if(Wrapper.getMC().currentScreen instanceof GuiMainMenu) {
             displayGuiScreen(new CustomMainMenu());
         }

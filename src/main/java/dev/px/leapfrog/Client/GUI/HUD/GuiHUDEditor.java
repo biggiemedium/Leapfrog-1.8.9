@@ -26,8 +26,10 @@ public class GuiHUDEditor extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         for(Element e : LeapFrog.elementManager.getElements()) {
-            e.editMode(mouseX, mouseY);
-            e.onRender(new Render2DEvent(partialTicks));
+            if(e.isVisible()) {
+                e.editMode(mouseX, mouseY);
+                e.onRender(new Render2DEvent(partialTicks));
+            }
         }
 
         RoundedShader.drawGradientRound(sr.getScaledWidth() / 2 - 35 + 10, sr.getScaledHeight() / 2 - 7, 35, 15, 4,
