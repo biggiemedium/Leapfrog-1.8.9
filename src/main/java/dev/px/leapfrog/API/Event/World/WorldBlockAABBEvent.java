@@ -12,12 +12,14 @@ public class WorldBlockAABBEvent extends Event {
     private Block block;
     private net.minecraft.util.BlockPos blockPos;
     private AxisAlignedBB boundingBox;
+    private AxisAlignedBB maskBoundingBox;
 
-    public WorldBlockAABBEvent(World world, Block block, BlockPos blockPos, AxisAlignedBB alignedBB) {
+    public WorldBlockAABBEvent(World world, Block block, BlockPos blockPos, AxisAlignedBB boundingBox, AxisAlignedBB maskBoundingBox) {
         this.world = world;
         this.block = block;
         this.blockPos = blockPos;
-        this.boundingBox = alignedBB;
+        this.boundingBox = boundingBox;
+        this.maskBoundingBox = maskBoundingBox;
     }
 
     public World getWorld() {
@@ -50,5 +52,13 @@ public class WorldBlockAABBEvent extends Event {
 
     public void setBoundingBox(AxisAlignedBB boundingBox) {
         this.boundingBox = boundingBox;
+    }
+
+    public AxisAlignedBB getMaskBoundingBox() {
+        return maskBoundingBox;
+    }
+
+    public void setMaskBoundingBox(AxisAlignedBB maskBoundingBox) {
+        this.maskBoundingBox = maskBoundingBox;
     }
 }

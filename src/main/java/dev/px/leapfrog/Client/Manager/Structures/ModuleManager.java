@@ -7,9 +7,7 @@ import dev.px.leapfrog.Client.Module.Combat.Velocity;
 import dev.px.leapfrog.Client.Module.Misc.ClientSpoofer;
 import dev.px.leapfrog.Client.Module.Misc.FakePlayer;
 import dev.px.leapfrog.Client.Module.Module;
-import dev.px.leapfrog.Client.Module.Movement.NoSlow;
-import dev.px.leapfrog.Client.Module.Movement.PacketSneak;
-import dev.px.leapfrog.Client.Module.Movement.Strafe;
+import dev.px.leapfrog.Client.Module.Movement.*;
 import dev.px.leapfrog.Client.Module.Render.*;
 
 import java.util.ArrayList;
@@ -26,8 +24,10 @@ public class ModuleManager {
         Add(new ClientSpoofer());
         Add(new FakePlayer());
 
+        Add(new Jesus());
         Add(new NoSlow());
         Add(new PacketSneak());
+        Add(new Spider());
         Add(new Strafe());
 
         Add(new ChatModification());
@@ -77,11 +77,6 @@ public class ModuleManager {
 
     public boolean isModuleToggled(Class module) {
         Module mod = modules.stream().filter(m -> m.getClass() == module).findFirst().orElse(null);
-        return mod != null && mod.isToggled();
-    }
-
-    public boolean isModuleToggled(Module module) {
-        Module mod = modules.stream().filter(m -> m == module).findFirst().orElse(null);
         return mod != null && mod.isToggled();
     }
 

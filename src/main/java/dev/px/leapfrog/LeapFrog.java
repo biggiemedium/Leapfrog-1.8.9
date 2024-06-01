@@ -46,6 +46,7 @@ public class LeapFrog {
     public static DiscordManager discordManager;
     public static MultiThreadingManager threadManager;
     public static ServerManager serverManager;
+    public static NotificationManager notificationManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -65,6 +66,7 @@ public class LeapFrog {
         elementManager = new ElementManager();
         capeManager = new CapeManager();
         serverManager = new ServerManager();
+        notificationManager  = new NotificationManager();
 
         // way down
         inputManager = new InputManager(); // put this after everything bc it calls on ColorManager, Module Manager, Settings Manager, Element Manager

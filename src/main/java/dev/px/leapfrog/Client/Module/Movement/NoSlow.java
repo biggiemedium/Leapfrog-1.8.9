@@ -10,6 +10,7 @@ import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
@@ -31,13 +32,6 @@ public class NoSlow extends Module {
                         mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                     }
                     break;
-                case Vulcan:
-                    if(mc.thePlayer.isUsingItem()) {
-                        if (mc.thePlayer.ticksExisted % 5 == 0) {
-
-                        }
-                    }
-                    break;
             }
         } else {
             switch (mode.getValue()) {
@@ -45,9 +39,6 @@ public class NoSlow extends Module {
                     if (mc.thePlayer.isUsingItem()) {
                         mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
                     }
-                    break;
-                case Vulcan:
-
                     break;
             }
         }
@@ -60,9 +51,11 @@ public class NoSlow extends Module {
                 event.cancel();
                 break;
             case Vulcan:
+                event.cancel(); // Vanilla noslow bypasses - dont fuck with packets
+                break;
+            case Grim:
                 event.cancel();
                 break;
-
             case Vanilla:
                 event.cancel();
                 break;
@@ -72,11 +65,6 @@ public class NoSlow extends Module {
     @Override
     public void onDisable() {
         super.onDisable();
-    }
-
-    @Override
-    public void onEnable() {
-        super.onEnable();
     }
 
     private enum Mode {

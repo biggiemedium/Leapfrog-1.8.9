@@ -12,6 +12,7 @@
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntityPlayer",
     "Entity.MixinEntityPlayerSP",
+    "Entity.MixinEntityLivingBase",
     "GUI.Chat.MixinGuiChat",
     "GUI.Chat.MixinGuiNewChat",
     "GUI.Menu.MixinSplashScreen",

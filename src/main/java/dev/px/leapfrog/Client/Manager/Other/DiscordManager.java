@@ -4,11 +4,13 @@ import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
 import club.minnced.discord.rpc.DiscordUser;
+import dev.px.leapfrog.API.Gui.CustomMainMenu;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 
 import java.util.Objects;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class DiscordManager {
@@ -67,15 +69,26 @@ public class DiscordManager {
     private String setState() {
         String s = "";
 
-        if(mc.currentScreen instanceof GuiMainMenu) {
+        if(mc.currentScreen instanceof GuiMainMenu || mc.currentScreen instanceof CustomMainMenu) {
             s = "Idle...";
         } else if(LeapFrog.spotifyManager.getAPI().isInitialized() && LeapFrog.spotifyManager.getAPI().isPlaying()) {
-            s = "Listening to " + LeapFrog.spotifyManager.getAPI().getTrack().getName();
+            s = "Listening to " + LeapFrog.spotifyManager.getAPI().getTrack().getName() + "|" + LeapFrog.spotifyManager.getAPI().getTrack().getArtist();
         } else {
-            s = "LeapFrog on top!";
+            //s = "LeapFrog on top!";
+            Random r = new Random();
+            int index = r.nextInt(states().length);
+            s = states()[index];
         }
 
         return s;
+    }
+
+    private String[] states() {
+        return new String[] {
+                "LeapFrog on top!",
+                "New bypasses!",
+                "Sponsored by Kermit!"
+        };
     }
 
     private String setDetails() {

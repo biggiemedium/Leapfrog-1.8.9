@@ -4,6 +4,8 @@ import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.Client.GUI.NewGUI.FreeFlowGUI;
+import dev.px.leapfrog.Client.GUI.Notifications.Notification;
+import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -63,6 +65,10 @@ public class InputManager implements Listenable {
                             if(freeFlowGUI != null) {
                                 mc.displayGuiScreen(freeFlowGUI);
                             }
+                        }
+
+                        if(keyCode == Keyboard.KEY_U) {
+                            LeapFrog.notificationManager.pushNotification("Test", "Yes", Notification.NotificationType.INFO, 5);
                         }
 
                     }

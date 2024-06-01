@@ -7,10 +7,7 @@ import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ClientSettingsScreen;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ColorsScreen;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.ModuleScreen;
-import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.Screen;
+import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.*;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.gui.GuiScreen;
@@ -57,6 +54,7 @@ public class ClickGUI extends GuiScreen {
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Visual, this));
 
         this.screens.add(new ClientSettingsScreen(x + 80, y, width - 80, height, this));
+        this.screens.add(new ElementScreen(x + 80, y, width - 80, height, this));
         this.screens.add(new ColorsScreen(x + 80, y, width - 80, height, this));
         this.currentScreen = screens.get(0);
 

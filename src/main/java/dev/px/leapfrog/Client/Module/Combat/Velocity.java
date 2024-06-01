@@ -21,6 +21,8 @@ public class Velocity extends Module {
 
     private Setting<Mode> mode = create(new Setting<>("Mode", Mode.NCP));
     private boolean cancel = false;
+
+
     @EventHandler
     private Listener<PlayerMotionEvent> updateEventListener = new Listener<>(event -> {
         if(event.getStage() == Event.Stage.Pre) {
@@ -31,9 +33,7 @@ public class Velocity extends Module {
                 if (mc.thePlayer.hurtTime > 0 && mc.thePlayer.hurtTime < 10) {
                     mc.thePlayer.motionX = 0;
                     mc.thePlayer.motionZ = 0;
-                    this.cancel = true;
                 }
-                this.cancel = false;
                 break;
             }
         }

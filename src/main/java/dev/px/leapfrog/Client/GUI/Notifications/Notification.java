@@ -4,53 +4,64 @@ import dev.px.leapfrog.API.Util.Math.TimerUtil;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
+import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
 public class Notification {
 
-    private String title, message;
-    private int x, y;
-    private int width, height;
-    private float time;
-    private TimerUtil timer;
-    private NotificationType type;
-    private ScaledResolution sr;
-    private Animation animation = new Animation(300, false, Easing.LINEAR);
+    private String messsage;
+    private long start;
 
-    public Notification(String title, String message, NotificationType type, int time) {
-        this.title = title;
-        this.message = message;
-        this.type = type;
-        this.width = (int) FontRenderer.sans18_bold.getStringWidth(message) + 40;
-        this.height = (int) FontRenderer.sans18_bold.getHeight() * 2;
-        this.timer = new TimerUtil();
-        this.timer.reset();
-        this.time = (float) (time * 1000);
-        this.sr = new ScaledResolution(Minecraft.getMinecraft());
+    private long fadedIn;
+    private long fadeOut;
+    private long end;
+    private int length;
+    private final ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+
+    public Notification(String messsage, int length) {
+        this.messsage = messsage;
+        this.length = length;
+
+        fadedIn = 200 * length;
+        fadeOut = fadedIn + 500 * length;
+        end = fadeOut + fadedIn;
+    }
+
+    public void show() {
+        start = System.currentTimeMillis();
+    }
+
+    public boolean isShown() {
+        return getTime() <= end;
+    }
+
+    private long getTime() {
+        return System.currentTimeMillis() - start;
     }
 
     public void render() {
-        GL11.glPushMatrix();
+        double offset;
+        int width = (int) FontRenderer.sans20_bold.getStringWidth(messsage) + 20;
+        int height = (int) FontRenderer.sans20_bold.getHeight() + 10;
+        long time = getTime();
 
-
-
-        switch (type) {
-            case INFO:
-
-                break;
-
-            case Warning:
-
-                break;
-
-            case Error:
-
-                break;
+        if (time < fadedIn) {
+            offset = Math.tanh(time / (double) (fadedIn) * 3.0) * 10;
+        } else if (time > fadeOut) {
+            offset = (Math.tanh(3.0 - (time - fadeOut) / (double) (end - fadeOut) * 3.0) * 10);
+        } else {
+            offset = 10;
         }
 
-        GL11.glPopMatrix();
+        int x = (sr.getScaledWidth() / 2) - (width / 2);
+        int y = (int) offset;
+        RoundedShader.drawRound(x, y, width, height, 7, new Color(0, 0, 0, 120));
+        GL11.glColor3f(1.0F, 1.0F, 1.0F);
+        FontRenderer.sans20_bold.drawString(messsage, x + 10, (int) y + 6, Color.WHITE.getRGB());
     }
 
     public enum NotificationType {

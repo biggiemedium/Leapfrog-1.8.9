@@ -1,8 +1,10 @@
 package dev.px.leapfrog.API.Util.Entity;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
@@ -78,4 +80,22 @@ public class PlayerUtil {
         return inLiquid;
     }
 
+    public static boolean onLiquid() {
+        boolean onLiquid = false;
+        final AxisAlignedBB playerBB = PlayerUtil.mc.thePlayer.getEntityBoundingBox();
+        final WorldClient world = PlayerUtil.mc.theWorld;
+        final int y = (int) playerBB.offset(0.0, -0.01, 0.0).minY;
+        for (int x = MathHelper.floor_double(playerBB.minX); x < MathHelper.floor_double(playerBB.maxX) + 1; ++x) {
+            for (int z = MathHelper.floor_double(playerBB.minZ); z < MathHelper.floor_double(playerBB.maxZ) + 1; ++z) {
+                final Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+                if (block != null && !(block instanceof BlockAir)) {
+                    if (!(block instanceof BlockLiquid)) {
+                        return false;
+                    }
+                    onLiquid = true;
+                }
+            }
+        }
+        return onLiquid;
+    }
 }
