@@ -181,6 +181,7 @@ public class ClickGUI extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if(keyCode == Keyboard.KEY_ESCAPE) {
             this.close = true;
+            LeapFrog.fileManager.save();
         }
         currentScreen.onType(typedChar, keyCode);
     }

@@ -12,6 +12,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
+import java.security.SecureRandom;
+
 public class PlayerUtil {
 
     private static Minecraft mc = Minecraft.getMinecraft();
@@ -80,6 +82,17 @@ public class PlayerUtil {
         return inLiquid;
     }
 
+    public static boolean isBlockUnderPlayer(double height) {
+        for (int offset = 0; offset < height; offset += 2) {
+            final AxisAlignedBB bb = mc.thePlayer.getEntityBoundingBox().offset(0, -offset, 0);
+
+            if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, bb).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean onLiquid() {
         boolean onLiquid = false;
         final AxisAlignedBB playerBB = PlayerUtil.mc.thePlayer.getEntityBoundingBox();
@@ -97,5 +110,19 @@ public class PlayerUtil {
             }
         }
         return onLiquid;
+    }
+
+    public static int getRandomInRange(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    public static float getRandomInRange(float min, float max) {
+        SecureRandom random = new SecureRandom();
+        return random.nextFloat() * (max - min) + min;
+    }
+
+    public static double getRandomInRange(double min, double max) {
+        SecureRandom random = new SecureRandom();
+        return random.nextDouble() * (max - min) + min;
     }
 }

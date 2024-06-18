@@ -1,5 +1,6 @@
 package dev.px.leapfrog;
 
+import dev.px.leapfrog.API.Gui.CustomMainMenu;
 import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
@@ -47,18 +48,23 @@ public class LeapFrog {
     public static MultiThreadingManager threadManager;
     public static ServerManager serverManager;
     public static NotificationManager notificationManager;
+    public static FileManager fileManager;
+    public static ConfigManager configManager;
+
+    public static CustomMainMenu menu;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         threadManager = new MultiThreadingManager();
         spotifyManager = new SpotifyManager();
-        discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
+        FontUtil.init();
+        FontRenderer.init();
+
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FontUtil.init();
-        FontRenderer.init();
+        menu = new CustomMainMenu();
         moduleManager = new ModuleManager();
         settingsManager = new SettingsManager(); // Settings manager before event processor
         eventProcessor = new EventProcessor();
@@ -67,7 +73,10 @@ public class LeapFrog {
         capeManager = new CapeManager();
         serverManager = new ServerManager();
         notificationManager  = new NotificationManager();
-
+        discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
+        discordManager.start();
+        fileManager = new FileManager();
+        configManager = new ConfigManager();
         // way down
         inputManager = new InputManager(); // put this after everything bc it calls on ColorManager, Module Manager, Settings Manager, Element Manager
     }
@@ -78,7 +87,7 @@ public class LeapFrog {
 
     public static void shutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            discordManager.shutDown();
+            //discordManager.shutDown();
             threadManager.shutDown();
         }));
     }

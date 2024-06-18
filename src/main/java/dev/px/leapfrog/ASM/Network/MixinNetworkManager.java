@@ -3,13 +3,19 @@ package dev.px.leapfrog.ASM.Network;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
 import dev.px.leapfrog.LeapFrog;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Queue;
+import java.util.concurrent.Future;
 
 @Mixin(NetworkManager.class)
 public class MixinNetworkManager {
@@ -40,5 +46,4 @@ public class MixinNetworkManager {
             callback.cancel();
         }
     }
-
 }

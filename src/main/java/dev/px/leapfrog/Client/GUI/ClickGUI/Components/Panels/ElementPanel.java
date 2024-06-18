@@ -31,7 +31,7 @@ public class ElementPanel implements Component {
 
     @Override
     public void render(int mouseX, int mouseY) {
-
+        RoundedShader.drawRound(getX(), getY(), getWidth(), getHeight(), 4, new Color(26, 26, 26));
     }
 
     @Override

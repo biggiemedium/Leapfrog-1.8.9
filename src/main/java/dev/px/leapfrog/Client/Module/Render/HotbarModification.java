@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @see dev.px.leapfrog.ASM.GUI.Game.MixinGuiInGame
  */
-@Module.ModuleInterface(name = "Hotbar Modifications", description = "Hotbar Animations/look", type = Type.Visual, drawn = true)
+@Module.ModuleInterface(name = "Hotbar Modifications", description = "Hotbar Animations/look", type = Type.Visual, drawn = true, toggled = true)
 public class HotbarModification extends Module {
 
     public HotbarModification() {

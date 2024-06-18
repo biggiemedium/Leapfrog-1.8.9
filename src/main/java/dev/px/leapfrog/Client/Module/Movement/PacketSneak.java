@@ -7,7 +7,11 @@ import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 @Module.ModuleInterface(name = "Packet Sneak", type = Type.Movement, description = "sends serverside packets that player is sneaking")
 public class PacketSneak extends Module {
@@ -37,7 +41,13 @@ public class PacketSneak extends Module {
     });
 
     @Override
+    public void onEnable() {
+        super.onEnable();
+    }
+
+    @Override
     public void onDisable() {
+        super.onDisable();
         mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING));
     }
 

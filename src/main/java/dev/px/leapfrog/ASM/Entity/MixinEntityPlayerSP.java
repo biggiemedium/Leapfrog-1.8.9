@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerSlowDownEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
@@ -68,6 +69,14 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
     public void onWalkingUpdatePost(CallbackInfo ci) {
         PlayerMotionEvent event = new PlayerMotionEvent(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround, Event.Stage.Post);
         LeapFrog.EVENT_BUS.post(event);
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    public void onPlayerUpdate(CallbackInfo ci) {
+        /*
+        PlayerUpdateEvent event = new PlayerUpdateEvent(Event.Stage.Pre);
+        LeapFrog.EVENT_BUS.post(event);
+         */
     }
 
     /*

@@ -1,7 +1,9 @@
 package dev.px.leapfrog.API.Util;
 
 import dev.px.leapfrog.API.Event.Client.SettingUpdateEvent;
+import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Game.KeyPressEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
@@ -60,7 +62,7 @@ public class EventProcessor implements Listenable {
 
                     if(mc.thePlayer != null && mc.theWorld != null) {
                         for(Module m : LeapFrog.moduleManager.getModules()) {
-                            if(m.getKeyBind() == keyCode) {
+                            if(m.keybind.getValue().getBind() == keyCode) {
                                 m.toggle();
                             }
                         }
@@ -102,15 +104,13 @@ public class EventProcessor implements Listenable {
         LeapFrog.EVENT_BUS.post(event);
     }
 
-    @EventHandler
-    private Listener<SettingUpdateEvent> settingUpdateEventListener = new Listener<>(event -> {
-        if(event.getSetting() == LeapFrog.settingsManager.RPC) {
-            if(LeapFrog.settingsManager.RPC.getValue()) {
-                LeapFrog.discordManager.start();
-            } else {
-                LeapFrog.discordManager.shutDown();
-            }
+    @SubscribeEvent
+    public void playerTickEvent(TickEvent.PlayerTickEvent event) {
+        if(mc.thePlayer == null || mc.theWorld == null) {
+            return;
         }
-    });
+        PlayerUpdateEvent e = new PlayerUpdateEvent(Event.Stage.Pre);
+        LeapFrog.EVENT_BUS.post(e);
+    }
 
 }

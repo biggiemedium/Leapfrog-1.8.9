@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Components.Setting;
 
+import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.ModuleButton;
 import dev.px.leapfrog.Client.Module.Setting;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,6 @@ public class SettingButton<T> {
     }
 
     public void draw(int mouseX, int mouseY) {
-
     }
 
     public void mouseClicked(int mouseX, int mouseY, int button) throws IOException {

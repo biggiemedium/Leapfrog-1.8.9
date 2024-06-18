@@ -1,11 +1,11 @@
 package dev.px.leapfrog.Client.Manager.Structures;
 
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.Client.Module.Combat.FastBow;
 import dev.px.leapfrog.Client.Module.Combat.KillAura;
 import dev.px.leapfrog.Client.Module.Combat.TestModule;
 import dev.px.leapfrog.Client.Module.Combat.Velocity;
-import dev.px.leapfrog.Client.Module.Misc.ClientSpoofer;
-import dev.px.leapfrog.Client.Module.Misc.FakePlayer;
+import dev.px.leapfrog.Client.Module.Misc.*;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Movement.*;
 import dev.px.leapfrog.Client.Module.Render.*;
@@ -18,12 +18,21 @@ public class ModuleManager {
 
     public ModuleManager() {
         Add(new TestModule());
+        Add(new FastBow());
         Add(new KillAura());
         Add(new Velocity());
 
+        Add(new AntiClickDelay());
+        Add(new AntiVoid());
         Add(new ClientSpoofer());
         Add(new FakePlayer());
+        Add(new FastPlace());
+        Add(new FreeCam());
+        Add(new Timer());
 
+        Add(new AirJump());
+        Add(new FastLadder());
+        Add(new Flight());
         Add(new Jesus());
         Add(new NoSlow());
         Add(new PacketSneak());
@@ -32,6 +41,7 @@ public class ModuleManager {
 
         Add(new ChatModification());
         Add(new ChinaHat());
+        Add(new ESP());
         Add(new FPSBooster());
         Add(new FullBright());
         Add(new HotbarModification());
@@ -46,7 +56,12 @@ public class ModuleManager {
     }
 
     public Module getModuleByName(String name) {
-        return modules.stream().filter(module -> module.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        for(Module m : modules) {
+            if(m.getName().equals(name)) {
+                return m;
+            }
+        }
+        return null;
     }
 
     public ArrayList<Module> getModuleByType(Type type) {

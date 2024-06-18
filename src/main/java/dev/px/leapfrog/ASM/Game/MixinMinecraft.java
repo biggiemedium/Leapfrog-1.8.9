@@ -49,22 +49,24 @@ public abstract class MixinMinecraft {
     @Shadow
     private boolean fullscreen;
 
+    @Shadow public GuiScreen currentScreen;
     private ResourceLocation shaders = new ResourceLocation("minecraft", "shaders/post/blur" + ".json");
 
-    @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/FMLCommonHandler;onPreClientTick()V", shift = At.Shift.AFTER))
-    public void onTickPre(CallbackInfo ci) {
-        PlayerUpdateEvent event = new PlayerUpdateEvent(Event.Stage.Pre);
-        LeapFrog.EVENT_BUS.post(event);
+    @Inject(method = "runTick()V", at = @At("RETURN"))
+    public void setScreen(CallbackInfo ci) {
+
+    }
+
+    @Inject(method = "displayGuiScreen", at = @At("RETURN"), cancellable = true)
+    public void displayGuiScreenInject(GuiScreen guiScreenIn, CallbackInfo ci) {
+
     }
 
     @Inject(method = "runTick", at = @At("TAIL"))
     private void onTick(final CallbackInfo ci) {
-        PlayerUpdateEvent event = new PlayerUpdateEvent(Event.Stage.Post);
-        LeapFrog.EVENT_BUS.post(event);
-        if(Wrapper.getMC().currentScreen instanceof GuiMainMenu) {
-            displayGuiScreen(new CustomMainMenu());
+        if(this.currentScreen instanceof GuiMainMenu) {
+            displayGuiScreen(LeapFrog.menu); // ?
         }
-
         if(LeapFrog.settingsManager != null) {
             if(LeapFrog.settingsManager.BLUR.getValue()) {
                 if(Minecraft.getMinecraft().theWorld != null) {

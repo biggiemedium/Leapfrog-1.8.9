@@ -12,7 +12,7 @@ public class SettingsManager {
     public Setting<Boolean> BACKGROUND;
     public Setting<Boolean> BLUR;
     public Setting<Boolean> FRIENDS;
-    public Setting<Boolean> RPC;
+    //public Setting<Boolean> RPC;
     public Setting<Boolean> WINDOWMODIFICATIONS;
     public Setting<Boolean> SCOREBOARD;
     public Setting<Boolean> TNTTIMER;
@@ -27,8 +27,8 @@ public class SettingsManager {
                 .setDescription("Blurs Minecrafts backgrounds");
         FRIENDS = Add(new Setting("Friends", true)
                 .setDescription("Initalizes friend system"));
-        RPC = Add(new Setting("DiscordRPC", false)
-                .setDescription("Displays Discord Rich Presence"));
+        //RPC = Add(new Setting("DiscordRPC", false)
+        //        .setDescription("Displays Discord Rich Presence"));
         WINDOWMODIFICATIONS = Add(new Setting<>("Window Modifications", true)
                 .setDescription("Fixes Fullscreen bug (1.8.9)"));
         SCOREBOARD = Add(new Setting("ScoreBoard", true))

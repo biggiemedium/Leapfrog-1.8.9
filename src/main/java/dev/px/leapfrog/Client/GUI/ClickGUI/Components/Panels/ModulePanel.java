@@ -52,7 +52,6 @@ public class ModulePanel implements Component {
         this.featureOffset = 0;
         int offsetY = 0;
         stack.pushScissor(x, y, width, height);
-        this.featureOffset = 0;
         for(ModuleButton b : buttons) {
             if(b.getX() != getX()) {
                 b.setX(getX());
@@ -65,14 +64,10 @@ public class ModulePanel implements Component {
             offsetY += b.getHeight() + b.getFeatureHeight() + 4;
             b.render(mouseX, mouseY);
         }
-
-        if(Mouse.getEventDWheel() != 0) {
-            // Motion blur here
-        }
         stack.popScissor();
 
         if(isMouseOver(x, y, width, height, mouseX, mouseY)) {
-            this.scrollY += Mouse.getDWheel() * 0.02;
+            this.scrollY += Mouse.getDWheel() * 0.02D;
         }
         if(scrollY > 0) {
             scrollY = 0;
@@ -83,9 +78,11 @@ public class ModulePanel implements Component {
 
     @Override
     public void onClick(int mouseX, int mouseY, int button) throws IOException {
-        for(ModuleButton b : buttons) {
-            if(b.getModule().getType() == this.type) {
-                b.onClick(mouseX, mouseY, button);
+        if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
+            for (ModuleButton b : buttons) {
+                if (b.getModule().getType() == this.type) {
+                    b.onClick(mouseX, mouseY, button);
+                }
             }
         }
     }
@@ -99,7 +96,9 @@ public class ModulePanel implements Component {
 
     @Override
     public void onType(char typedChar, int keyCode) throws IOException {
-
+        for(ModuleButton b : buttons) {
+            b.onType(typedChar, keyCode);
+        }
     }
 
     private boolean isMouseOver(float x, float y, float width, float height, int mouseX, int mouseY) {

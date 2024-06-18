@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class DiscordManager {
 
     private DiscordEventHandlers handlers = new DiscordEventHandlers();
-    private DiscordRichPresence presence;
+    private DiscordRichPresence presence = new DiscordRichPresence();
     private DiscordUser user;
     private DiscordRPC rpc;
     public Thread thread;
@@ -27,7 +27,6 @@ public class DiscordManager {
     private Minecraft mc = Minecraft.getMinecraft();
 
     public DiscordManager() {
-        this.presence = new DiscordRichPresence();
         this.rpc = DiscordRPC.INSTANCE;
         this.user = new DiscordUser();
         LeapFrog.LOGGER.info("Presence started for " + user.username);
@@ -72,7 +71,7 @@ public class DiscordManager {
         if(mc.currentScreen instanceof GuiMainMenu || mc.currentScreen instanceof CustomMainMenu) {
             s = "Idle...";
         } else if(LeapFrog.spotifyManager.getAPI().isInitialized() && LeapFrog.spotifyManager.getAPI().isPlaying()) {
-            s = "Listening to " + LeapFrog.spotifyManager.getAPI().getTrack().getName() + "|" + LeapFrog.spotifyManager.getAPI().getTrack().getArtist();
+            s = "Listening to " + LeapFrog.spotifyManager.getAPI().getTrack().getName() + " | " + LeapFrog.spotifyManager.getAPI().getTrack().getArtist();
         } else {
             //s = "LeapFrog on top!";
             Random r = new Random();

@@ -21,7 +21,7 @@ public class ElementScreen extends Screen {
     @Override
     public void render(int mouseX, int mouseY) {
         RoundedShader.drawRound(getX() + 8, getY() + 8, getWidth() - 16, 22, 2, new Color(26, 26, 26));
-        FontUtil.regular_bold26.drawString("Settings", getX() + 12, getY() + 13, -1);
+        FontUtil.regular_bold26.drawString("HUD", getX() + 12, getY() + 13, -1);
         froggy.renderT(getX() + getWidth() - 38, getY() + 4, 30, 30);
 
         panel.setX(getX() + 8);

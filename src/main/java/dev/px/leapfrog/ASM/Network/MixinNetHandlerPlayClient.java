@@ -62,6 +62,10 @@ public class MixinNetHandlerPlayClient {
      * @param packetIn
      * @author alan
      * Yes I stole this from rise what are you going to do
+     *
+     * Handles changes in player positioning and rotation such as when travelling to a new dimension, (re)spawning,
+     * mounting horses etc. Seems to immediately reply to the server with the clients post-processing perspective on the
+     * player positioning
      */
     public void redirectPlayerPosLook(S08PacketPlayerPosLook packetIn)
     {

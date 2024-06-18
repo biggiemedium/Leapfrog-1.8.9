@@ -37,6 +37,8 @@ public class ModuleScreen extends Screen {
         //RoundedShader.drawRound(getX() + 8, getY() + 36, getWidth() - 16, getHeight() - 45, 4, new Color(26, 26, 26));
         panel.setX(getX() + 8);
         panel.setY(getY() + 36);
+        panel.setWidth(getWidth() - 16);
+        panel.setHeight(getHeight() - 45);
         panel.render(mouseX, mouseY);
     }
 

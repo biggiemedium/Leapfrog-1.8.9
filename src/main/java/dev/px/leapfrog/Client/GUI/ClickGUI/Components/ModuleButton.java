@@ -75,10 +75,10 @@ public class ModuleButton implements Component {
                     offsetY += b.getHeight();
                 }
             }
+            DrawnButton b = new DrawnButton(this, getX(), getY() + offsetY, new Setting<>("Drawn", new AtomicBoolean(true)));
+            this.settingButtons.add(b);
+            offsetY += b.getHeight();
         }
-        DrawnButton b = new DrawnButton(this, getX(), getY() + offsetY, new Setting<>("Drawn", new AtomicBoolean(true)));
-        this.settingButtons.add(b);
-        offsetY += b.getHeight();
     }
 
     public void initGUI() {
@@ -142,11 +142,13 @@ public class ModuleButton implements Component {
         // Button rendering
         // Button position handling must come before
         if(openAnimation.getAnimationFactor() > 0) {
+          //  stack.pushScissor((int) this.getX(), (int) this.getY(), (int) this.getWidth(), (int) height + ((int)featureHeight * (int) openAnimation.getAnimationFactor()));
             this.settingButtons.forEach(settingButton -> {
                 if (settingButton.getSetting().isVisible()) {
                     settingButton.draw(mouseX, mouseY);
                 }
             });
+          //  stack.popScissor();
         }
     }
 
@@ -163,6 +165,8 @@ public class ModuleButton implements Component {
             }
         }
 
+        if(!this.isOpen()) return;
+
         for(SettingButton b : settingButtons) {
             b.mouseClicked(mouseX, mouseY, button);
         }
@@ -170,6 +174,7 @@ public class ModuleButton implements Component {
 
     @Override
     public void onRelease(int mouseX, int mouseY, int button) {
+        if(!this.isOpen()) return;
         for(SettingButton b : settingButtons) {
             b.mouseReleased(mouseX, mouseY);
         }
@@ -177,6 +182,7 @@ public class ModuleButton implements Component {
 
     @Override
     public void onType(char typedChar, int keyCode) throws IOException {
+        if(!this.isOpen()) return;
         for(SettingButton b : settingButtons) {
             b.keyTyped(typedChar, keyCode);
         }

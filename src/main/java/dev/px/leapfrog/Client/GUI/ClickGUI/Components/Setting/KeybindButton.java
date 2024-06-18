@@ -29,7 +29,11 @@ public class KeybindButton extends SettingButton<Bind> {
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         if(listening) {
-            this.setting.setValue(new Bind(keyCode));
+            if (keyCode == 211 || keyCode == Keyboard.KEY_BACK) {
+                this.setting.setValue(new Bind(-1)); // unbind
+            } else {
+                this.setting.setValue(new Bind(keyCode));
+            }
         }
         this.listening = false;
     }

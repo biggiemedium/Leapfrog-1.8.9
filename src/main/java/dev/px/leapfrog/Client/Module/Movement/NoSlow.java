@@ -8,6 +8,7 @@ import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
+import net.minecraft.item.ItemBow;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
@@ -26,45 +27,70 @@ public class NoSlow extends Module {
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
         if(event.getStage() == Event.Stage.Pre) {
-            switch (mode.getValue()) {
-                case NCP:
-                    if(mc.thePlayer.isUsingItem()) {
-                        mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    }
-                    break;
+            if(!noSlowCheck()) {
+                switch (mode.getValue()) {
+                    case Vanilla:
+
+                        break;
+                    case NCP:
+                        if (mc.thePlayer.isUsingItem()) {
+                            mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                        }
+                        break;
+                }
             }
         } else {
-            switch (mode.getValue()) {
-                case NCP:
-                    if (mc.thePlayer.isUsingItem()) {
-                        mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    }
-                    break;
+            if(!noSlowCheck()) {
+                switch (mode.getValue()) {
+                    case Vanilla:
+
+                        break;
+                    case NCP:
+                        if (mc.thePlayer.isUsingItem()) {
+                            mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
+                        }
+                        break;
+                }
             }
+
         }
     });
 
     @EventHandler
     private Listener<PlayerSlowDownEvent> playerSlowDownEventListener = new Listener<>(event -> {
-        switch (mode.getValue()) {
-            case NCP:
-                event.cancel();
-                break;
-            case Vulcan:
-                event.cancel(); // Vanilla noslow bypasses - dont fuck with packets
-                break;
-            case Grim:
-                event.cancel();
-                break;
-            case Vanilla:
-                event.cancel();
-                break;
+        if(!noSlowCheck()) {
+            switch (mode.getValue()) {
+                case NCP:
+                    event.cancel();
+                    break;
+                case Vulcan:
+                    event.cancel(); // Vanilla noslow bypasses - dont fuck with packets
+                    break;
+                case Grim:
+                    event.cancel();
+                    break;
+                case Vanilla:
+                    event.cancel();
+                    break;
+            }
         }
     });
 
     @Override
     public void onDisable() {
         super.onDisable();
+    }
+
+    private boolean noSlowCheck() {
+        if(mc.thePlayer.getCurrentEquippedItem() != null) {
+            if(mc.thePlayer.getHeldItem().getItem() instanceof ItemBow) {
+                if(mc.thePlayer.isUsingItem()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private enum Mode {

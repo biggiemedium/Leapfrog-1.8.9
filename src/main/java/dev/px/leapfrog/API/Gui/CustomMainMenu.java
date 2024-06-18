@@ -1,14 +1,10 @@
 package dev.px.leapfrog.API.Gui;
 
-import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
-import dev.px.leapfrog.API.Util.Render.Blur.GaussianFilter;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
-import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.GLSLSandboxShader;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
-import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -118,8 +114,8 @@ public class CustomMainMenu extends GuiScreen {
                 this.enabled = true;
                 this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
                 FontRenderer.sans24_bold.drawString(this.displayString,
-                        (int) this.xPosition + (width / 2) - (FontRenderer.sans24_bold.getStringWidth(this.displayString) / 2),
-                        (int) this.yPosition + (height / 2) - (FontRenderer.sans24_bold.getHeight() / 2), -1);
+                        this.xPosition + (width / 2D) - (FontRenderer.sans24_bold.getStringWidth(this.displayString) / 2),
+                        this.yPosition + (height / 2D) - (FontRenderer.sans24_bold.getHeight() / 2), -1);
                 RoundedShader.drawRoundOutline(xPosition, yPosition, width, height, 4, 1,
                         this.hovered ? new Color(200, 200, 200, 100) : new Color(255, 255, 255, 100), new Color(255, 255, 255));
                 hoverAnimation.setState(this.hovered);

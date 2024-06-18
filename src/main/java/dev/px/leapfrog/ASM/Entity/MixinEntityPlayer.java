@@ -6,4 +6,5 @@ import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(EntityPlayer.class)
 public class MixinEntityPlayer {
+
 }

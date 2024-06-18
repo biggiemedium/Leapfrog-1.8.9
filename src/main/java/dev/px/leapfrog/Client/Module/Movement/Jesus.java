@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.Module.Movement;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
 import dev.px.leapfrog.API.Event.World.WorldBlockAABBEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
@@ -24,6 +25,24 @@ public class Jesus extends Module {
     private Setting<Mode> mode = create(new Setting<>("Mode", Mode.Vanilla));
 
     @EventHandler
+    private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
+        switch (mode.getValue()) {
+            case Vanilla:
+
+                break;
+            case NCP:
+                //if(PlayerUtil.onLiquid()) {
+                //    MoveUtil.setMoveSpeed(event, MoveUtil.getBaseMoveSpeed());
+                //}
+                break;
+
+            case karhu:
+
+                break;
+        }
+    });
+
+    @EventHandler
     private Listener<PlayerMotionEvent> updateEventListener = new Listener<>(event -> {
         if(event.getStage() == Event.Stage.Pre) {
             switch (mode.getValue()) {
@@ -31,13 +50,16 @@ public class Jesus extends Module {
 
                     break;
                 case NCP:
-                    if(mc.thePlayer.ticksExisted % 2 == 0 && PlayerUtil.onLiquid()) {
-                        event.setY(event.getY() - 0.18f);
+                    if (mc.thePlayer.ticksExisted % 2 == 0 && PlayerUtil.onLiquid()) {
+                        event.setY(event.getY() - 0.015625);
                     }
                     break;
 
-                case Grim:
-
+                case karhu:
+                    if(PlayerUtil.onLiquid()) {
+                        event.setY(event.getY() - (mc.thePlayer.ticksExisted % 2 == 0 ? 0.015625 : 0));
+                        event.setOnGround(true);
+                    }
                     break;
             }
 
@@ -50,7 +72,7 @@ public class Jesus extends Module {
 
                     break;
 
-                case Grim:
+                case karhu:
 
                     break;
             }
@@ -70,13 +92,26 @@ public class Jesus extends Module {
                 }
                 break;
             case NCP:
+                if (event.getBlock() instanceof BlockLiquid && !mc.gameSettings.keyBindSneak.isKeyDown()) {
+                    int x = event.getBlockPos().getX();
+                    int y = event.getBlockPos().getY();
+                    int z = event.getBlockPos().getZ();
 
+                    event.setBoundingBox(AxisAlignedBB.fromBounds(x, y, z, x + 1, y + 1, z + 1));
+                }
                 break;
 
-            case Grim:
+            case karhu:
+                if (event.getBlock() instanceof BlockLiquid && !mc.gameSettings.keyBindSneak.isKeyDown()) {
+                    int x = event.getBlockPos().getX();
+                    int y = event.getBlockPos().getY();
+                    int z = event.getBlockPos().getZ();
 
+                    event.setBoundingBox(AxisAlignedBB.fromBounds(x, y, z, x + 1, y + 1, z + 1));
+                }
                 break;
         }
+
     });
 
     @EventHandler
@@ -89,12 +124,10 @@ public class Jesus extends Module {
 
                     break;
                 case NCP:
-                    if(!PlayerUtil.inLiquid() && PlayerUtil.onLiquid()) {
-                        mc.thePlayer.posY = packet.getPositionY() - 0.18f;
-                    }
+
                     break;
 
-                case Grim:
+                case karhu :
 
                     break;
             }
@@ -104,7 +137,7 @@ public class Jesus extends Module {
     private enum Mode {
         Vanilla,
         NCP,
-        Grim
+        karhu
     }
 
 }

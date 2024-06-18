@@ -16,4 +16,10 @@ public interface IMixinMinecraft {
 
     @Accessor("rightClickDelayTimer")
     void setRightClickDelayTimer(int value);
+
+    @Accessor("leftClickCounter")
+    int getLeftClickCounter();
+
+    @Accessor("leftClickCounter")
+    void setLeftClickCounter(int counter);
 }

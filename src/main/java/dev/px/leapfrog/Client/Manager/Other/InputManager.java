@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.Manager.Other;
 
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
@@ -68,7 +69,13 @@ public class InputManager implements Listenable {
                         }
 
                         if(keyCode == Keyboard.KEY_U) {
-                            LeapFrog.notificationManager.pushNotification("Test", "Yes", Notification.NotificationType.INFO, 5);
+                            LeapFrog.configManager.addConfig("Test Config");
+                            ChatUtil.sendClientSideMessage("Saved Config: Test Config");
+                        }
+
+                        if(keyCode == Keyboard.KEY_I) {
+                            LeapFrog.configManager.loadConfig("Test Config");
+                            ChatUtil.sendClientSideMessage("Load Config: Test Config");
                         }
 
                     }

@@ -7,4 +7,8 @@ import dev.px.leapfrog.Client.Module.Setting;
 @Module.ModuleInterface(name = "Kill aura", type = Type.Combat, description = "Auto targets enemies with sword")
 public class KillAura extends Module {
 
+    public KillAura() {
+
+    }
+
 }

@@ -32,6 +32,10 @@ public class RenderUtil {
     private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
     private static Minecraft mc = Wrapper.getMC();
 
+    public static void resetColor() {
+        GL11.glColor4f(1, 1, 1, 1);
+    }
+
     public static double[] renderInterpolations(EntityPlayer player, float ticks) {
         double pX = player.lastTickPosX + (player.posX - player.lastTickPosX) * ticks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosX();
         double pY = player.lastTickPosY + (player.posY - player.lastTickPosY) * ticks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosY();

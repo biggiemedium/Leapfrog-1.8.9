@@ -10,6 +10,7 @@
     "Listeners.IMixinMinecraft",
     "Listeners.IMixinSkinManager",
     "Entity.MixinAbstractClientPlayer",
+    "Entity.MixinEntity",
     "Entity.MixinEntityPlayer",
     "Entity.MixinEntityPlayerSP",
     "Entity.MixinEntityLivingBase",
