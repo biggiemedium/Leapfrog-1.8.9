@@ -5,10 +5,12 @@ import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Shaders.GLSLSandboxShader;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
+import dev.px.leapfrog.API.Util.Render.Texture;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.GuiModList;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -22,6 +24,7 @@ import java.io.IOException;
 public class CustomMainMenu extends GuiScreen {
 
     private GLSLSandboxShader backgroundShader;
+    private Texture texture;
     private MenuButton modButton;
     private long time = -1;
 
@@ -29,7 +32,7 @@ public class CustomMainMenu extends GuiScreen {
         try {
             //this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/background.fsh");
             this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/wave.fsh");
-
+            this.texture = new Texture(new ResourceLocation("Leapfrog/Images/Froggy.png"));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load background shader", e);
         }
@@ -55,6 +58,7 @@ public class CustomMainMenu extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         int y = this.height / 4 + 55;
+
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
         GlStateManager.disableCull();
         this.backgroundShader.useShader((int) (sr.getScaledWidth() * 2.0f), (int) (sr.getScaledHeight() * 2.0f), (float) mouseX, (float) mouseY, (float) (System.currentTimeMillis() - time) / 1000.0F);
@@ -65,6 +69,7 @@ public class CustomMainMenu extends GuiScreen {
         GL11.glVertex2f(1f, -1f);
         GL11.glEnd();
         GL20.glUseProgram(0);
+        texture.renderT(this.width / 2, y - 50, 50, 50);
         super.drawScreen(mouseX, mouseY, partialTicks);
         //FontRenderer.sans40_bold.drawString("LeapFrog", this.width / 2 - FontRenderer.sans40_bold.getStringWidth("LeapFrog"), y - FontRenderer.sans40_bold.getHeight(), -1);
     }

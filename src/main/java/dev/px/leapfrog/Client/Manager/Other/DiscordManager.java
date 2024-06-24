@@ -1,3 +1,4 @@
+/*
 package dev.px.leapfrog.Client.Manager.Other;
 
 import club.minnced.discord.rpc.DiscordEventHandlers;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.GuiMainMenu;
 
 import java.util.Objects;
 import java.util.Random;
-import java.util.logging.Logger;
 
 public class DiscordManager {
 
@@ -29,12 +29,11 @@ public class DiscordManager {
     public DiscordManager() {
         this.rpc = DiscordRPC.INSTANCE;
         this.user = new DiscordUser();
-        LeapFrog.LOGGER.info("Presence started for " + user.username);
     }
 
     public void start() {
-        LeapFrog.LOGGER.info("Starting RPC");
-        handlers.ready = (user) -> LeapFrog.LOGGER.info("Ready to start RPC!");
+        System.out.println("Starting RPC");
+        handlers.ready = (user) -> System.out.println("Ready to start RPC!");
         rpc.Discord_Initialize(applicationId, handlers, true, steamId);
 
         rpc.Discord_UpdatePresence(presence);
@@ -56,7 +55,7 @@ public class DiscordManager {
     }
 
     public void shutDown() {
-        LeapFrog.LOGGER.info("Shutting Down RPC");
+        System.out.println("Shutting Down RPC");
         if(!this.thread.isInterrupted() || thread.isAlive()) {
             this.thread.interrupt();
             this.rpc.Discord_Shutdown();
@@ -100,10 +99,12 @@ public class DiscordManager {
             return mc.thePlayer.getName() + " | " + "Singleplayer";
         }
 
-        if(mc.thePlayer != null && !mc.isSingleplayer() && !(Objects.requireNonNull(mc.getCurrentServerData()).serverIP == null)) {
+        if(mc.thePlayer != null && !mc.isSingleplayer() && mc.getCurrentServerData() != null && mc.getCurrentServerData().serverIP != null) {
             return mc.thePlayer.getName() + " | " + "Multiplayer";
         }
 
         return detail;
     }
 }
+
+ */

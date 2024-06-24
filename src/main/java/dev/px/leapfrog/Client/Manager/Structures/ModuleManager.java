@@ -28,6 +28,7 @@ public class ModuleManager {
         Add(new FakePlayer());
         Add(new FastPlace());
         Add(new FreeCam());
+        Add(new NoRotate());
         Add(new Timer());
 
         Add(new AirJump());

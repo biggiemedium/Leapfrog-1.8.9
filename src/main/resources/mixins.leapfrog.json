@@ -9,6 +9,7 @@
     "Listeners.IMixinRenderManager",
     "Listeners.IMixinMinecraft",
     "Listeners.IMixinSkinManager",
+    "Listeners.IMixinS08PacketPlayerPosLook",
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntity",
     "Entity.MixinEntityPlayer",

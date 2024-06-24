@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
 import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.MathHelper;
 
 /**
  * @author alan
@@ -26,6 +27,26 @@ public class MoveUtil {
         }
 
         return motionY;
+    }
+
+    public static void strafe(double speed, float yaw) {
+        if (!isMoving()) {
+            return;
+        }
+
+        yaw = (float) Math.toRadians(yaw);
+        mc.thePlayer.motionX = -MathHelper.sin(yaw) * speed;
+        mc.thePlayer.motionZ = MathHelper.cos(yaw) * speed;
+    }
+
+    public static void strafe(double speed) {
+        if (!isMoving()) {
+            return;
+        }
+
+        float yaw = getDirection(mc.thePlayer.rotationYaw);
+        mc.thePlayer.motionX = -MathHelper.sin(yaw) * speed;
+        mc.thePlayer.motionZ = MathHelper.cos(yaw) * speed;
     }
 
     public static double getBaseMoveSpeed() {

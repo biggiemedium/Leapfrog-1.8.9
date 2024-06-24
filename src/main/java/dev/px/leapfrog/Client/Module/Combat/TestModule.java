@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
+import dev.px.leapfrog.API.Module.BetweenInteger;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.API.Util.Math.MoveUtil;
@@ -16,6 +17,7 @@ import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -33,6 +35,7 @@ public class TestModule extends Module {
     private Setting<Float> timer = create(new Setting<>("Timer", 1.0f, 0.0f, 5.0f));
     private Setting<Float> speedV = create(new Setting<>("V speed", 1.0f, 0.0f, 10.0f));
     private Setting<Float> speedH = create(new Setting<>("H Speed", 1.0f, 0.0f, 10.0f));
+    private Setting<BetweenInteger<Integer>> betweenn = create(new Setting<>("CPS", new BetweenInteger<>(1, 10)));
 
     private int ticks = 0;
     private double speed;
@@ -62,6 +65,14 @@ public class TestModule extends Module {
 
     @EventHandler
     private Listener<PacketReceiveEvent> packetrEventListener = new Listener<>(event -> {
+
+    });
+
+    @EventHandler
+    private Listener<PacketSendEvent> packetsEventListener = new Listener<>(event -> {
+        if(event.getPacket() instanceof C0FPacketConfirmTransaction || event.getPacket() instanceof C00PacketKeepAlive) {
+            event.cancel();
+        }
 
     });
 

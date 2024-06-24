@@ -93,6 +93,19 @@ public class PlayerUtil {
         return false;
     }
 
+    public static boolean isBlockUnderEntity(EntityPlayer player, Block block, int range) {
+        for (int i = 0; i < range; i++) {
+            int blockX = MathHelper.floor_double(player.posX);
+            int blockY = MathHelper.floor_double(player.getEntityBoundingBox().minY) - 1 - i;
+            int blockZ = MathHelper.floor_double(player.posZ);
+            BlockPos blockPos = new BlockPos(blockX, blockY, blockZ);
+            if (mc.theWorld.getBlockState(blockPos).getBlock() == block) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean onLiquid() {
         boolean onLiquid = false;
         final AxisAlignedBB playerBB = PlayerUtil.mc.thePlayer.getEntityBoundingBox();

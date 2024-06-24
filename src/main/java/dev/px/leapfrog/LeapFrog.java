@@ -44,7 +44,7 @@ public class LeapFrog {
     public static CapeManager capeManager;
     public static SpotifyManager spotifyManager;
     public static InputManager inputManager;
-    public static DiscordManager discordManager;
+    //public static DiscordManager discordManager;
     public static MultiThreadingManager threadManager;
     public static ServerManager serverManager;
     public static NotificationManager notificationManager;
@@ -73,8 +73,8 @@ public class LeapFrog {
         capeManager = new CapeManager();
         serverManager = new ServerManager();
         notificationManager  = new NotificationManager();
-        discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
-        discordManager.start();
+        //discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
+        //discordManager.start();
         fileManager = new FileManager();
         configManager = new ConfigManager();
         // way down

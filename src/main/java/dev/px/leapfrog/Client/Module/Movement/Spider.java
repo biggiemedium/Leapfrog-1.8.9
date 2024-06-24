@@ -16,7 +16,7 @@ public class Spider extends Module {
 
     }
 
-    public Setting<Mode> mode = create(new Setting<>("Mode", Mode.Verses));
+    public Setting<Mode> mode = create(new Setting<>("Mode", Mode.Verus));
 
     private boolean versusFlag = false;
     private boolean spoofFlag = false;
@@ -25,7 +25,7 @@ public class Spider extends Module {
     private Listener<PlayerMotionEvent> updateEventListener = new Listener<>(event -> {
         if(event.getStage() == Event.Stage.Pre) {
             switch (mode.getValue()) {
-                case Verses:
+                case Verus:
                     if(mc.thePlayer.isCollidedHorizontally && !versusFlag && mc.thePlayer.ticksExisted % 3 == 0) {
                         mc.thePlayer.motionY = MoveUtil.jumpBoostMotion(MoveUtil.JUMP_HEIGHT);
                     }
@@ -55,7 +55,7 @@ public class Spider extends Module {
     });
 
     private enum Mode {
-        Verses,
+        Verus,
         Vulcan
     }
 
