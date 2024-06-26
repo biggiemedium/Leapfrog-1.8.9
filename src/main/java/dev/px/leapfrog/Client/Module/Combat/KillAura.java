@@ -11,4 +11,12 @@ public class KillAura extends Module {
 
     }
 
+    // rotate
+    // block
+    // click mode
+    // cps
+    // raycast
+
+
+
 }

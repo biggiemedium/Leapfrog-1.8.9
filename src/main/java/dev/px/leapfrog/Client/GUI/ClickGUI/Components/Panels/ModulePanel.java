@@ -33,9 +33,12 @@ public class ModulePanel implements Component {
         this.type = type;
 
         buttons.clear();
-        for(Module m : LeapFrog.moduleManager.getModules()) {
-            if(m.getType() == type) {
-                buttons.add(new ModuleButton(m, x + 8, y, width - 8, new Color(35, 35, 35), this));
+        int offsetY = 0;
+        for (Module m : LeapFrog.moduleManager.getModules()) {
+            if (m.getType() == type) {
+                ModuleButton button = new ModuleButton(m, x + 8, y, width - 8, new Color(35, 35, 35), this);
+                buttons.add(button);
+                //offsetY += button.getHeight() + button.getFeatureHeight() + 4;
             }
         }
     }
@@ -44,6 +47,14 @@ public class ModulePanel implements Component {
         for(ModuleButton b : buttons) {
             b.initGUI();
         }
+    }
+
+    private int calculateTotalHeight() {
+        int totalHeight = 0;
+        for (ModuleButton b : buttons) {
+            totalHeight += b.getHeight() + b.getFeatureHeight() + 4;
+        }
+        return totalHeight;
     }
 
     @Override

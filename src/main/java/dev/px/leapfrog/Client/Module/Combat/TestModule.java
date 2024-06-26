@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.Module.Combat;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
@@ -9,6 +10,7 @@ import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.API.Util.Math.MoveUtil;
 import dev.px.leapfrog.API.Util.Math.TimerUtil;
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -65,14 +67,15 @@ public class TestModule extends Module {
 
     @EventHandler
     private Listener<PacketReceiveEvent> packetrEventListener = new Listener<>(event -> {
-
+        if(event.getPacket() instanceof S08PacketPlayerPosLook) {
+            ChatUtil.sendClientSideMessage(ChatFormatting.RED + "Warning: " + ChatFormatting.RESET + "You flagged the anti-cheat!");
+        }
     });
 
     @EventHandler
     private Listener<PacketSendEvent> packetsEventListener = new Listener<>(event -> {
-        if(event.getPacket() instanceof C0FPacketConfirmTransaction || event.getPacket() instanceof C00PacketKeepAlive) {
-            event.cancel();
-        }
+
+
 
     });
 

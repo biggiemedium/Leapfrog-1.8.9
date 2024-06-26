@@ -1,11 +1,15 @@
 package dev.px.leapfrog.API.Util;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.px.leapfrog.API.Event.Client.SettingUpdateEvent;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Game.KeyPressEvent;
+import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
+import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
 import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
@@ -14,6 +18,7 @@ import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listenable;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -32,6 +37,7 @@ public class EventProcessor implements Listenable {
     }
 
     private Minecraft mc = Minecraft.getMinecraft();
+    private boolean isTeleporting = false;
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent event) {
@@ -109,8 +115,25 @@ public class EventProcessor implements Listenable {
         if(mc.thePlayer == null || mc.theWorld == null) {
             return;
         }
+
         PlayerUpdateEvent e = new PlayerUpdateEvent(Event.Stage.Pre);
         LeapFrog.EVENT_BUS.post(e);
     }
 
+    @EventHandler
+    private Listener<PacketReceiveEvent> packetrEventListener = new Listener<>(event -> {
+        if(LeapFrog.settingsManager.ANTICHEATFLAG.getValue()) {
+            if (event.getPacket() instanceof S08PacketPlayerPosLook) {
+                if (!isTeleporting) {
+                    ChatUtil.sendClientSideMessage(ChatFormatting.RED + "Warning: " + ChatFormatting.RESET + "You flagged the anti-cheat!");
+                }
+                isTeleporting = false;
+            }
+        }
+    });
+
+    @EventHandler
+    private Listener<PlayerTeleportEvent> teleportEventListener = new Listener<>(event -> {
+        isTeleporting = true;
+    });
 }

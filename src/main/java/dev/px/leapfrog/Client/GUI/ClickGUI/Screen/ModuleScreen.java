@@ -2,6 +2,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.Screen;
 
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
+import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Components.Panels.ModulePanel;
@@ -13,6 +14,7 @@ public class ModuleScreen extends Screen {
 
     private ModulePanel panel;
     private Type type;
+    private RenderUtil.ScissorStack stack = new RenderUtil.ScissorStack();
 
     public ModuleScreen(int x, int y, int width, int height, Type type, ClickGUI clickGUI) {
         super(type.name(), x, y, width, height, clickGUI);
@@ -39,7 +41,9 @@ public class ModuleScreen extends Screen {
         panel.setY(getY() + 36);
         panel.setWidth(getWidth() - 16);
         panel.setHeight(getHeight() - 45);
+        //stack.pushScissor(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight());
         panel.render(mouseX, mouseY);
+        //stack.popScissor();
     }
 
     @Override

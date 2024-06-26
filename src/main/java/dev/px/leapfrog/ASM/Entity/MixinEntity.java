@@ -1,15 +1,18 @@
 package dev.px.leapfrog.ASM.Entity;
 
+import dev.px.leapfrog.API.Event.Entity.EntityCollisionBorderSize;
 import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerStrafeEvent;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class MixinEntity {
@@ -20,6 +23,17 @@ public class MixinEntity {
     public void applyEntityCollisionEvent(Entity entity, CallbackInfo ci) {
         if(entity == Minecraft.getMinecraft().thePlayer) {
 
+        }
+    }
+
+    @Inject(method = "getCollisionBorderSize", at = @At("HEAD"), cancellable = true)
+    public void adjustBorderSize(CallbackInfoReturnable<Float> cir) {
+        if((Object) this instanceof EntityPlayer) {
+            EntityCollisionBorderSize event = new EntityCollisionBorderSize();
+            LeapFrog.EVENT_BUS.post(event);
+            if (event.isCancelled()) {
+                cir.setReturnValue(event.getBorderSize());
+            }
         }
     }
 

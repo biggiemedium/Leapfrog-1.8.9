@@ -22,8 +22,6 @@ public class ClickGUI extends GuiScreen {
     /*
     Categories TODO:
     Module,
-    Client Settings,
-    Theme,
     Friends/Socials,
     Configs
      */
@@ -49,6 +47,7 @@ public class ClickGUI extends GuiScreen {
         this.screens = new ArrayList<>();
 
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Combat, this));
+        this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Ghost, this));
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Misc, this));
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Movement, this));
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Visual, this));

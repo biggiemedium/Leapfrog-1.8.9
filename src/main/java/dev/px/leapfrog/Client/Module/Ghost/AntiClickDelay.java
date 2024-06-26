@@ -1,4 +1,4 @@
-package dev.px.leapfrog.Client.Module.Misc;
+package dev.px.leapfrog.Client.Module.Ghost;
 
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
@@ -8,7 +8,7 @@ import dev.px.leapfrog.Client.Module.Module;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 
-@Module.ModuleInterface(name = "Anti ClickDelay", type = Type.Misc, description = "Removes click delay")
+@Module.ModuleInterface(name = "Anti ClickDelay", type = Type.Ghost, description = "Removes click delay")
 public class AntiClickDelay extends Module {
 
     public AntiClickDelay() {

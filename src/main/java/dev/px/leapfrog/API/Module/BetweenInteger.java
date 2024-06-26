@@ -29,7 +29,7 @@ public class BetweenInteger<T extends Number & Comparable<T>> {
         adjustMinMax();
     }
 
-    private void adjustMinMax() {
+    public void adjustMinMax() {
         if (min.compareTo(max) > 0) {
             T temp = min;
             min = max;

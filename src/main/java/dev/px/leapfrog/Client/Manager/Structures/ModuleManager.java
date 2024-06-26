@@ -5,6 +5,7 @@ import dev.px.leapfrog.Client.Module.Combat.FastBow;
 import dev.px.leapfrog.Client.Module.Combat.KillAura;
 import dev.px.leapfrog.Client.Module.Combat.TestModule;
 import dev.px.leapfrog.Client.Module.Combat.Velocity;
+import dev.px.leapfrog.Client.Module.Ghost.*;
 import dev.px.leapfrog.Client.Module.Misc.*;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Movement.*;
@@ -22,15 +23,22 @@ public class ModuleManager {
         Add(new KillAura());
         Add(new Velocity());
 
+        // Ghost
         Add(new AntiClickDelay());
+        Add(new AutoClicker());
+        Add(new Disabler());
+        Add(new FastPlace());
+        Add(new Hitbox());
+
+        // Misc
         Add(new AntiVoid());
         Add(new ClientSpoofer());
         Add(new FakePlayer());
-        Add(new FastPlace());
         Add(new FreeCam());
         Add(new NoRotate());
         Add(new Timer());
 
+        // Movement
         Add(new AirJump());
         Add(new FastLadder());
         Add(new Flight());
@@ -40,6 +48,7 @@ public class ModuleManager {
         Add(new Spider());
         Add(new Strafe());
 
+        // Render
         Add(new ChatModification());
         Add(new ChinaHat());
         Add(new ESP());

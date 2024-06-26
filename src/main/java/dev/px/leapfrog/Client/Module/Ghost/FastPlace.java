@@ -1,4 +1,4 @@
-package dev.px.leapfrog.Client.Module.Misc;
+package dev.px.leapfrog.Client.Module.Ghost;
 
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
@@ -10,7 +10,7 @@ import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.item.ItemBlock;
 
-@Module.ModuleInterface(name = "Fast Place", type = Type.Misc, description = "Decreases place delay")
+@Module.ModuleInterface(name = "Fast Place", type = Type.Ghost, description = "Decreases place delay")
 public class FastPlace extends Module {
 
     public FastPlace() {

@@ -69,7 +69,7 @@ public class CustomMainMenu extends GuiScreen {
         GL11.glVertex2f(1f, -1f);
         GL11.glEnd();
         GL20.glUseProgram(0);
-        texture.renderT(this.width / 2, y - 50, 50, 50);
+        //texture.renderT(this.width / 2, y - 50, 50, 50);
         super.drawScreen(mouseX, mouseY, partialTicks);
         //FontRenderer.sans40_bold.drawString("LeapFrog", this.width / 2 - FontRenderer.sans40_bold.getStringWidth("LeapFrog"), y - FontRenderer.sans40_bold.getHeight(), -1);
     }

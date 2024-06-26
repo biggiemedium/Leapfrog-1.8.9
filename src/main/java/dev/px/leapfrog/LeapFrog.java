@@ -5,6 +5,7 @@ import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.Client.Manager.Other.*;
+import dev.px.leapfrog.Client.Manager.Player.PositionManager;
 import dev.px.leapfrog.Client.Manager.Structures.*;
 import me.zero.alpine.fork.bus.EventBus;
 import me.zero.alpine.fork.bus.EventManager;
@@ -50,6 +51,7 @@ public class LeapFrog {
     public static NotificationManager notificationManager;
     public static FileManager fileManager;
     public static ConfigManager configManager;
+    public static PositionManager positionManager;
 
     public static CustomMainMenu menu;
 
@@ -77,6 +79,7 @@ public class LeapFrog {
         //discordManager.start();
         fileManager = new FileManager();
         configManager = new ConfigManager();
+        positionManager = new PositionManager();
         // way down
         inputManager = new InputManager(); // put this after everything bc it calls on ColorManager, Module Manager, Settings Manager, Element Manager
     }

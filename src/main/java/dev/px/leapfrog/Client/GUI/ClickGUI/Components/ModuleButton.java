@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.GUI.ClickGUI.Components;
 
+import dev.px.leapfrog.API.Module.BetweenInteger;
 import dev.px.leapfrog.API.Module.Bind;
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
@@ -57,16 +58,26 @@ public class ModuleButton implements Component {
                     offsetY += b.getHeight();
                 }
                 if(s.getValue() instanceof Number) {
+                   //if (s.getValue() instanceof BetweenInteger) {
+                   //    BetweenIntegerButton b = new BetweenIntegerButton(this, getX(), getY() + offsetY, (Setting<BetweenIntegerButton<?>>) s);
+                   //    settingButtons.add(b);
+                   //    offsetY += b.getHeight();
+                   //} else {
                     SliderButton b = new SliderButton(this, getX(), getY() + offsetY, s);
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
+                    //}
                 }
                 if(s.getValue() instanceof Enum) {
                     EnumButton b = new EnumButton(this, getX(), getY() + offsetY, s);
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
                 }
-
+                if (s.getValue() instanceof BetweenInteger) {
+                    BetweenIntegerButton b = new BetweenIntegerButton(this, getX(), getY() + offsetY, (Setting<BetweenIntegerButton<?>>) s);
+                    settingButtons.add(b);
+                    offsetY += b.getHeight();
+                }
 
                 // Keybind
                 if(s.getValue() instanceof Bind) {
@@ -120,9 +131,9 @@ public class ModuleButton implements Component {
                 }
             });
         }
+
         // Setting background
         RoundedShader.drawRound(getX() + 4, y, getWidth() - 8, height + (featureHeight * (float) openAnimation.getAnimationFactor()), 2, color);
-
 
         if(hover.getAnimationFactor() > 0) {
             RoundedShader.drawRoundOutline(getX() + 4, y, getWidth() - 8, height, 4, 0.5f, new Color(0, 0, 0, 0), new Color(255, 255, 255, 150));
@@ -142,13 +153,11 @@ public class ModuleButton implements Component {
         // Button rendering
         // Button position handling must come before
         if(openAnimation.getAnimationFactor() > 0) {
-          //  stack.pushScissor((int) this.getX(), (int) this.getY(), (int) this.getWidth(), (int) height + ((int)featureHeight * (int) openAnimation.getAnimationFactor()));
             this.settingButtons.forEach(settingButton -> {
                 if (settingButton.getSetting().isVisible()) {
                     settingButton.draw(mouseX, mouseY);
                 }
             });
-          //  stack.popScissor();
         }
     }
 

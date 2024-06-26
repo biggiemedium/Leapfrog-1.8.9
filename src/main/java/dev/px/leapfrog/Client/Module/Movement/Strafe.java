@@ -13,6 +13,8 @@ import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +32,56 @@ public class Strafe extends Module {
 
     private double speed = 0.0D;
     private int stage = 0;
+    private double jumpY = 0;
+
+    @EventHandler
+    private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
+        switch (mode.getValue()) {
+            case NCP:
+                double speed = 0.0f;
+                double offsetY = 0; // change to 0 ?
+                double forward = mc.thePlayer.movementInput.moveForward;
+                double strafe = mc.thePlayer.movementInput.moveStrafe;
+                float yaw = mc.thePlayer.rotationYaw;
+
+                if (mc.thePlayer.isPotionActive(Potion.jump)) {
+                    offsetY += (mc.thePlayer.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+                }
+
+                speed = 0.2873f;
+                this.jumpY = offsetY;
+
+                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                    int amplifier = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
+                    speed *= (1.0f + 0.2f * (amplifier + 1));
+                }
+
+                if (forward == 0.0D && strafe == 0.0D) {
+                    event.setX(0.0D);
+                    event.setZ(0.0D);
+                } else {
+                    if (forward != 0.0D) {
+                        if (strafe > 0.0D) {
+                            yaw += (float) ((forward > 0.0D) ? -45 : 45);
+                        } else if (strafe < 0.0D) {
+                            yaw += (float) ((forward > 0.0D) ? 45 : -45);
+                        }
+
+                        strafe = 0.0D;
+
+                        if (forward > 0.0D) {
+                            forward = 1.0D;
+                        } else if (forward < 0.0D) {
+                            forward = -1.0D;
+                        }
+                    }
+
+                    event.setX(forward * speed * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0F)));
+                    event.setZ(forward * speed * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0F)));
+                }
+                break;
+        }
+    });
 
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
@@ -39,7 +91,7 @@ public class Strafe extends Module {
                     vanilla(event);
                     break;
                 case NCP:
-                    NCP(event);
+                    //NCP(event);
                     break;
 
                 case Grim:

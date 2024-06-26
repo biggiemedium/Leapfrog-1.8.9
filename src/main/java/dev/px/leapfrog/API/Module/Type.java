@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 public enum Type {
     Combat,
+    Ghost,
     Misc,
     Movement,
     Visual;
