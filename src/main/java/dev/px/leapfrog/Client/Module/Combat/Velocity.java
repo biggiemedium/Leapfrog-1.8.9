@@ -5,6 +5,8 @@ import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.ASM.Listeners.IMixinEntityPlayerSP;
+import dev.px.leapfrog.ASM.Listeners.IMixinS12PacketEntityVelocity;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
@@ -22,6 +24,9 @@ public class Velocity extends Module {
 
     private Setting<Mode> mode = create(new Setting<>("Mode", Mode.HurtTick));
     private boolean cancel = false;
+
+    private Setting<Integer> horizontal = create(new Setting<>("Horizontal", 100, 0, 100, v -> mode.getValue() == Mode.Packet));
+    private Setting<Integer> vertical = create(new Setting<>("Vertical", 100, 0, 100, v -> mode.getValue() == Mode.Packet));
 
 
     @EventHandler
@@ -43,7 +48,7 @@ public class Velocity extends Module {
     @EventHandler
     private Listener<PacketSendEvent> packetSendEventListener = new Listener<>(event -> {
         switch (mode.getValue()) {
-            case NCP:
+            case C0F:
             if (event.getPacket() instanceof C0FPacketConfirmTransaction && mc.thePlayer.hurtTime > 0) {
                 event.cancel();
             }
@@ -51,6 +56,7 @@ public class Velocity extends Module {
         }
     });
 
+    @SuppressWarnings("duplicate")
     @EventHandler
     private Listener<PacketReceiveEvent> receiveEventListener = new Listener<>(event -> {
         switch (mode.getValue()) {
@@ -78,13 +84,42 @@ public class Velocity extends Module {
                         event.cancel();
                     }
                 }
+                break;
+            case C0F:
+                if(event.getPacket() instanceof S12PacketEntityVelocity) {
+                    if(mc.thePlayer == null) return;
+                    if(((S12PacketEntityVelocity) event.getPacket()).getEntityID() == mc.thePlayer.getEntityId()) {
+                        event.cancel();
+                    }
+                }
+                break;
+            case Packet:
+                if (event.getPacket() instanceof S12PacketEntityVelocity) {
+                    if (mc.thePlayer == null) return;
+                    if (((S12PacketEntityVelocity) event.getPacket()).getEntityID() == mc.thePlayer.getEntityId()) {
+                        // Horizontal
+                        ((IMixinS12PacketEntityVelocity) event.getPacket()).setMotionX(horizontal.getValue() / 100);
+                        ((IMixinS12PacketEntityVelocity) event.getPacket()).setMotionZ(horizontal.getValue() / 100);
+
+                        // Vertical
+                        ((IMixinS12PacketEntityVelocity) event.getPacket()).setMotionY(vertical.getValue() / 100);
+                    }
+                }
+                break;
         }
     });
+
+    @Override
+    public void safeToggle(S08PacketPlayerPosLook packet, boolean teleport) {
+        super.safeToggle(packet, teleport);
+    }
 
     private enum Mode {
         HurtTick,
         Grim,
-        NCP
+        NCP,
+        C0F,
+        Packet
     }
 
 }

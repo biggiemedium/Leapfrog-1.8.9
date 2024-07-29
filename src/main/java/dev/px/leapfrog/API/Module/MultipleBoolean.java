@@ -1,16 +1,39 @@
 package dev.px.leapfrog.API.Module;
 
+import dev.px.leapfrog.Client.Module.Setting;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MultipleBoolean {
 
-    private Boolean[] settings;
+    private ArrayList<Setting<Boolean>> settings;
 
-    public MultipleBoolean(Boolean... settings) {
+    public MultipleBoolean(ArrayList<Setting<Boolean>> settings) {
         this.settings = settings;
     }
 
+    public MultipleBoolean add(Setting<Boolean> b) {
+        this.settings.add(b);
+        return this;
+    }
 
+    public ArrayList<Boolean> getValues() {
+        ArrayList<Boolean> values = new ArrayList<>();
+        for (Setting<Boolean> setting : settings) {
+            values.add(setting.getValue());
+        }
+        return values;
+    }
 
+    public void toggleAll() {
+        for (Setting<Boolean> setting : settings) {
+            setting.setValue(!setting.getValue());
+        }
+    }
+
+    public MultipleBoolean build() {
+        return this;
+    }
 }

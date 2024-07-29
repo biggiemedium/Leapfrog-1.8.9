@@ -1,10 +1,7 @@
 package dev.px.leapfrog.Client.Manager.Structures;
 
 import dev.px.leapfrog.API.Module.Type;
-import dev.px.leapfrog.Client.Module.Combat.FastBow;
-import dev.px.leapfrog.Client.Module.Combat.KillAura;
-import dev.px.leapfrog.Client.Module.Combat.TestModule;
-import dev.px.leapfrog.Client.Module.Combat.Velocity;
+import dev.px.leapfrog.Client.Module.Combat.*;
 import dev.px.leapfrog.Client.Module.Ghost.*;
 import dev.px.leapfrog.Client.Module.Misc.*;
 import dev.px.leapfrog.Client.Module.Module;
@@ -12,12 +9,14 @@ import dev.px.leapfrog.Client.Module.Movement.*;
 import dev.px.leapfrog.Client.Module.Render.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ModuleManager {
 
     private ArrayList<Module> modules = new ArrayList<>();
 
     public ModuleManager() {
+        Add(new ExtraKnockBack());
         Add(new TestModule());
         Add(new FastBow());
         Add(new KillAura());
@@ -25,6 +24,7 @@ public class ModuleManager {
 
         // Ghost
         Add(new AntiClickDelay());
+        Add(new AntiMiss());
         Add(new AutoClicker());
         Add(new Disabler());
         Add(new FastPlace());
@@ -32,6 +32,7 @@ public class ModuleManager {
 
         // Misc
         Add(new AntiVoid());
+        Add(new AutoInventory());
         Add(new ClientSpoofer());
         Add(new FakePlayer());
         Add(new FreeCam());
@@ -49,6 +50,7 @@ public class ModuleManager {
         Add(new Strafe());
 
         // Render
+        Add(new Animations());
         Add(new ChatModification());
         Add(new ChinaHat());
         Add(new ESP());
@@ -57,8 +59,12 @@ public class ModuleManager {
         Add(new HotbarModification());
         Add(new ItemPhysics());
         Add(new NameTags());
+        Add(new NoRender());
         Add(new NoShake());
+        Add(new TargetHUD());
         Add(new ThanosSnapEffect());
+
+        Collections.sort(modules);
     }
 
     private void Add(Module module) {

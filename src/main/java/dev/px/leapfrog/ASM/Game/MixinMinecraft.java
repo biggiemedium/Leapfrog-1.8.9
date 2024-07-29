@@ -1,6 +1,8 @@
 package dev.px.leapfrog.ASM.Game;
 
 import dev.px.leapfrog.API.Event.Event;
+import dev.px.leapfrog.API.Event.Input.ClickMouseEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerAttackEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Gui.CustomMainMenu;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
@@ -16,6 +18,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
@@ -50,6 +53,7 @@ public abstract class MixinMinecraft {
     private boolean fullscreen;
 
     @Shadow public GuiScreen currentScreen;
+    @Shadow public MovingObjectPosition objectMouseOver;
     private ResourceLocation shaders = new ResourceLocation("minecraft", "shaders/post/blur" + ".json");
 
     @Inject(method = "runTick()V", at = @At("RETURN"))
@@ -60,6 +64,27 @@ public abstract class MixinMinecraft {
     @Inject(method = "displayGuiScreen", at = @At("RETURN"), cancellable = true)
     public void displayGuiScreenInject(GuiScreen guiScreenIn, CallbackInfo ci) {
 
+    }
+
+    @Inject(method = "clickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingItem()V", shift = At.Shift.BEFORE), cancellable = true)
+    public void onMouseClick(CallbackInfo ci) {
+        if(this.objectMouseOver.entityHit != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+            PlayerAttackEvent event = new PlayerAttackEvent(this.objectMouseOver.entityHit);
+            LeapFrog.EVENT_BUS.post(event);
+            event.setStage(Event.Stage.Pre);
+            if(event.isCancelled()) {
+                ci.cancel();
+            }
+        }
+    }
+
+    @Inject(method = "clickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingItem()V", shift = At.Shift.BEFORE), cancellable = true)
+    public void onMouseClickHead(CallbackInfo ci) {
+        ClickMouseEvent event = new ClickMouseEvent();
+        LeapFrog.EVENT_BUS.post(event);
+        if(event.isCancelled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "runTick", at = @At("TAIL"))

@@ -122,7 +122,7 @@ public class CustomMainMenu extends GuiScreen {
                         this.xPosition + (width / 2D) - (FontRenderer.sans24_bold.getStringWidth(this.displayString) / 2),
                         this.yPosition + (height / 2D) - (FontRenderer.sans24_bold.getHeight() / 2), -1);
                 RoundedShader.drawRoundOutline(xPosition, yPosition, width, height, 4, 1,
-                        this.hovered ? new Color(200, 200, 200, 100) : new Color(255, 255, 255, 100), new Color(255, 255, 255));
+                        this.hovered ? new Color(200, 200, 200, 100) : new Color(255, 255, 255, 25), new Color(255, 255, 255, 225));
                 hoverAnimation.setState(this.hovered);
             }
         }

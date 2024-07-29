@@ -245,6 +245,13 @@ public class RenderUtil {
         }
     }
 
+    public static void scaleStart(float x, float y, float scale) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0);
+        GL11.glScalef(scale, scale, 1);
+        GL11.glTranslatef(-x, -y, 0);
+    }
+
     public static ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException {
         BufferedImage bufferedimage = ImageIO.read(imageStream);
         int[] aint = bufferedimage.getRGB(0, 0, bufferedimage.getWidth(), bufferedimage.getHeight(), (int[])null, 0, bufferedimage.getWidth());

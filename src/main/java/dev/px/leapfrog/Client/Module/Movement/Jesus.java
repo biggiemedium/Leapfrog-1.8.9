@@ -58,7 +58,7 @@ public class Jesus extends Module {
                 case karhu:
                     if(PlayerUtil.onLiquid()) {
                         event.setY(event.getY() - (mc.thePlayer.ticksExisted % 2 == 0 ? 0.015625 : 0));
-                        event.setOnGround(true);
+                        event.setOnGround(false);
                     }
                     break;
             }

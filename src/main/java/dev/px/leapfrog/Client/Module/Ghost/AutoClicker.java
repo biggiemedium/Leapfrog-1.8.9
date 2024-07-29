@@ -22,6 +22,7 @@ public class AutoClicker extends Module {
 
     private Setting<Integer> minSpeed = create(new Setting<>("Min CPS", 4, 0, 15));
     private Setting<Integer> maxSpeed = create(new Setting<>("Max CPS", 10, 0, 20));
+    private Setting<Boolean> noBlocking = create(new Setting<>("Blocking Check", true));
 
     private TimerUtil timer = new TimerUtil();
 
@@ -38,8 +39,14 @@ public class AutoClicker extends Module {
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
         if (event.getStage() == Event.Stage.Pre) {
+            if(minSpeed.getValue() > maxSpeed.getValue()) {
+                minSpeed.setValue(minSpeed.getValue() - 1);
+            }
             if (mc.gameSettings.keyBindAttack.isKeyDown()) {
                 if (mc.thePlayer.getHeldItem() != null && (mc.thePlayer.getHeldItem().getItem() instanceof ItemTool || mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)) {
+                    if(mc.thePlayer.isBlocking() && noBlocking.getValue()) {
+                        return;
+                    }
                     if (timer.passed(getCpsDelay())) {
                         mc.thePlayer.swingItem();
                         if (mc.objectMouseOver.entityHit != null) {
@@ -47,7 +54,6 @@ public class AutoClicker extends Module {
                         }
                         timer.reset();
                     }
-
                 }
             }
         } else {

@@ -25,10 +25,12 @@ public class FileManager {
 
     public void load() {
         FileUtil.loadModules(preferences);
+        FileUtil.loadSettings(preferences);
     }
 
     public void save() {
         FileUtil.saveModules(preferences);
+        FileUtil.saveSettings(preferences);
     }
 
     public File getDirectory() {

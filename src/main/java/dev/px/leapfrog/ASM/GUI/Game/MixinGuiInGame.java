@@ -2,6 +2,8 @@ package dev.px.leapfrog.ASM.GUI.Game;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import dev.px.leapfrog.API.Event.Render.Overlays.RenderPortalOverlayEvent;
+import dev.px.leapfrog.API.Event.Render.Overlays.RenderPumpkinOverlayEvent;
 import dev.px.leapfrog.API.Event.Render.RenderScoreboardEvent;
 import dev.px.leapfrog.API.Util.Render.Animation.SimpleAnimation;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
@@ -120,6 +122,22 @@ public abstract class MixinGuiInGame extends Gui {
                 }
             }
 
+        }
+    }
+
+    @Inject(method = "renderPumpkinOverlay", at = @At("HEAD"), cancellable = true)
+    public void onPumpkinRender(ScaledResolution p_renderPumpkinOverlay_1_, CallbackInfo ci) {
+        RenderPumpkinOverlayEvent event = new RenderPumpkinOverlayEvent();
+        if(event.isCancelled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "renderPortal", at = @At("HEAD"), cancellable = true)
+    public void onPoralRender(float p_renderPortal_1_, ScaledResolution p_renderPortal_2_, CallbackInfo ci) {
+        RenderPortalOverlayEvent event = new RenderPortalOverlayEvent();
+        if(event.isCancelled()) {
+            ci.cancel();
         }
     }
 

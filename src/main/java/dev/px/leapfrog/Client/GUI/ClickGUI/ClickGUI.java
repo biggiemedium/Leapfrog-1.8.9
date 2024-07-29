@@ -53,7 +53,7 @@ public class ClickGUI extends GuiScreen {
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Visual, this));
 
         this.screens.add(new ClientSettingsScreen(x + 80, y, width - 80, height, this));
-        this.screens.add(new ElementScreen(x + 80, y, width - 80, height, this));
+        //this.screens.add(new ElementScreen(x + 80, y, width - 80, height, this));
         this.screens.add(new ColorsScreen(x + 80, y, width - 80, height, this));
         this.currentScreen = screens.get(0);
 

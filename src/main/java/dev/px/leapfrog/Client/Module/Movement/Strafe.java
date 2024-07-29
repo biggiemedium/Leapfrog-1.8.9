@@ -3,11 +3,14 @@ package dev.px.leapfrog.Client.Module.Movement;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerStrafeEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.API.Util.Math.MoveUtil;
+import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
+import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.block.Block;
@@ -27,58 +30,22 @@ public class Strafe extends Module {
 
     }
 
-    public Setting<Mode> mode = create(new Setting<>("Mode", Mode.AAC));
+    public Setting<Mode> mode = create(new Setting<>("Mode", Mode.NCP));
     private Setting<Float> vanillaMultipler = create(new Setting<>("Vanilla Speed", 1.5F, 0.0F, 2.0F, v -> mode.getValue() == Mode.Vanilla));
+
+    // NCP
+    private Setting<Boolean> NCPTimer = create(new Setting<>("NCP Timer", false, v -> mode.getValue() == Mode.NCP));
 
     private double speed = 0.0D;
     private int stage = 0;
     private double jumpY = 0;
+    private int NCPTicks = 0;
 
     @EventHandler
     private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
         switch (mode.getValue()) {
             case NCP:
-                double speed = 0.0f;
-                double offsetY = 0; // change to 0 ?
-                double forward = mc.thePlayer.movementInput.moveForward;
-                double strafe = mc.thePlayer.movementInput.moveStrafe;
-                float yaw = mc.thePlayer.rotationYaw;
 
-                if (mc.thePlayer.isPotionActive(Potion.jump)) {
-                    offsetY += (mc.thePlayer.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
-                }
-
-                speed = 0.2873f;
-                this.jumpY = offsetY;
-
-                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
-                    int amplifier = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
-                    speed *= (1.0f + 0.2f * (amplifier + 1));
-                }
-
-                if (forward == 0.0D && strafe == 0.0D) {
-                    event.setX(0.0D);
-                    event.setZ(0.0D);
-                } else {
-                    if (forward != 0.0D) {
-                        if (strafe > 0.0D) {
-                            yaw += (float) ((forward > 0.0D) ? -45 : 45);
-                        } else if (strafe < 0.0D) {
-                            yaw += (float) ((forward > 0.0D) ? 45 : -45);
-                        }
-
-                        strafe = 0.0D;
-
-                        if (forward > 0.0D) {
-                            forward = 1.0D;
-                        } else if (forward < 0.0D) {
-                            forward = -1.0D;
-                        }
-                    }
-
-                    event.setX(forward * speed * Math.cos(Math.toRadians(yaw + 90.0F)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0F)));
-                    event.setZ(forward * speed * Math.sin(Math.toRadians(yaw + 90.0F)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0F)));
-                }
                 break;
         }
     });
@@ -91,21 +58,14 @@ public class Strafe extends Module {
                     vanilla(event);
                     break;
                 case NCP:
-                    //NCP(event);
+                    NCP(event);
                     break;
-
-                case Grim:
-                    Grim(event);
-                    break;
-
-                case AAC:
-                    AAC(event);
-                    break;
-
                 case Verus:
                     verus(event);
                     break;
             }
+        } else {
+            //((IMixinMinecraft) mc).timer().timerSpeed = 1.0f; // yes
         }
     });
 
@@ -128,13 +88,32 @@ public class Strafe extends Module {
     }
 
     private void NCP(PlayerMotionEvent event) {
-        float speed = 0.2873f;
-        speed *= 1.0064f;
-        if(MoveUtil.isMoving()) {
-            if(mc.thePlayer.onGround) {
-                mc.thePlayer.jump();
-            }
-            MoveUtil.setMoveSpeed(speed, mc.thePlayer.rotationYaw, mc.thePlayer.moveStrafing, mc.thePlayer.moveForward);
+        switch (NCPTicks) {
+            case 0:
+            case 1:
+                if (PlayerUtil.isMoving()) {
+                    if (mc.thePlayer.onGround) {
+                        mc.thePlayer.jump();
+                        NCPTicks++;
+                    }
+                }
+                break;
+
+            case 2:
+                if (PlayerUtil.isMoving()) {
+                    if (mc.thePlayer.onGround) {
+                        mc.thePlayer.jump();
+                        MoveUtil.setMoveSpeed(MoveUtil.getBaseMoveSpeed() + 0.2);
+                        if(this.NCPTimer.getValue()) {
+                            ((IMixinMinecraft) mc).timer().timerSpeed = 1.07f;
+                        } else {
+                            ((IMixinMinecraft) mc).timer().timerSpeed = 1.0f;
+                        }
+                    } else {
+                        MoveUtil.setMoveSpeed(MoveUtil.getBaseMoveSpeed());
+                    }
+                }
+                break;
         }
     }
 
@@ -162,12 +141,23 @@ public class Strafe extends Module {
 
     }
 
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        ((IMixinMinecraft) mc).timer().timerSpeed = 1.0f;
+        NCPTicks = 0;
+    }
 
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        NCPTicks = 0;
+    }
 
     private enum Mode {
         Vanilla,
-        AAC,
-        Grim,
+        //AAC,
+        //Grim,
         NCP,
         Verus
     }

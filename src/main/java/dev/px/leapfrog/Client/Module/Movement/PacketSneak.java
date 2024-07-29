@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.Module.Movement;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.ASM.Listeners.IMixinNetHandlerPlayClient;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
@@ -29,6 +30,9 @@ public class PacketSneak extends Module {
                 case NCP:
                     mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING));
                     break;
+                case Legit:
+                    mc.thePlayer.movementInput.sneak = ((IMixinNetHandlerPlayClient) mc.thePlayer.sendQueue).isDoneLoadingTerrain();
+                    break;
             }
         } else {
             switch (mode.getValue()) {
@@ -52,6 +56,7 @@ public class PacketSneak extends Module {
     }
 
     private enum Mode {
-        NCP
+        NCP,
+        Legit
     }
 }

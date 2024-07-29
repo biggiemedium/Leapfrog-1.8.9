@@ -34,7 +34,9 @@ public class NoRotate extends Module {
                     break;
 
                 case Cancel:
-                    event.cancel();
+                    if(mc.thePlayer.ticksExisted > 5) {
+                        event.cancel();
+                    }
                     break;
 
                 case Spoof:

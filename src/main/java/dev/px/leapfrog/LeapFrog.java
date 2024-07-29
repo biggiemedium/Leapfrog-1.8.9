@@ -17,6 +17,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 @Mod(modid = LeapFrog.MODID, version = LeapFrog.VERSION)
 public class LeapFrog {
 
@@ -92,6 +94,8 @@ public class LeapFrog {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             //discordManager.shutDown();
             threadManager.shutDown();
+            try { configManager.saveConfigs(); } catch (IOException e) { e.printStackTrace(); }
+
         }));
     }
 }

@@ -78,7 +78,7 @@ public class ModulePanel implements Component {
         stack.popScissor();
 
         if(isMouseOver(x, y, width, height, mouseX, mouseY)) {
-            this.scrollY += Mouse.getDWheel() * 0.02D;
+            this.scrollY += Mouse.getDWheel() * 0.2D;
         }
         if(scrollY > 0) {
             scrollY = 0;

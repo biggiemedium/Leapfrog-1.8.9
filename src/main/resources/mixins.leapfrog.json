@@ -8,8 +8,11 @@
     "Game.MixinScoreboard",
     "Listeners.IMixinRenderManager",
     "Listeners.IMixinMinecraft",
+    "Listeners.IMixinNetHandlerPlayClient",
     "Listeners.IMixinSkinManager",
     "Listeners.IMixinS08PacketPlayerPosLook",
+    "Listeners.IMixinS12PacketEntityVelocity",
+    "Listeners.IMixinEntityPlayerSP",
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntity",
     "Entity.MixinEntityPlayer",
@@ -22,10 +25,12 @@
     "Network.MixinNetHandlerPlayClient",
     "Network.MixinNetworkManager",
     "Render.MixinEntityRenderer",
+    "Render.MixinItemRenderer",
     "Render.MixinRenderEntityItem",
     "Render.MixinRenderLivingEntity",
     "Render.MixinRenderGlobal",
     "Render.MixinRenderTNTPrimed",
-    "World.MixinBlock"
+    "World.MixinBlock",
+    "Multiplayer.MixinPlayerControllerMP"
   ]
 }

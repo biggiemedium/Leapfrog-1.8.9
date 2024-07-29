@@ -36,7 +36,7 @@ public class FreeCam extends Module {
 
     @Override
     public void onEnable() {
-        if(mc.thePlayer == null || mc.theWorld == null) return;
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         mc.thePlayer.noClip = true;
         this.oldX = mc.thePlayer.posX;
         this.oldY = mc.thePlayer.posY;
@@ -54,47 +54,38 @@ public class FreeCam extends Module {
 
     @Override
     public void onDisable() {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         mc.thePlayer.noClip = false;
         mc.thePlayer.capabilities.isFlying = false;
         mc.thePlayer.setPositionAndRotation(this.oldX, this.oldY, this.oldZ, this.oldYaw, this.oldPitch);
-        mc.theWorld.removeEntity(player);
+        if (player != null) {
+            mc.theWorld.removeEntity(player);
+            player = null;  // Reset player to null after removing
+        }
         super.onDisable();
     }
 
     @EventHandler
     private Listener<PacketSendEvent> sendEventListener = new Listener<>(event -> {
-        if(event.getPacket() instanceof C0APacketAnimation
+        if (event.getPacket() instanceof C0APacketAnimation
                 || event.getPacket() instanceof C03PacketPlayer
                 || event.getPacket() instanceof C02PacketUseEntity
                 || event.getPacket() instanceof C0BPacketEntityAction
                 || event.getPacket() instanceof C08PacketPlayerBlockPlacement) {
-                event.cancel();
+            event.cancel();
         }
     });
 
     @EventHandler
-    private Listener<PlayerMoveEvent> motionEventListener = new Listener<>(event -> {
-        mc.thePlayer.noClip = true;
-        event.setX(0);
-        event.setY(0);
-        event.setZ(0);
-        mc.thePlayer.setVelocity(0, 0, 0);
-
-        if (mc.gameSettings.keyBindJump.isKeyDown()) {
-            mc.thePlayer.motionY += speed.getValue();
+    private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
+        if (event.getStage() == Event.Stage.Pre) {
+            mc.thePlayer.motionY = 0.0D + (mc.gameSettings.keyBindJump.isKeyDown() ? speed.getValue() : 0.0D) - (mc.gameSettings.keyBindSneak.isKeyDown() ? speed.getValue() : 0.0D);
+            MoveUtil.setMoveSpeed(speed.getValue());
         }
-        if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-            mc.thePlayer.motionY -= speed.getValue();
-        }
-
-        //if (MoveUtil.isMoving()) {
-        //    MoveUtil.setMoveSpeed(event, speed.getValue());
-        //}
     });
 
     @EventHandler
     private Listener<WorldBlockAABBEvent> aabbEventListener = new Listener<>(event -> {
         event.setBoundingBox(null);
-        event.cancel();
     });
 }

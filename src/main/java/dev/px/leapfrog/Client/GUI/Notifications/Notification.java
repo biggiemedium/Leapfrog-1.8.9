@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class Notification {
+public class Notification implements Comparable<Notification> {
 
     private String messsage;
     private long start;
@@ -25,22 +25,9 @@ public class Notification {
     public Notification(String messsage, int length) {
         this.messsage = messsage;
         this.length = length;
-
-        fadedIn = 200 * length;
-        fadeOut = fadedIn + 500 * length;
-        end = fadeOut + fadedIn;
-    }
-
-    public void show() {
-        start = System.currentTimeMillis();
-    }
-
-    public boolean isShown() {
-        return getTime() <= end;
-    }
-
-    private long getTime() {
-        return System.currentTimeMillis() - start;
+        this.fadedIn = 200 * length;
+        this.fadeOut = fadedIn + 500 * length;
+        this.end = fadeOut + fadedIn;
     }
 
     public void render() {
@@ -62,6 +49,31 @@ public class Notification {
         RoundedShader.drawRound(x, y, width, height, 7, new Color(0, 0, 0, 120));
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
         FontRenderer.sans20_bold.drawString(messsage, x + 10, (int) y + 6, Color.WHITE.getRGB());
+    }
+
+    public void show() {
+        this.start = System.currentTimeMillis();
+    }
+
+    public boolean isShown() {
+        return getTime() <= end;
+    }
+
+    private long getTime() {
+        return System.currentTimeMillis() - start;
+    }
+
+    public long getEnd() {
+        return end;
+    }
+
+    public int getHeight() {
+        return (int) FontRenderer.sans20_bold.getHeight() + 10;
+    }
+
+    @Override
+    public int compareTo(Notification other) {
+        return Long.compare(this.end, other.end);
     }
 
     public enum NotificationType {
