@@ -1,10 +1,11 @@
 package dev.px.leapfrog.Client.Module.Render;
 
+import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
-import dev.px.leapfrog.API.Util.Math.Pair;
+import dev.px.leapfrog.API.Util.Math.ADT.Pair;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.ContinualAnimation;
@@ -15,7 +16,6 @@ import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.API.Util.Render.StencilUtil;
 import dev.px.leapfrog.Client.Module.Combat.KillAura;
-import dev.px.leapfrog.Client.Module.Combat.TestModule;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
@@ -26,7 +26,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector4f;
@@ -47,6 +46,7 @@ public class TargetHUD extends Module {
 
     private Setting<TrackingMode> trackingMode = create(new Setting<>("Tracking", TrackingMode.Right));
     private Setting<Boolean> killAuraOnly = create(new Setting<>("Kill Aura Target Only", true));
+    //private Setting<Boolean> currentTarget = create(new Setting<>("Current Target", true, v -> killAuraOnly.getValue()));
     private Setting<Integer> range = create(new Setting<>("Range", 8, 1, 25));
     private Setting<Float> scale = create(new Setting<>("Scale", 1f, 0.1f, 2f));
 
@@ -72,6 +72,12 @@ public class TargetHUD extends Module {
         this.fadeAnimations.clear();
         super.onDisable();
     }
+
+    @EventHandler
+    private Listener<PlayerTeleportEvent> teleportEventListener = new Listener<>(event -> {
+        this.fadeAnimations.clear();
+        this.entityPositions.clear();
+    });
 
     @EventHandler
     private Listener<Render3DEvent> render3DEventListener = new Listener<>(event -> {

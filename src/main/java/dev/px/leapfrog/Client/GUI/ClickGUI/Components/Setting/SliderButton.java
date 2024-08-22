@@ -86,6 +86,7 @@ public class SliderButton<T extends Number> extends SettingButton<Number> {
         RoundedShader.drawRound((float)  (getX() + getWidth()) - (int) (renderWidth2 + 5) + slide.getValue(), (float) getY() + 3 - 1.5f, 7, 7, 3.5f, new Color(255, 255, 255));
 
         FontRenderer.sans16_bold.drawString(setting.getName() + ": " + (setting.getValue() instanceof Integer ? Math.round(setting.getValue().doubleValue()) : MathUtil.roundToPlace(setting.getValue().doubleValue(), 1)), (int) getX() + 5,getY() + (getHeight() / 2 - 3), -1);
+
     }
 
     @Override

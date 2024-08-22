@@ -1,4 +1,4 @@
-package dev.px.leapfrog.API.Event.Game;
+package dev.px.leapfrog.API.Event.Input;
 
 import dev.px.leapfrog.API.Event.Event;
 

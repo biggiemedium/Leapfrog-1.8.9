@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;

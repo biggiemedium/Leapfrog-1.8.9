@@ -19,7 +19,6 @@ public class Module implements Listenable, Comparable<Module> {
 
     private String name;
     private String description;
-    private int keyBind;
     private boolean toggled;
     private boolean drawn;
     private boolean safeToggle;
@@ -35,7 +34,7 @@ public class Module implements Listenable, Comparable<Module> {
         if(this.getClass().isAnnotationPresent(ModuleInterface.class)) {
             this.name = getModule().name();
             this.description = getModule().description();
-            this.keyBind = getModule().keyBind();
+            this.keybind.setValue(new Bind(getModule().keyBind()));
             this.toggled = getModule().toggled();
             this.safeToggle = getModule().safeToggle();
             this.drawn = getModule().drawn();
@@ -98,14 +97,6 @@ public class Module implements Listenable, Comparable<Module> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getKeyBind() {
-        return keyBind;
-    }
-
-    public void setKeyBind(int keyBind) {
-        this.keyBind = keyBind;
     }
 
     public boolean isToggled() {

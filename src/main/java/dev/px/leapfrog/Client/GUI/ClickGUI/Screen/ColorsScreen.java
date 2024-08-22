@@ -42,7 +42,9 @@ public class ColorsScreen extends Screen {
         Color color3 = ColorUtil.interpolateColorsBackAndForth(15, 180, color.getMainColor(), color.getAlternativeColor(), false);
         Color color4 = ColorUtil.interpolateColorsBackAndForth(15, 270, color.getMainColor(), color.getAlternativeColor(), false);
 
-        RoundedShader.drawGradientRound((getX() + 8) + 4, (getY() + 36) + 4 , 35, 35, 4, color1, color2, color3, color4); // radius 10
+        RoundedShader.drawGradientRound((getX() + 8) + 4, (getY() + 36) + 4 , 35, 35,
+                4,
+                color1, color2, color3, color4); // radius 10
         FontUtil.regular_bold24.drawString("Accent Color", (getX() + 8) + 46, (getY() + 36) + 6, -1);
         FontUtil.regular_bold20.drawString(color.getName(), (getX() + 8) + 46, (getY() + 36) + 10 + FontUtil.regular_bold26.getHeight(), -1);
         //FontUtil.regular_bold24.drawString("Opacity: " + Math.abs(-color.getOpactiy().getValue()), (getX() + 8) + 46, (getY() + 36) + 10 + FontUtil.regular_bold26.getHeight(), -1);

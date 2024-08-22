@@ -12,6 +12,7 @@ public class TestElement extends Element {
         super(1, 1);
     }
 
+
     @Override
     public void onRender(Render2DEvent event) {
         this.drawBackground(getX(), getY(), getWidth(), getHeight());

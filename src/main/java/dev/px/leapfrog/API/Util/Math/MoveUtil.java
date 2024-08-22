@@ -19,6 +19,26 @@ public class MoveUtil {
     private static Minecraft mc = Minecraft.getMinecraft();
     public static final double JUMP_HEIGHT = 0.42F;
 
+    /**
+     * Gets the players predicted jump motion the specified amount of ticks ahead
+     *
+     * @return predicted jump motion
+     */
+    public static double predictedMotion(double motion, int ticks) {
+        if (ticks == 0) return motion;
+        double predicted = motion;
+
+        for (int i = 0; i < ticks; i++) {
+            predicted = (predicted - 0.08) * 0.98F;
+        }
+
+        return predicted;
+    }
+
+    public static boolean isOnGround(double height) {
+        return !Minecraft.getMinecraft().theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0D, -height, 0.0D)).isEmpty();
+    }
+
     public static void resetMotion() {
         mc.thePlayer.motionX = 0;
         mc.thePlayer.motionZ = 0;
@@ -32,6 +52,12 @@ public class MoveUtil {
         return motionY;
     }
 
+    /**
+     * Strafes the player in the specified direction with the given speed.
+     *
+     * @param speed the speed of strafing
+     * @param yaw   the yaw direction to strafe towards
+     */
     public static void strafe(double speed, float yaw) {
         if (!isMoving()) {
             return;
@@ -42,6 +68,11 @@ public class MoveUtil {
         mc.thePlayer.motionZ = MathHelper.cos(yaw) * speed;
     }
 
+    /**
+     * Strafes the player in the direction they're currently facing.
+     *
+     * @param speed the speed of strafing
+     */
     public static void strafe(double speed) {
         if (!isMoving()) {
             return;
@@ -52,6 +83,11 @@ public class MoveUtil {
         mc.thePlayer.motionZ = MathHelper.cos(yaw) * speed;
     }
 
+    /**
+     * Gets the base move speed, considering active potion effects.
+     *
+     * @return the base move speed
+     */
     public static double getBaseMoveSpeed() {
         double baseSpeed = mc.thePlayer.capabilities.getWalkSpeed() * 2.873;
         if (mc.thePlayer.isPotionActive(Potion.moveSlowdown)) {
@@ -63,6 +99,16 @@ public class MoveUtil {
         return baseSpeed;
     }
 
+    public static float getMotionSpeed() {
+        return (float) Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
+    }
+
+    /**
+     * Gets the direction the player is currently facing.
+     *
+     * @param yaw the player's yaw
+     * @return the direction in radians
+     */
     public static float getDirection(float yaw) {
         if (mc.thePlayer.moveForward < 0.0f) {
             yaw += 180.0f;
@@ -83,30 +129,6 @@ public class MoveUtil {
         return yaw;
     }
 
-    public static void setMoveSpeed(double moveSpeed, float yaw, double strafe, double forward) {
-        if (forward != 0.0D) {
-            if (strafe > 0.0D) {
-                yaw += ((forward > 0.0D) ? -45 : 45);
-            } else if (strafe < 0.0D) {
-                yaw += ((forward > 0.0D) ? 45 : -45);
-            }
-            strafe = 0.0D;
-            if (forward > 0.0D) {
-                forward = 1.0D;
-            } else if (forward < 0.0D) {
-                forward = -1.0D;
-            }
-        }
-        if (strafe > 0.0D) {
-            strafe = 1.0D;
-        } else if (strafe < 0.0D) {
-            strafe = -1.0D;
-        }
-        double mx = Math.cos(Math.toRadians((yaw + 90.0F)));
-        double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
-        mc.thePlayer.motionX = forward * moveSpeed * mx + strafe * moveSpeed * mz;
-        mc.thePlayer.motionZ = forward * moveSpeed * mz - strafe * moveSpeed * mx;
-    }
 
     public static void setMoveSpeed(double speed) {
         double forward = mc.thePlayer.moveForward;
@@ -142,35 +164,11 @@ public class MoveUtil {
         mc.thePlayer.motionZ = motionY;
     }
 
-    public static void setMoveSpeed(PlayerMoveEvent event, double speed) {
-        double forward = mc.thePlayer.moveForward;
-        double strafe = mc.thePlayer.moveStrafing;
-        float yaw = mc.thePlayer.rotationYaw;
-        if (forward == 0.0 && strafe == 0.0) {
-            event.setX(0.0);
-            event.setZ(0.0);
-        } else {
-            if (forward != 0.0) {
-                if (strafe > 0.0) {
-                    yaw += ((forward > 0.0) ? -45 : 45);
-                } else if (strafe < 0.0) {
-                    yaw += ((forward > 0.0) ? 45 : -45);
-                }
-                strafe = 0.0;
-                if (forward > 0.0) {
-                    forward = 1.0;
-                } else if (forward < 0.0) {
-                    forward = -1.0;
-                }
-            }
-            event.setX(forward * speed * Math.cos(Math.toRadians(yaw + 90.0f))
-                    + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0f)));
-
-            event.setZ(forward * speed * Math.sin(Math.toRadians(yaw + 90.0f))
-                    - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0f)));
-        }
-    }
-
+    /**
+     * Checks if the player is currently moving.
+     *
+     * @return true if the player is moving, false otherwise
+     */
     public static boolean isMoving() {
         return mc.thePlayer.moveForward != 0 || mc.thePlayer.moveStrafing != 0;
     }

@@ -1,10 +1,9 @@
 package dev.px.leapfrog.API.Util;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import dev.px.leapfrog.API.Event.Client.SettingUpdateEvent;
 import dev.px.leapfrog.API.Event.Event;
-import dev.px.leapfrog.API.Event.Game.KeyPressEvent;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerSendChatEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Event.Render.Overlays.RenderFireOverlayEvent;
@@ -12,8 +11,7 @@ import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
-import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
-import dev.px.leapfrog.Client.GUI.Notifications.Notification;
+import dev.px.leapfrog.Client.GUI.HUD.UI.GuiHUDEditor;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.EventHandler;
@@ -28,9 +26,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.input.Keyboard;
+
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EventProcessor implements Listenable {
 
@@ -57,35 +56,6 @@ public class EventProcessor implements Listenable {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onKey(InputEvent event) {
-        try {
-            if(Keyboard.isCreated()) {
-                if(Keyboard.getEventKeyState()) {
-                    int keyCode = Keyboard.getEventKey();
-                    if(keyCode <= 0)
-                        return;
-
-                    if(mc.thePlayer != null && mc.theWorld != null) {
-                        for(Module m : LeapFrog.moduleManager.getModules()) {
-                            if(m.keybind.getValue().getBind() == keyCode) {
-                                m.toggle();
-                            }
-                        }
-
-                        if(keyCode == Keyboard.KEY_O) {
-                            LeapFrog.notificationManager.pushNotification("Test", "ur mom", Notification.NotificationType.INFO, 5);
-                            ChatUtil.sendClientSideMessage("Posted Notification");
-                        }
-
-                        KeyPressEvent e = new KeyPressEvent(keyCode);
-                        LeapFrog.EVENT_BUS.post(e);
-                    }
-                }
-            }
-        } catch (Exception q) { q.printStackTrace(); }
     }
 
 
@@ -143,12 +113,6 @@ public class EventProcessor implements Listenable {
     @EventHandler
     private Listener<PacketReceiveEvent> packetrEventListener = new Listener<>(event -> {
             if (event.getPacket() instanceof S08PacketPlayerPosLook) {
-                if(LeapFrog.settingsManager.ANTICHEATFLAG.getValue()) {
-                    if (!isTeleporting) {
-                        ChatUtil.sendClientSideMessage(ChatFormatting.RED + "Warning: " + ChatFormatting.RESET + "You flagged the anti-cheat!");
-                    }
-                    isTeleporting = false;
-                }
                 for(Module m : LeapFrog.moduleManager.getModules()) {
                     if(m.isSafeToggle()) {
                         m.safeToggle((S08PacketPlayerPosLook) event.getPacket(), isTeleporting);

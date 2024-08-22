@@ -32,6 +32,7 @@ public class MultiThreadingManager {
      */
     public void shutDown() {
         EXECUTOR.shutdown();
+        FIXED_EXECUTOR.shutdown();
     }
 
     private ScheduledExecutorService newDaemonScheduledExecutor(String name) {

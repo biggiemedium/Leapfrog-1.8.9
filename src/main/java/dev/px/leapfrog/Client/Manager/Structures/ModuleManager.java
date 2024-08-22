@@ -7,6 +7,7 @@ import dev.px.leapfrog.Client.Module.Misc.*;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Movement.*;
 import dev.px.leapfrog.Client.Module.Render.*;
+import scala.actors.Debug;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,9 +24,12 @@ public class ModuleManager {
         Add(new Velocity());
 
         // Ghost
+        Add(new AimAssist());
         Add(new AntiClickDelay());
+        Add(new AntiJumpDelay());
         Add(new AntiMiss());
         Add(new AutoClicker());
+        Add(new Eagle());
         Add(new Disabler());
         Add(new FastPlace());
         Add(new Hitbox());
@@ -34,6 +38,7 @@ public class ModuleManager {
         Add(new AntiVoid());
         Add(new AutoInventory());
         Add(new ClientSpoofer());
+        Add(new Debugger());
         Add(new FakePlayer());
         Add(new FreeCam());
         Add(new NoRotate());
@@ -42,6 +47,7 @@ public class ModuleManager {
         // Movement
         Add(new AirJump());
         Add(new FastLadder());
+        Add(new FastWeb());
         Add(new Flight());
         Add(new Jesus());
         Add(new NoSlow());

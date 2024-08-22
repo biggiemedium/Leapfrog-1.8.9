@@ -2,6 +2,7 @@ package dev.px.leapfrog.ASM.Game;
 
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Input.ClickMouseEvent;
+import dev.px.leapfrog.API.Event.Input.KeyPressEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerAttackEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Gui.CustomMainMenu;
@@ -23,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,6 +159,11 @@ public abstract class MixinMinecraft {
             //RenderUtil.setIcon("/assets/minecraft/Leapfrog/Images/Froggy-transformed.png");
             //c.cancel();
         }
+    }
+
+    @Inject(method = "shutdown", at = @At("HEAD"), cancellable = true)
+    public void onShutdown(CallbackInfo ci) {
+        LeapFrog.fileManager.save();
     }
 
     @Overwrite

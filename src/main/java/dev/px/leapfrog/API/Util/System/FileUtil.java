@@ -1,6 +1,7 @@
 package dev.px.leapfrog.API.Util.System;
 
 import dev.px.leapfrog.API.Module.Bind;
+import dev.px.leapfrog.API.Util.Render.Color.AccentColor;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
@@ -19,6 +20,37 @@ public class FileUtil {
         }
     }
 
+    public static void saveTheme(File directory) {
+        try {
+            File file = new File(directory, "Theme.txt");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(LeapFrog.colorManager.getClientColor().getName() + "\r\n");
+            writer.close();
+        } catch (Exception ignored) {}
+    }
+
+    public static void loadTheme(File directory) {
+        try {
+            File file = new File(directory, "Theme.txt");
+            FileInputStream inputStream = new FileInputStream(file);
+            DataInputStream dis = new DataInputStream(inputStream);
+            BufferedReader writer = new BufferedReader(new InputStreamReader(dis));
+            String line;
+            while ((line = writer.readLine()) != null) {
+                String cl = line.trim();
+                String theme = cl.split(":")[0];
+                for(AccentColor c : LeapFrog.colorManager.getColors()) {
+                    if(c.getName().equalsIgnoreCase(theme)) {
+                        LeapFrog.colorManager.setClientColor(c);
+                    }
+                }
+            }
+            writer.close();
+        } catch (Exception ignored) {}
+
+    }
+
+
     public static void saveModules(File directory) {
         File modules = new File(directory, "modules.txt");
         try {
@@ -35,6 +67,75 @@ public class FileUtil {
             out.close();
         }
         catch (Exception ignored) {}
+    }
+
+    public static void loadPreferences(File directory) {
+        File file = new File(directory, "preferences.txt");
+        if (!file.exists()) {
+            System.out.println("Preferences file does not exist.");
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(":");
+                if (parts.length == 2) {
+                    String name = parts[0];
+                    String value = parts[1];
+                    for (Setting setting : LeapFrog.settingsManager.getPreferences()) {
+                        if (setting.getName().equals(name)) {
+                            if (setting.getValue() instanceof Boolean) {
+                                setting.setValue(Boolean.parseBoolean(value));
+                            } else if (setting.getValue() instanceof Integer) {
+                                setting.setValue(Integer.parseInt(value));
+                            } else if (setting.getValue() instanceof Double) {
+                                setting.setValue(Double.parseDouble(value));
+                            } else if (setting.getValue() instanceof String) {
+                                setting.setValue(value);
+                            }
+                            // Add more type checks here if needed
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception
+        }
+    }
+
+    public static void savePreferences(File directory) {
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        File file = new File(directory, "preferences.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Setting<?> setting : LeapFrog.settingsManager.getPreferences()) {
+                // Save settings based on their type
+                if (setting.getValue() instanceof Boolean) {
+                    writer.write(setting.getName() + ":" + ((Boolean) setting.getValue() ? "true" : "false"));
+                } else if (setting.getValue() instanceof Integer) {
+                    writer.write(setting.getName() + ":" + setting.getValue().toString());
+                } else if (setting.getValue() instanceof Double) {
+                    writer.write(setting.getName() + ":" + setting.getValue().toString());
+                } else if (setting.getValue() instanceof String) {
+                    writer.write(setting.getName() + ":" + (String) setting.getValue());
+                }
+
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception
+        }
+    }
+
+
+
+    private static <T> T parseValue(Setting<T> setting, String value) {
+        if (setting.getValue() instanceof Boolean) {
+            return (T) Boolean.valueOf(value);
+        }
+        // Add parsing logic for other types if needed
+        return null;
     }
 
     public static void saveSettings(File directory) {
@@ -184,13 +285,9 @@ public class FileUtil {
                         boolean drawn = Boolean.parseBoolean(parts[2].trim());
                         int bind = Integer.parseInt(parts[3].trim());
 
-                        LeapFrog.LOGGER.info("Debug 1");
                         Module m = LeapFrog.moduleManager.getModuleByName(name);
-                        LeapFrog.LOGGER.info("Debug 2");
                         if (m != null) {
-                            LeapFrog.LOGGER.info("Debug 3: " + m.isToggled());
                             m.setToggled(toggled);
-                            LeapFrog.LOGGER.info("Debug 4: " + m.isToggled());
                             m.setDrawn(drawn);
                             m.keybind.setValue(new Bind(bind));
                         } else {
@@ -204,7 +301,6 @@ public class FileUtil {
                 }
             }
             br.close();
-            LeapFrog.LOGGER.info("Debug 5");
         } catch (FileNotFoundException e) {
             LeapFrog.LOGGER.error("File not found: " + e.getMessage());
         } catch (IOException e) {

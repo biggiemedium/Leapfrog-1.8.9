@@ -12,7 +12,6 @@ public class SettingsManager {
     public Setting<Boolean> BACKGROUND;
     public Setting<Boolean> BLUR;
     public Setting<Boolean> FRIENDS;
-    public Setting<Boolean> ANTICHEATFLAG;
     //public Setting<Boolean> RPC;
     public Setting<Boolean> WINDOWMODIFICATIONS;
     public Setting<Boolean> SCOREBOARD;
@@ -28,8 +27,6 @@ public class SettingsManager {
                 .setDescription("Blurs Minecrafts backgrounds");
         FRIENDS = Add(new Setting("Friends", true)
                 .setDescription("Initalizes friend system"));
-        ANTICHEATFLAG = Add(new Setting("Anti-Cheat Flag", true)
-                .setDescription("Warns you when anti-cheat is flagged"));
         //RPC = Add(new Setting("DiscordRPC", false)
         //        .setDescription("Displays Discord Rich Presence"));
         WINDOWMODIFICATIONS = Add(new Setting<>("Window Modifications", true)

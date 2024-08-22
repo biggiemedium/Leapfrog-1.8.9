@@ -6,6 +6,8 @@
   "mixins": [
     "Game.MixinMinecraft",
     "Game.MixinScoreboard",
+    "Listeners.IMixinC03PacketPlayer",
+    "Listeners.IMixinEntity",
     "Listeners.IMixinRenderManager",
     "Listeners.IMixinMinecraft",
     "Listeners.IMixinNetHandlerPlayClient",
@@ -18,6 +20,7 @@
     "Entity.MixinEntityPlayer",
     "Entity.MixinEntityPlayerSP",
     "Entity.MixinEntityLivingBase",
+    "GUI.MixinGuiScreen",
     "GUI.Chat.MixinGuiChat",
     "GUI.Chat.MixinGuiNewChat",
     "GUI.Menu.MixinSplashScreen",

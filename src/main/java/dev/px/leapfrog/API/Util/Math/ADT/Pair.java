@@ -1,4 +1,4 @@
-package dev.px.leapfrog.API.Util.Math;
+package dev.px.leapfrog.API.Util.Math.ADT;
 
 public class Pair<K, V> {
 

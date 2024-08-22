@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Gui.CustomMainMenu;
 import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
+import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.Manager.Other.*;
 import dev.px.leapfrog.Client.Manager.Player.PositionManager;
 import dev.px.leapfrog.Client.Manager.Structures.*;
@@ -47,6 +48,7 @@ public class LeapFrog {
     public static CapeManager capeManager;
     public static SpotifyManager spotifyManager;
     public static InputManager inputManager;
+    public static CommandManager commandManager;
     //public static DiscordManager discordManager;
     public static MultiThreadingManager threadManager;
     public static ServerManager serverManager;
@@ -63,7 +65,6 @@ public class LeapFrog {
         spotifyManager = new SpotifyManager();
         FontUtil.init();
         FontRenderer.init();
-
     }
 
     @EventHandler
@@ -71,6 +72,7 @@ public class LeapFrog {
         menu = new CustomMainMenu();
         moduleManager = new ModuleManager();
         settingsManager = new SettingsManager(); // Settings manager before event processor
+        commandManager = new CommandManager();
         eventProcessor = new EventProcessor();
         colorManager = new ColorManager(); // Color manager before element manager
         elementManager = new ElementManager();

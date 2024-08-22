@@ -20,7 +20,6 @@ public class EntityUtil {
             return false;
         }
 
-
         if(entity instanceof EntityAnimal || entity instanceof EntityTameable || entity instanceof EntitySquid || entity instanceof EntityAgeable) {
             return true;
         }

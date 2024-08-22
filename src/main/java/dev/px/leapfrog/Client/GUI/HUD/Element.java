@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.GUI.HUD;
 
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
+import dev.px.leapfrog.API.Util.Math.GridSystem;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
@@ -10,7 +11,9 @@ import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.lang.annotation.ElementType;
@@ -31,6 +34,7 @@ public class Element {
     private ArrayList<Setting<?>> settings = new ArrayList<>();
     protected Minecraft mc = Wrapper.getMC();
     protected MinecraftFontRenderer font = FontRenderer.sans20_bold;
+    public ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
 
     public Element(int x, int y, int width, int height) {
         this.name = getElement().name();
@@ -70,7 +74,7 @@ public class Element {
         return "";
     }
 
-    public <T> Setting Add(Setting preference) {
+    public <T> Setting create(Setting preference) {
         this.settings.add(preference);
         return preference;
     }
@@ -80,25 +84,30 @@ public class Element {
             x = dragX + mouseX;
             y = dragY + mouseY;
             FontUtil.regular12.drawString("x " + getX() + " y " + getY(), getX() - 2, getY() + getHeight() + 5, -1);
+            snapToGrid(LeapFrog.inputManager.getClickGUI().getHudEditor().getGrid());
+
         }
 
         RoundedShader.drawRoundOutline(getX() - 1, getY() - 1, getWidth() + 2, getHeight() + 2, 4, 0.1f, new Color(0, 0, 0, 0), new Color(255, 255, 255));
 
-        // ill do this stuff later
-        if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
-            if(Mouse.getEventDWheel() != 0) {
+        if (isHovered(mouseX, mouseY)) {
+            int dWheel = Mouse.getDWheel();
+            if (dWheel != 0) {
                 scaling = true;
-            }
-            if(scaling) {
-                if(scale <= 1) {
-                    scale = 1;
-                } else if(scale <= 5) {
-                    scale = 5; // cannot be bigger than 5x what the element is
-                }
-                scale += Mouse.getDWheel() * 0.01d;
+                scale += dWheel * 0.001f;
+
+                if (scale < 0.5f) scale = 0.5f; // Minimum scale constraint
+                if (scale > 5.0f) scale = 5.0f; // Maximum scale constraint
+            } else {
+                scaling = false;
             }
         }
 
+    }
+
+    private void snapToGrid(GridSystem grid) {
+        this.x = (int) (Math.round((float) x / grid.getDistance()) * grid.getDistance());
+        this.y = (int) (Math.round((float) y / grid.getDistance()) * grid.getDistance());
     }
 
     public void mouseClicked(int mouseX, int mouseY, int button) {

@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 
 public class AntiCheatManager {
 

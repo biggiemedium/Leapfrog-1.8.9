@@ -12,14 +12,20 @@ import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector4f;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +43,7 @@ public class ESP extends Module {
     private Setting<Mode> mode = create(new Setting<>("Mode", Mode.Box));
     private Setting<Colors> espColor = create(new Setting<>("Color", Colors.Client));
     private Setting<Color> customColor = create(new Setting<>("Custom Color", new Color(255, 255, 255), v -> espColor.getValue() == Colors.Custom));
-
+    private Setting<Integer> range = create(new Setting<>("Range", 50, 0, 100));
     private Map<Entity, Vector4f> entityPosition = new HashMap<>();
 
     @EventHandler
@@ -51,6 +57,9 @@ public class ESP extends Module {
                 continue;
             }
             if(e.isDead) {
+                continue;
+            }
+            if(mc.thePlayer.getDistance(e.posX, e.posY, e.posZ) >= range.getValue()) {
                 continue;
             }
             if(ESPUtil.isInView(e)) {

@@ -19,10 +19,17 @@ public class Config {
 
     public void save() {
         FileUtil.saveModules(directory);
+        FileUtil.saveTheme(directory);
+        FileUtil.saveSettings(directory);
+        FileUtil.savePreferences(directory);
     }
 
     public void load() {
         loadModules();
+        FileUtil.loadTheme(directory);
+        FileUtil.loadTheme(directory);
+        FileUtil.saveSettings(directory);
+        FileUtil.loadPreferences(directory);
     }
 
 
@@ -39,16 +46,19 @@ public class Config {
             while ((line = in.readLine()) != null) {
                 String[] parts = line.split(":");
                 if (parts.length == 3) {
-                    for(Module m : LeapFrog.moduleManager.getModules()) {
-
-                    }
                     String name = parts[0];
                     boolean toggled = Boolean.parseBoolean(parts[1]);
-                    boolean drawn = Boolean.parseBoolean(parts[3]);
+                    boolean drawn = Boolean.parseBoolean(parts[2]);
 
                     Module m = LeapFrog.moduleManager.getModuleByName(name);
-                    m.setToggled(toggled);
-                    m.setDrawn(drawn);
+                    if (m != null) {
+                        m.setToggled(toggled);
+                        m.setDrawn(drawn);
+                    } else {
+                        LeapFrog.LOGGER.warn("Module not found: " + name);
+                    }
+                } else {
+                    LeapFrog.LOGGER.warn("Invalid line format in modules file: " + line);
                 }
             }
         } catch (IOException e) {

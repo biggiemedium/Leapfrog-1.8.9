@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
@@ -31,6 +32,21 @@ public class RenderUtil {
 
     private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
     private static Minecraft mc = Wrapper.getMC();
+
+    /**
+     * @param framebuffer
+     * @return framebuffer
+     * https://www.google.com/search?q=what+is+framebuffer+opengl+java&sca_esv=3cad9cc1a9da8ec0&rlz=1C1GEWG_enCA1109CA1109&biw=1536&bih=695&tbm=vid&sxsrf=ADLYWIIy0g6I3mwcVcSJQ7zt8WmEgAVmcw%3A1724170277753&ei=JcDEZoraLfWkptQPu9iN2AY&ved=0ahUKEwjKgMDn-oOIAxV1kokEHTtsA2sQ4dUDCA0&uact=5&oq=what+is+framebuffer+opengl+java&gs_lp=Eg1nd3Mtd2l6LXZpZGVvIh93aGF0IGlzIGZyYW1lYnVmZmVyIG9wZW5nbCBqYXZhMgUQIRigATIFECEYoAEyBRAhGKABSNAGUKoBWOcFcAB4AJABAJgBhQGgAaQEqgEDNS4xuAEDyAEA-AEBmAIGoAKwBMICBhAAGBYYHsICCxAAGIAEGIYDGIoFwgIIEAAYgAQYogSYAwCIBgGSBwM0LjKgB4IX&sclient=gws-wiz-video#fpstate=ive&vld=cid:a30ab9f2,vid:lALvR4j6RCM,st:0
+     */
+    public static Framebuffer createFrameBuffer(Framebuffer framebuffer) {
+        if(framebuffer == null || framebuffer.framebufferWidth != mc.displayWidth || framebuffer.framebufferHeight != mc.displayHeight) {
+            if (framebuffer != null) {
+                framebuffer.deleteFramebuffer();
+            }
+            return new Framebuffer(mc.displayWidth, mc.displayHeight, false);
+        }
+        return framebuffer;
+    }
 
     public static void resetColor() {
         GL11.glColor4f(1, 1, 1, 1);

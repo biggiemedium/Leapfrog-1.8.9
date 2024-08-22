@@ -1,11 +1,12 @@
 package dev.px.leapfrog.Client.Manager.Other;
 
+import dev.px.leapfrog.API.Event.Input.KeyPressEvent;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Wrapper;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
-import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
+import dev.px.leapfrog.Client.GUI.HUD.UI.GuiHUDEditor;
 import dev.px.leapfrog.Client.GUI.NewGUI.FreeFlowGUI;
-import dev.px.leapfrog.Client.GUI.Notifications.Notification;
+import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ public class InputManager implements Listenable {
 
     public InputManager() {
         MinecraftForge.EVENT_BUS.register(this);
+        LeapFrog.EVENT_BUS.subscribe(this);
         this.freeFlowGUI = new FreeFlowGUI();
         this.clickGUI = new ClickGUI();
     }
@@ -49,8 +51,12 @@ public class InputManager implements Listenable {
                     int keyCode = Keyboard.getEventKey();
                     if(keyCode <= 0)
                         return;
+                    LeapFrog.EVENT_BUS.post(new KeyPressEvent(keyCode));
 
                     if(mc.thePlayer != null && mc.theWorld != null) {
+                        LeapFrog.moduleManager.getModules().stream()
+                                .filter(module -> module.keybind.getValue().getBind() == keyCode)
+                                .forEach(Module::toggle);
 
                         if(keyCode == Keyboard.KEY_RSHIFT) {
                             if(clickGUI != null) {
@@ -68,20 +74,33 @@ public class InputManager implements Listenable {
                             }
                         }
 
-                        if(keyCode == Keyboard.KEY_U) {
-                            LeapFrog.configManager.addConfig("Test Config");
-                            ChatUtil.sendClientSideMessage("Saved Config: Test Config");
-                        }
-
                         if(keyCode == Keyboard.KEY_I) {
-                            LeapFrog.configManager.loadConfig("Test Config");
-                            ChatUtil.sendClientSideMessage("Load Config: Test Config");
+                            ChatUtil.sendClientSideMessage("Saved Ghost config");
+                            LeapFrog.configManager.addConfig("Ghost");
                         }
 
+                        if(keyCode == Keyboard.KEY_U) {
+                            ChatUtil.sendClientSideMessage("Loaded Ghost Config");
+                            LeapFrog.configManager.loadConfig("Ghost");
+                        }
+
+                        if(keyCode == Keyboard.KEY_L) {
+                            ChatUtil.sendClientSideMessage("Saved Vulcan config");
+                            LeapFrog.configManager.addConfig("Vulcan");
+                        }
+
+                        if(keyCode == Keyboard.KEY_K) {
+                            ChatUtil.sendClientSideMessage("Loaded Vulcan Config");
+                            LeapFrog.configManager.loadConfig("Vulcan");
+                        }
                     }
                 }
             }
         } catch (Exception q) { q.printStackTrace(); }
+    }
+
+    public ClickGUI getClickGUI() {
+        return clickGUI;
     }
 
     public static class ScrollHandler {

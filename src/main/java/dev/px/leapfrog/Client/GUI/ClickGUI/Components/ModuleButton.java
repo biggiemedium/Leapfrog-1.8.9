@@ -57,16 +57,10 @@ public class ModuleButton implements Component {
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
                 }
-                if(s.getValue() instanceof Number) {
-                   //if (s.getValue() instanceof BetweenInteger) {
-                   //    BetweenIntegerButton b = new BetweenIntegerButton(this, getX(), getY() + offsetY, (Setting<BetweenIntegerButton<?>>) s);
-                   //    settingButtons.add(b);
-                   //    offsetY += b.getHeight();
-                   //} else {
-                    SliderButton b = new SliderButton(this, getX(), getY() + offsetY, s);
+                if (s.getValue() instanceof Number) {
+                    SliderButton<?> b = new SliderButton<>(this, getX(), getY() + offsetY, (Setting<Number>) s);
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
-                    //}
                 }
                 if(s.getValue() instanceof Enum) {
                     EnumButton b = new EnumButton(this, getX(), getY() + offsetY, s);
@@ -74,8 +68,8 @@ public class ModuleButton implements Component {
                     offsetY += b.getHeight();
                 }
                 if (s.getValue() instanceof BetweenInteger) {
-                    BetweenIntegerButton b = new BetweenIntegerButton(this, getX(), getY() + offsetY, (Setting<BetweenIntegerButton<?>>) s);
-                    settingButtons.add(b);
+                    BetweenIntegerButton<?> b = new BetweenIntegerButton(this, getX(), getY() + offsetY, (Setting<BetweenInteger<?>>) s);
+                    this.settingButtons.add(b);
                     offsetY += b.getHeight();
                 }
 

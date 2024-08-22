@@ -1,10 +1,13 @@
-package dev.px.leapfrog.Client.GUI.HUD;
+package dev.px.leapfrog.Client.GUI.HUD.UI;
 
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
+import dev.px.leapfrog.API.Util.Math.GridSystem;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
+import dev.px.leapfrog.Client.GUI.HUD.Element;
+import dev.px.leapfrog.Client.GUI.HUD.UI.Components.Frame;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,10 +20,15 @@ public class GuiHUDEditor extends GuiScreen {
 
     private boolean backToGui;
     private ScaledResolution sr;
+    private GridSystem grid;
+    private Frame frame;
 
     public GuiHUDEditor(boolean backToGui) {
         this.backToGui = backToGui;
-        sr = new ScaledResolution(Minecraft.getMinecraft());
+        this.sr = new ScaledResolution(Minecraft.getMinecraft());
+        this.grid = new GridSystem(sr.getScaledWidth(), sr.getScaledHeight(), 1.0f, 20);
+        this.frame = new Frame("HUD", 50, 50, 100, 20);
+
     }
 
     @Override
@@ -32,13 +40,24 @@ public class GuiHUDEditor extends GuiScreen {
             }
         }
 
-        RoundedShader.drawGradientRound(sr.getScaledWidth() / 2 - 35 + 10, sr.getScaledHeight() / 2 - 7, 35, 15, 4,
+        // chatGPT :)
+        int boxWidth = 35;
+        int boxHeight = 15;
+        int boxX = sr.getScaledWidth() / 2 - boxWidth / 2;
+        int boxY = sr.getScaledHeight() / 2 - boxHeight / 2;
+        RoundedShader.drawGradientRound(boxX, boxY, boxWidth, boxHeight, 4,
                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[0], 120),
                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[1], 120),
                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[2], 120),
                 ColorUtil.applyOpacity(ColorUtil.getClientColorInterpolation()[3], 120)
         );
-        FontRenderer.sans24_bold.drawString("GUI", sr.getScaledWidth() / 2 - (35 / 2), sr.getScaledHeight() / 2 - (7 / 2), -1);
+
+        double textWidth = FontRenderer.sans24_bold.getStringWidth("GUI");
+        double textHeight = FontRenderer.sans24_bold.getHeight();
+        double textX = sr.getScaledWidth() / 2 - textWidth / 2;
+        double textY = sr.getScaledHeight() / 2 - textHeight / 2;
+
+        FontRenderer.sans24_bold.drawString("GUI", textX, textY, -1);        grid.render();
     }
 
     @Override
@@ -79,5 +98,37 @@ public class GuiHUDEditor extends GuiScreen {
 
     private boolean isMouseOver(float x, float y, float width, float height, int mouseX, int mouseY) {
         return mouseX >= x && mouseY >= y && mouseX <= (x + width) && mouseY <= (y + height);
+    }
+
+    public boolean isBackToGui() {
+        return backToGui;
+    }
+
+    public void setBackToGui(boolean backToGui) {
+        this.backToGui = backToGui;
+    }
+
+    public ScaledResolution getSr() {
+        return sr;
+    }
+
+    public void setSr(ScaledResolution sr) {
+        this.sr = sr;
+    }
+
+    public GridSystem getGrid() {
+        return grid;
+    }
+
+    public void setGrid(GridSystem grid) {
+        this.grid = grid;
+    }
+
+    public Frame getFrame() {
+        return frame;
+    }
+
+    public void setFrame(Frame frame) {
+        this.frame = frame;
     }
 }

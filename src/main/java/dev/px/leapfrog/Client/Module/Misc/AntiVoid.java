@@ -1,13 +1,27 @@
 package dev.px.leapfrog.Client.Module.Misc;
 
 import dev.px.leapfrog.API.Event.Event;
+import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
+import dev.px.leapfrog.API.Util.Math.Vectors.Vec3d;
+import dev.px.leapfrog.API.Util.Network.PacketUtil;
+import dev.px.leapfrog.ASM.Listeners.IMixinC03PacketPlayer;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C03PacketPlayer;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Module.ModuleInterface(name = "Anti void", type = Type.Misc, description = "Prevents falling in void")
 public class AntiVoid extends Module {
@@ -33,6 +47,20 @@ public class AntiVoid extends Module {
                 break;
             }
         }
+    });
+
+    @EventHandler
+    private Listener<PacketSendEvent> sendEventListener = new Listener<>(event -> {
+        switch (mode.getValue()) {
+            case NCP:
+
+                break;
+        }
+    });
+
+    @EventHandler
+    private Listener<PlayerTeleportEvent> teleportEventListener = new Listener<>(event -> { // S08
+
     });
 
     private enum Mode {

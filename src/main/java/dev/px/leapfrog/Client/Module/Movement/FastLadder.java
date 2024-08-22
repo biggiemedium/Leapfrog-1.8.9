@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.Module.Movement;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.API.Util.Network.PacketUtil;
 import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -38,7 +39,7 @@ public class FastLadder extends Module {
                     break;
                 case Packet:
                     if(mc.thePlayer.isOnLadder()) {
-                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + packetSpeed.getValue(), mc.thePlayer.posZ, event.isOnGround()));
+                        PacketUtil.sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + packetSpeed.getValue(), mc.thePlayer.posZ, event.isOnGround()));
                         mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + packetSpeed.getValue(), mc.thePlayer.posZ);
                     }
                     break;

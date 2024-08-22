@@ -8,7 +8,7 @@ import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.Client.GUI.ClickGUI.Screen.*;
-import dev.px.leapfrog.Client.GUI.HUD.GuiHUDEditor;
+import dev.px.leapfrog.Client.GUI.HUD.UI.GuiHUDEditor;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -34,6 +34,7 @@ public class ClickGUI extends GuiScreen {
     private Screen currentScreen;
     private Animation moveAnimation = new Animation(100, false, Easing.LINEAR);
     private float moveY = 0;
+    private GuiHUDEditor hudEditor;
 
     public ClickGUI() {
         this.x = 100;
@@ -45,6 +46,7 @@ public class ClickGUI extends GuiScreen {
         this.dragX = 0;
         this.dragY = 0;
         this.screens = new ArrayList<>();
+        this.hudEditor = new GuiHUDEditor(true);
 
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Combat, this));
         this.screens.add(new ModuleScreen(x + 80, y, width - 80, height, Type.Ghost, this));
@@ -135,6 +137,7 @@ public class ClickGUI extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        this.hudEditor = new GuiHUDEditor(true);
         if(isMouseOver(x, y, width, 15, mouseX, mouseY)) {
             if(mouseButton == 0) {
                 this.dragging = true;
@@ -145,7 +148,7 @@ public class ClickGUI extends GuiScreen {
 
         if(isMouseOver(getX() + 15, getY() + (getHeight() - 25), 70, 15, mouseX, mouseY)) {
             this.close = true;
-            mc.displayGuiScreen(new GuiHUDEditor(true));
+            mc.displayGuiScreen(hudEditor);
         }
 
         int offsetY = 0;
@@ -231,6 +234,14 @@ public class ClickGUI extends GuiScreen {
 
     public void setOpenAnimation(Animation openAnimation) {
         this.openAnimation = openAnimation;
+    }
+
+    public GuiHUDEditor getHudEditor() {
+        return hudEditor;
+    }
+
+    public void setHudEditor(GuiHUDEditor hudEditor) {
+        this.hudEditor = hudEditor;
     }
 
     @Override

@@ -2,6 +2,7 @@ package dev.px.leapfrog.Client.Module.Misc;
 
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.API.Util.Network.PacketUtil;
 import dev.px.leapfrog.ASM.Listeners.IMixinS08PacketPlayerPosLook;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -40,7 +41,7 @@ public class NoRotate extends Module {
                     break;
 
                 case Spoof:
-                    mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, packet.getYaw(), packet.getPitch(), mc.thePlayer.onGround));
+                    PacketUtil.sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, packet.getYaw(), packet.getPitch(), mc.thePlayer.onGround));
                     break;
             }
 

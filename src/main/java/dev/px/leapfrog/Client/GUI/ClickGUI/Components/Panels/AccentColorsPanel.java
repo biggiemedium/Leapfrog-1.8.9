@@ -45,6 +45,8 @@ public class AccentColorsPanel implements Component {
         int offsetX = 0;
         if(scrollX > 0) {
             scrollX = 0;
+        } else if(scrollX > -offsetX) {
+            scrollX = -offsetX;
         }
 
         stack.pushScissor(getX(), getY(), getWidth() * (int) screen.getClickGUI().getOpenAnimation().getAnimationFactor(), getHeight() * (int) screen.getClickGUI().getOpenAnimation().getAnimationFactor());
@@ -63,7 +65,7 @@ public class AccentColorsPanel implements Component {
         stack.popScissor();
 
         if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
-            scrollX += Mouse.getDWheel() * 0.02D;
+            scrollX += Mouse.getDWheel() * 0.2D;
         }
     }
 

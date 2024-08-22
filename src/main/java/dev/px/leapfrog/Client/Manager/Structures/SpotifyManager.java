@@ -19,11 +19,10 @@ public class SpotifyManager {
     public SpotifyManager() {
         API = SpotifyAPIFactory.createInitialized();
         openAPI = API.getOpenAPI();
-        if(API.isInitialized()) {
-            init();
-        } else {
+        if (!API.isInitialized()) {
             API.initialize();
         }
+        init();
     }
 
     public void init() {

@@ -30,42 +30,6 @@ public class PlayerUtil {
         return player.getHealth() + player.getAbsorptionAmount();
     }
 
-    public static double getBaseMoveSpeed() {
-        double baseSpeed = mc.thePlayer.capabilities.getWalkSpeed() * 2.873;
-        if (mc.thePlayer.isPotionActive(Potion.moveSlowdown)) {
-            baseSpeed /= 1.0 + 0.2 * (mc.thePlayer.getActivePotionEffect(Potion.moveSlowdown).getAmplifier() + 1);
-        }
-        if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
-            baseSpeed *= 1.0 + 0.2 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1);
-        }
-        return baseSpeed;
-    }
-
-    public static void setSpeed(double moveSpeed, float yaw, double strafe, double forward) {
-        if (forward != 0.0D) {
-            if (strafe > 0.0D) {
-                yaw += ((forward > 0.0D) ? -45 : 45);
-            } else if (strafe < 0.0D) {
-                yaw += ((forward > 0.0D) ? 45 : -45);
-            }
-            strafe = 0.0D;
-            if (forward > 0.0D) {
-                forward = 1.0D;
-            } else if (forward < 0.0D) {
-                forward = -1.0D;
-            }
-        }
-        if (strafe > 0.0D) {
-            strafe = 1.0D;
-        } else if (strafe < 0.0D) {
-            strafe = -1.0D;
-        }
-        double mx = Math.cos(Math.toRadians((yaw + 90.0F)));
-        double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
-        mc.thePlayer.motionX = forward * moveSpeed * mx + strafe * moveSpeed * mz;
-        mc.thePlayer.motionZ = forward * moveSpeed * mz - strafe * moveSpeed * mx;
-    }
-
     public static boolean inLiquid() {
         boolean inLiquid = false;
         int y = (int) (mc.thePlayer.getEntityBoundingBox().minY + 0.02D);
@@ -123,19 +87,5 @@ public class PlayerUtil {
             }
         }
         return onLiquid;
-    }
-
-    public static int getRandomInRange(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
-    }
-
-    public static float getRandomInRange(float min, float max) {
-        SecureRandom random = new SecureRandom();
-        return random.nextFloat() * (max - min) + min;
-    }
-
-    public static double getRandomInRange(double min, double max) {
-        SecureRandom random = new SecureRandom();
-        return random.nextDouble() * (max - min) + min;
     }
 }

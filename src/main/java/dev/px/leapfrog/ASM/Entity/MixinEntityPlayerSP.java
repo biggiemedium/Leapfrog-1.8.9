@@ -3,6 +3,7 @@ package dev.px.leapfrog.ASM.Entity;
 import com.mojang.authlib.GameProfile;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerSendChatEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerSlowDownEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
@@ -29,6 +30,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mixin(EntityPlayerSP.class)
 public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
@@ -71,6 +74,49 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         LeapFrog.EVENT_BUS.post(event);
     }
 
+    @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
+    public void onChat(String p_sendChatMessage_1_, CallbackInfo ci) {
+        PlayerSendChatEvent event = new PlayerSendChatEvent(p_sendChatMessage_1_);
+        LeapFrog.EVENT_BUS.post(event);
+        if(event.isCancelled()) {
+            ci.cancel();
+        }
+
+        // idk why this doesn't work in command manager but just use this here
+        String message = event.getMessage();
+        if (!message.startsWith(".")) return;
+        message = message.substring(1);
+        final String[] args = message.split(" ");
+
+
+        System.out.println("Message: " + message);
+        System.out.println("Args: " + Arrays.toString(args));
+
+        AtomicBoolean commandFound = new AtomicBoolean(false);
+
+        try {
+            LeapFrog.commandManager.getCommands().stream()
+                    .filter(command -> {
+                        // Print command arguments for debugging
+                        System.out.println("Command arguments: " + Arrays.toString(command.getArguments()));
+                        return Arrays.stream(command.getArguments())
+                                .anyMatch(expression -> expression.equalsIgnoreCase(args[0]));
+                    })
+                    .forEach(command -> {
+                        commandFound.set(true);
+                        command.execute(args);
+                    });
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if (!commandFound.get()) {
+            ChatUtil.sendClientSideMessage("command.unknown");
+        }
+
+        ci.cancel();
+    }
+
     @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
     public void onPlayerUpdate(CallbackInfo ci) {
         /*
@@ -78,34 +124,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         LeapFrog.EVENT_BUS.post(event);
          */
     }
-
-    /*
-    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isUsingItem()Z", ordinal = 0))
-    public boolean yes(EntityPlayerSP instance) {
-        return false;
-    }
-
-    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isRiding()Z"))
-    public boolean no(EntityPlayerSP instance) {
-        return false;
-    }
-
-
-    @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;pushOutOfBlocks(DDD)Z", shift = At.Shift.BEFORE), cancellable = true)
-    public void onSlowDown(CallbackInfo ci) {
-        PlayerSlowDownEvent event = new PlayerSlowDownEvent();
-        LeapFrog.EVENT_BUS.post(event);
-
-        if(this.isUsingItem() && !this.isRiding()) {
-            if(!event.isCancelled()) {
-                this.movementInput.moveStrafe *= 0.2F;
-                this.movementInput.moveForward *= 0.2F;
-                this.sprintToggleTimer = 0;
-            }
-        }
-    }
-
-     */
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"), cancellable = true)
     public void onLivingUpdate2(CallbackInfo ci) {

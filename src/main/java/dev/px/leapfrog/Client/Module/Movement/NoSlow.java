@@ -11,6 +11,7 @@ import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.item.ItemBow;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -36,6 +37,9 @@ public class NoSlow extends Module {
                         if (mc.thePlayer.isUsingItem()) {
                             mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                         }
+                        break;
+                    case Grim:
+
                         break;
                 }
             }

@@ -26,11 +26,15 @@ public class FileManager {
     public void load() {
         FileUtil.loadModules(preferences);
         FileUtil.loadSettings(preferences);
+        FileUtil.loadTheme(preferences);
+        FileUtil.loadPreferences(preferences);
     }
 
     public void save() {
         FileUtil.saveModules(preferences);
         FileUtil.saveSettings(preferences);
+        FileUtil.saveTheme(preferences);
+        FileUtil.savePreferences(preferences);
     }
 
     public File getDirectory() {

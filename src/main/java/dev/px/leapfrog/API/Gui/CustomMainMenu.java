@@ -26,6 +26,8 @@ public class CustomMainMenu extends GuiScreen {
     private GLSLSandboxShader backgroundShader;
     private Texture texture;
     private MenuButton modButton;
+    private GuiButton changeScale;
+    private GuiButton altManager;
     private long time = -1;
 
     public CustomMainMenu() {
@@ -52,7 +54,8 @@ public class CustomMainMenu extends GuiScreen {
         this.buttonList.add(new MenuButton(1, this.width / 2 - 100, y + 26 * 1, I18n.format("menu.multiplayer")));
         this.buttonList.add(new MenuButton(2, this.width / 2 - 100, y + 26 * 2, "Settings"));
         this.buttonList.add(modButton = new MenuButton(3, this.width / 2 - 100, y + 26 * 3, 98 * 2 + 4, 20, "Mods"));
-        this.buttonList.add(new MenuButton(4, this.width / 2 - 100, y + 26 * 4, 98 * 2 + 4, 20, "Exit"));
+        this.buttonList.add(altManager = new MenuButton(69, this.width / 2 - 100, y + 26 * 4, 98 * 2 + 4, 20, "Alts"));
+        this.buttonList.add(new MenuButton(4, this.width / 2 - 100, y + 26 * 5, 98 * 2 + 4, 20, "Exit"));
     }
 
     @Override
@@ -69,7 +72,7 @@ public class CustomMainMenu extends GuiScreen {
         GL11.glVertex2f(1f, -1f);
         GL11.glEnd();
         GL20.glUseProgram(0);
-        //texture.renderT(this.width / 2, y - 50, 50, 50);
+        //texture.renderT((sr.getScaledWidth() / 2) - 25, y - 50, 50, 50);
         super.drawScreen(mouseX, mouseY, partialTicks);
         //FontRenderer.sans40_bold.drawString("LeapFrog", this.width / 2 - FontRenderer.sans40_bold.getStringWidth("LeapFrog"), y - FontRenderer.sans40_bold.getHeight(), -1);
     }
@@ -87,6 +90,9 @@ public class CustomMainMenu extends GuiScreen {
         }
         if(button.id == 3) {
             mc.displayGuiScreen(new GuiModList(this));
+        }
+        if(button.id == 69) {
+
         }
 
         if(button.id == 4) {

@@ -14,6 +14,7 @@ import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
@@ -32,7 +33,7 @@ public class Strafe extends Module {
 
     public Setting<Mode> mode = create(new Setting<>("Mode", Mode.NCP));
     private Setting<Float> vanillaMultipler = create(new Setting<>("Vanilla Speed", 1.5F, 0.0F, 2.0F, v -> mode.getValue() == Mode.Vanilla));
-
+    private Setting<Boolean> watchDogOnGround = create(new Setting<>("On Ground", true, v -> mode.getValue() == Mode.WatchDog));
     // NCP
     private Setting<Boolean> NCPTimer = create(new Setting<>("NCP Timer", false, v -> mode.getValue() == Mode.NCP));
 
@@ -40,6 +41,7 @@ public class Strafe extends Module {
     private int stage = 0;
     private double jumpY = 0;
     private int NCPTicks = 0;
+    private int vulcanTicks = 0;
 
     @EventHandler
     private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
@@ -63,8 +65,22 @@ public class Strafe extends Module {
                 case Verus:
                     verus(event);
                     break;
+                case Vulcan:
+                    vulcan(event);
+                    break;
+                case VulcanTenacity:
+                    vulcanTenacityPre(event);
+                    break;
+                case WatchDog:
+                    watchDog(event);
+                    break;
             }
         } else {
+            switch (mode.getValue()) {
+                case VulcanTenacity:
+                    vulcanTenacityPost(event);
+                    break;
+            }
             //((IMixinMinecraft) mc).timer().timerSpeed = 1.0f; // yes
         }
     });
@@ -141,6 +157,52 @@ public class Strafe extends Module {
 
     }
 
+    private void vulcan(PlayerMotionEvent event) {
+            if(MoveUtil.isMoving()) {
+                if(mc.thePlayer.isSprinting()) {
+                    mc.thePlayer.setSprinting(false);
+                }
+                if(MoveUtil.isOnGround(0.1)) {
+                    MoveUtil.setMoveSpeed(Math.max(0.34, MoveUtil.getBaseMoveSpeed()));
+                    mc.thePlayer.jump();
+                } else {
+                    MoveUtil.setMoveSpeed(Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ));
+                    ((IMixinMinecraft) mc).timer().timerSpeed = 1.05F;
+                }
+            } else {
+                ((IMixinMinecraft) mc).timer().timerSpeed = 1F;
+            }
+    }
+
+    private void vulcanTenacityPre(PlayerMotionEvent event) {
+        if (mc.thePlayer.onGround) {
+            if (MoveUtil.isMoving()) {
+                mc.thePlayer.jump();
+                MoveUtil.setMoveSpeed(MoveUtil.getBaseMoveSpeed() * 1.6);
+                vulcanTicks = 0;
+            }
+        }
+    }
+
+    private void vulcanTenacityPost(PlayerMotionEvent event) {
+        vulcanTicks++;
+        if (vulcanTicks == 1) {
+            MoveUtil.setMoveSpeed(MoveUtil.getBaseMoveSpeed() * 1.16);
+        }
+    }
+
+    private void watchDog(PlayerMotionEvent event) {
+        if (MoveUtil.isMoving()) {
+            if (MoveUtil.isOnGround(0.01) && mc.thePlayer.isCollidedVertically) {
+                MoveUtil.setMoveSpeed(Math.max(0.275, MoveUtil.getBaseMoveSpeed() * 0.9));
+                mc.thePlayer.jump();
+            } else if(!this.watchDogOnGround.getValue()){
+                MoveUtil.setMoveSpeed(MoveUtil.getMotionSpeed());
+            }
+        }
+    }
+
+
     @Override
     public void onDisable() {
         super.onDisable();
@@ -159,6 +221,9 @@ public class Strafe extends Module {
         //AAC,
         //Grim,
         NCP,
-        Verus
+        Verus,
+        Vulcan,
+        VulcanTenacity,
+        WatchDog
     }
 }

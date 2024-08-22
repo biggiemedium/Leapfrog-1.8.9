@@ -7,6 +7,7 @@ import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
 import dev.px.leapfrog.API.Event.World.WorldBlockAABBEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
+import dev.px.leapfrog.ASM.Listeners.IMixinC03PacketPlayer;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
@@ -51,7 +52,7 @@ public class Jesus extends Module {
                     break;
                 case NCP:
                     if (mc.thePlayer.ticksExisted % 2 == 0 && PlayerUtil.onLiquid()) {
-                        event.setY(event.getY() - 0.015625);
+                        event.setY(event.getY() - 0.131f);
                     }
                     break;
 
@@ -124,7 +125,10 @@ public class Jesus extends Module {
 
                     break;
                 case NCP:
-
+                    if(PlayerUtil.onLiquid()) {
+                        ((IMixinC03PacketPlayer) packet).setOnGround(false);
+                        ((IMixinC03PacketPlayer) packet).setY(mc.thePlayer.ticksExisted % 2 == 0 ? ((IMixinC03PacketPlayer) packet).getY() - 0.05 : ((IMixinC03PacketPlayer) packet).getY());
+                    }
                     break;
 
                 case karhu :
