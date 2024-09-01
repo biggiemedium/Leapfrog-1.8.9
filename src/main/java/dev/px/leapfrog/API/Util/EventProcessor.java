@@ -49,7 +49,7 @@ public class EventProcessor implements Listenable {
 
             for(Element element : LeapFrog.elementManager.getElements()) {
                 if(!(mc.currentScreen instanceof GuiHUDEditor)) {
-                    if (element.isVisible()) {
+                    if (element.isToggled()) {
                         element.onRender(e);
                         element.renderDummy(e);
                     }

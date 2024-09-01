@@ -17,8 +17,9 @@ public class Flight extends Module {
 
     }
 
-    private Setting<Mode> mode = create(new Setting<>("Mode", Mode.Vanilla));
-    private Setting<Integer> speed = create(new Setting<>("Speed", 2, 1, 5));
+    private Setting<Mode> mode = create(new Setting<>("Mode", Mode.Vulcan));
+
+    private double startY;
 
     /**
      * @see dev.px.leapfrog.ASM.Network.MixinNetHandlerPlayServer
@@ -28,11 +29,6 @@ public class Flight extends Module {
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
         if(event.getStage() == Event.Stage.Pre) {
             switch (mode.getValue()) {
-                case Vanilla:
-                    //mc.thePlayer.capabilities.isFlying = false;
-                    //mc.thePlayer.capabilities.allowFlying = false;
-                    //mc.thePlayer.motionY = mc.gameSettings.keyBindJump.isKeyDown() ? speed.getValue() : mc.gameSettings.keyBindSneak.isKeyDown() ? -speed.getValue() : 0;
-                    break;
                 case NCP:
 
                     break;
@@ -41,16 +37,22 @@ public class Flight extends Module {
                     mc.thePlayer.motionY = 0;
                     event.setOnGround(true);
                     break;
+                case Vulcan:
+                    if (mc.thePlayer.posY < startY) {
+                        if (mc.thePlayer.fallDistance > 2) {
+                            event.setOnGround(true);
+                            mc.thePlayer.fallDistance = 0;
+                        }
+                        if (mc.thePlayer.ticksExisted % 3 != 0) {
+                            mc.thePlayer.motionY = -0.0991;
+                        } else {
+                            mc.thePlayer.motionY += 0.026;
+                        }
+                    }
+                    break;
             }
         } else {
             switch (mode.getValue()) {
-                case Vanilla:
-                    if (this.mc.playerController.getCurrentGameType() != WorldSettings.GameType.CREATIVE && this.mc.playerController.getCurrentGameType() != WorldSettings.GameType.SPECTATOR) {
-                        mc.thePlayer.capabilities.isFlying = true;
-                        mc.thePlayer.capabilities.allowFlying = true;
-                        mc.thePlayer.capabilities.setFlySpeed(speed.getValue() * 0.05f);
-                    }
-                    break;
                 case NoFall:
 
                     break;
@@ -65,17 +67,17 @@ public class Flight extends Module {
     @Override
     public void onDisable() {
         super.onDisable();
-        if(mode.getValue() == Mode.Vanilla) {
-            if (this.mc.playerController.getCurrentGameType() != WorldSettings.GameType.CREATIVE && this.mc.playerController.getCurrentGameType() != WorldSettings.GameType.SPECTATOR) {
-                mc.thePlayer.capabilities.isFlying = false;
-                mc.thePlayer.capabilities.allowFlying = false;
-            }
-            MoveUtil.resetMotion();
-        }
+        MoveUtil.resetMotion();
+    }
+
+    @Override
+    public void onEnable() {
+        this.startY = mc.thePlayer.posY;
+        super.onEnable();
     }
 
     private enum Mode {
-        Vanilla,
+        Vulcan,
         NoFall,
         NCP
     }

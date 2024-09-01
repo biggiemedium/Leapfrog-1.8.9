@@ -1,6 +1,6 @@
 package dev.px.leapfrog.API.Util.System;
 
-import dev.px.leapfrog.API.Module.Bind;
+import dev.px.leapfrog.API.Module.Setting.Bind;
 import dev.px.leapfrog.API.Util.Render.Color.AccentColor;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -9,8 +9,6 @@ import dev.px.leapfrog.LeapFrog;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FileUtil {
 

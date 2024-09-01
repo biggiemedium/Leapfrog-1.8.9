@@ -1,8 +1,11 @@
 package dev.px.leapfrog.Client.Module;
 
-import dev.px.leapfrog.API.Module.Bind;
+import dev.px.leapfrog.API.Module.Setting.Bind;
+import dev.px.leapfrog.API.Module.Toggleable;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
+import dev.px.leapfrog.Client.GUI.Notifications.Notification;
+import dev.px.leapfrog.Client.Module.Render.Notifications;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.Listenable;
 import net.minecraft.client.Minecraft;
@@ -15,11 +18,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 
-public class Module implements Listenable, Comparable<Module> {
+public class Module extends Toggleable implements Listenable, Comparable<Module> {
 
-    private String name;
-    private String description;
-    private boolean toggled;
     private boolean drawn;
     private boolean safeToggle;
     private Type type;
@@ -31,6 +31,7 @@ public class Module implements Listenable, Comparable<Module> {
     private int violations = 0;
 
     public Module() {
+        super("", "", false);
         if(this.getClass().isAnnotationPresent(ModuleInterface.class)) {
             this.name = getModule().name();
             this.description = getModule().description();
@@ -58,6 +59,31 @@ public class Module implements Listenable, Comparable<Module> {
 
     public void toggle() {
         this.toggled = !this.toggled;
+
+        if (LeapFrog.moduleManager.isModuleToggled(Notifications.class) && LeapFrog.moduleManager.getModuleByClass(Notifications.class).toggle.getValue()) {
+            String titleToggle = "Module toggled";
+            String descriptionToggleOn = this.getName() + " was " + "§aenabled\r";
+            String descriptionToggleOff = this.getName() + " was " + "§cdisabled\r";
+
+            switch (LeapFrog.moduleManager.getModuleByClass(Notifications.class).mode.getValue()) {
+                case Client:
+                    break;
+                case SuicideX:
+                    if (this.isToggled()) {
+                        titleToggle = "Enabled Module " + this.getName() + ".";
+                    } else {
+                        titleToggle = "Disabled Module " + this.getName() + ".";
+                    }
+                    descriptionToggleOff = "";
+                    descriptionToggleOn = "";
+                    break;
+            }
+            if (toggled) {
+                LeapFrog.notificationManager.post(titleToggle, descriptionToggleOn, Notification.NotificationType.Enable);
+            } else {
+                LeapFrog.notificationManager.post(titleToggle, descriptionToggleOff, Notification.NotificationType.Disable);
+            }
+        }
 
         if(this.toggled) {
             this.onEnable();

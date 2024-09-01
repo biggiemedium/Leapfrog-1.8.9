@@ -14,6 +14,7 @@
     "Listeners.IMixinSkinManager",
     "Listeners.IMixinS08PacketPlayerPosLook",
     "Listeners.IMixinS12PacketEntityVelocity",
+    "Listeners.IMixinC17PacketCustomPayload",
     "Listeners.IMixinEntityPlayerSP",
     "Entity.MixinAbstractClientPlayer",
     "Entity.MixinEntity",
@@ -23,6 +24,7 @@
     "GUI.MixinGuiScreen",
     "GUI.Chat.MixinGuiChat",
     "GUI.Chat.MixinGuiNewChat",
+    "GUI.Container.MixinGuiContainer",
     "GUI.Menu.MixinSplashScreen",
     "GUI.Game.MixinGuiInGame",
     "Network.MixinNetHandlerPlayClient",
@@ -34,6 +36,7 @@
     "Render.MixinRenderGlobal",
     "Render.MixinRenderTNTPrimed",
     "World.MixinBlock",
-    "Multiplayer.MixinPlayerControllerMP"
+    "Multiplayer.MixinPlayerControllerMP",
+    "Util.MixinMovementInputFromOptions"
   ]
 }

@@ -1,8 +1,11 @@
 package dev.px.leapfrog.Client.GUI.Notifications;
 
 import dev.px.leapfrog.API.Util.Math.TimerUtil;
-import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
+import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Animation;
+import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Impl.DecelerateAnimation;
+import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Impl.EaseBackIn;
+import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import net.minecraft.client.Minecraft;
@@ -11,74 +14,79 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class Notification implements Comparable<Notification> {
+/**
+ * @author Tenacity Client
+ */
+public class Notification {
 
-    private String messsage;
-    private long start;
+    private String name, description;
+    private NotificationType type;
+    private float time;
+    private Animation animation;
+    private TimerUtil timer;
 
-    private long fadedIn;
-    private long fadeOut;
-    private long end;
-    private int length;
-    private final ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-
-    public Notification(String messsage, int length) {
-        this.messsage = messsage;
-        this.length = length;
-        this.fadedIn = 200 * length;
-        this.fadeOut = fadedIn + 500 * length;
-        this.end = fadeOut + fadedIn;
+    public Notification(String name, String description, NotificationType type, int time) {
+        this.name = name;
+        this.description = description;
+        this.time = (long) (time * 1000);
+        this.timer = new TimerUtil();
+        this.type = type;
+        this.animation = new DecelerateAnimation(250, 1);
     }
 
-    public void render() {
-        double offset;
-        int width = (int) FontRenderer.sans20_bold.getStringWidth(messsage) + 20;
-        int height = (int) FontRenderer.sans20_bold.getHeight() + 10;
-        long time = getTime();
-
-        if (time < fadedIn) {
-            offset = Math.tanh(time / (double) (fadedIn) * 3.0) * 10;
-        } else if (time > fadeOut) {
-            offset = (Math.tanh(3.0 - (time - fadeOut) / (double) (end - fadeOut) * 3.0) * 10);
-        } else {
-            offset = 10;
-        }
-
-        int x = (sr.getScaledWidth() / 2) - (width / 2);
-        int y = (int) offset;
-        RoundedShader.drawRound(x, y, width, height, 7, new Color(0, 0, 0, 120));
-        GL11.glColor3f(1.0F, 1.0F, 1.0F);
-        FontRenderer.sans20_bold.drawString(messsage, x + 10, (int) y + 6, Color.WHITE.getRGB());
+    public String getName() {
+        return name;
     }
 
-    public void show() {
-        this.start = System.currentTimeMillis();
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean isShown() {
-        return getTime() <= end;
+    public String getDescription() {
+        return description;
     }
 
-    private long getTime() {
-        return System.currentTimeMillis() - start;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public long getEnd() {
-        return end;
+    public NotificationType getType() {
+        return type;
     }
 
-    public int getHeight() {
-        return (int) FontRenderer.sans20_bold.getHeight() + 10;
+    public void setType(NotificationType type) {
+        this.type = type;
     }
 
-    @Override
-    public int compareTo(Notification other) {
-        return Long.compare(this.end, other.end);
+    public float getTime() {
+        return time;
+    }
+
+    public void setTime(float time) {
+        this.time = time;
+    }
+
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public TimerUtil getTimer() {
+        return timer;
+    }
+
+    public void setTimer(TimerUtil timer) {
+        this.timer = timer;
     }
 
     public enum NotificationType {
         INFO,
         Warning,
-        Error
+        Error,
+        Enable,
+        Disable
     }
 }

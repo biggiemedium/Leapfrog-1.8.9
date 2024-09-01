@@ -117,6 +117,15 @@ public class ColorUtil {
         return applyOpacity(old, opacity).getRGB();
     }
 
+    public static Color tripleColor(int rgbValue) {
+        return tripleColor(rgbValue, 1);
+    }
+
+    public static Color tripleColor(int rgbValue, float alpha) {
+        alpha = Math.min(1, Math.max(0, alpha));
+        return new Color(rgbValue, rgbValue, rgbValue, (int) (255 * alpha));
+    }
+
     //Opacity value ranges from 0-1
     public static Color applyOpacity(Color color, float opacity) {
         opacity = Math.min(1, Math.max(0, opacity));

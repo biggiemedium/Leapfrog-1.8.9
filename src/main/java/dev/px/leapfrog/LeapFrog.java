@@ -4,9 +4,9 @@ import dev.px.leapfrog.API.Gui.CustomMainMenu;
 import dev.px.leapfrog.API.Util.EventProcessor;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
-import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
 import dev.px.leapfrog.Client.Manager.Other.*;
 import dev.px.leapfrog.Client.Manager.Player.PositionManager;
+import dev.px.leapfrog.Client.Manager.Player.TargetManager;
 import dev.px.leapfrog.Client.Manager.Structures.*;
 import me.zero.alpine.fork.bus.EventBus;
 import me.zero.alpine.fork.bus.EventManager;
@@ -25,12 +25,10 @@ public class LeapFrog {
 
     /*
     - Notifcation system
-    - HUD (Draggable HUD, Grid system)
-    - GUI Theme - HUD font color picker
     - Improve HUD Editor screen
-    - Fix Main Menu
     - Rotation, anticheat, speed, position manager
     - Fix Keybinding
+    - Fix Reach
      */
 
     public static final String MODID = "leapfrog";
@@ -51,6 +49,7 @@ public class LeapFrog {
     public static CommandManager commandManager;
     //public static DiscordManager discordManager;
     public static MultiThreadingManager threadManager;
+    public static TargetManager targetManager;
     public static ServerManager serverManager;
     public static NotificationManager notificationManager;
     public static FileManager fileManager;
@@ -81,6 +80,7 @@ public class LeapFrog {
         notificationManager  = new NotificationManager();
         //discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
         //discordManager.start();
+        targetManager = new TargetManager();
         fileManager = new FileManager();
         configManager = new ConfigManager();
         positionManager = new PositionManager();

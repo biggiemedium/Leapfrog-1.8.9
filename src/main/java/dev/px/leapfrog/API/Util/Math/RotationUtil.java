@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vector3d;
 
 import java.util.Random;
 
@@ -14,6 +15,16 @@ import java.util.Random;
 public class RotationUtil {
 
     private static Minecraft mc = Minecraft.getMinecraft();
+
+    public static float[] getNeededRotations(double p1, double p2, double p3, double t1, double t2, double t3) {
+        final double diffX = t1 - p1;
+        final double diffY = t2 - p2;
+        final double diffZ = t3 - p3;
+        final double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
+        final float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0f;
+        final float pitch = (float) (-Math.toDegrees(Math.atan2(diffY, diffXZ)));
+        return new float[]{MathHelper.wrapAngleTo180_float(yaw), MathHelper.wrapAngleTo180_float(pitch)};
+    }
 
     public static float smoothRotate(float currentRotation, float targetRotation, float maxChange) {
         float rotationDifference = MathHelper.wrapAngleTo180_float(targetRotation - currentRotation);
@@ -66,7 +77,7 @@ public class RotationUtil {
         return new float[] {adjustedYaw, adjustedPitch};
     }
 
-    private static float[] getRotations(Entity entity) {
+    public static float[] getRotations(Entity entity) {
         if (entity == null) {
             return null;
         }
@@ -83,6 +94,15 @@ public class RotationUtil {
         final float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / Math.PI) - 90.0f;
         final float pitch = (float) (-(Math.atan2(diffY, dist) * 180.0 / Math.PI));
         return new float[]{yaw, pitch};
+    }
+
+    public static float[] getBlockRotations(double x, double y, double z) {
+        double var4 = x - mc.thePlayer.posX + 0.5;
+        double var6 = z - mc.thePlayer.posZ + 0.5;
+        double var8 = y - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight() - 1.0);
+        double var14 = MathHelper.sqrt_double(var4 * var4 + var6 * var6);
+        float var12 = (float) (Math.atan2(var6, var4) * 180.0 / 3.141592653589793) - 90.0f;
+        return new float[]{var12, (float) (-Math.atan2(var8, var14) * 180.0 / 3.141592653589793)};
     }
 
     public static double[] faceTargetNoDelay(double px, double py, double pz, EntityPlayer me) { // bannable bc its not smooth

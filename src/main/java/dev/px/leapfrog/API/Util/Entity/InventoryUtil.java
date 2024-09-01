@@ -70,4 +70,22 @@ public class InventoryUtil {
         mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, slot, hSlot, 2, mc.thePlayer);
     }
 
+    public static int isItemInHotbar(Item stack) {
+        for (int i = 0; i < 9; i++) {
+            ItemStack itemStack = mc.thePlayer.inventory.getStackInSlot(i);
+
+            if (itemStack == null) {
+                if (stack == null) {
+                    return i;
+                }
+                continue;
+            }
+
+            if (itemStack.getItem() == stack) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

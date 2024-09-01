@@ -2,43 +2,35 @@ package dev.px.leapfrog.ASM.Game;
 
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Input.ClickMouseEvent;
-import dev.px.leapfrog.API.Event.Input.KeyPressEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerAttackEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Gui.CustomMainMenu;
-import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
-import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.RenderUtil;
-import dev.px.leapfrog.API.Util.Render.SplashScreen;
-import dev.px.leapfrog.API.Wrapper;
+import dev.px.leapfrog.API.Gui.SplashScreen;
 import dev.px.leapfrog.Client.Module.Render.FPSBooster;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import org.apache.commons.io.IOUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft {
@@ -57,12 +49,36 @@ public abstract class MixinMinecraft {
 
     @Shadow public GuiScreen currentScreen;
     @Shadow public MovingObjectPosition objectMouseOver;
+    @Shadow public GuiIngame ingameGUI;
+    @Shadow public EffectRenderer effectRenderer;
     private ResourceLocation shaders = new ResourceLocation("minecraft", "shaders/post/blur" + ".json");
 
-    @Inject(method = "runTick()V", at = @At("RETURN"))
-    public void setScreen(CallbackInfo ci) {
+    Executor threadpool = Executors.newFixedThreadPool(1);
 
+    // Multi threading
+    @Redirect(method = "runTick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiIngame;updateTick()V", ordinal = 0))
+    public void updateTick1(GuiIngame ingameGUI) {
+        threadpool.execute(() -> {
+            ingameGUI.updateTick();
+        });
     }
+
+    // Multi threading
+    @Inject(method = "runTick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V", ordinal = 3, shift = At.Shift.AFTER))
+    public void updateTick2(CallbackInfo ci) {
+        threadpool.execute(() -> {
+            ingameGUI.updateTick();
+        });
+    }
+
+    // Multi threading
+    @Redirect(method = "runTick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/EffectRenderer;updateEffects()V"))
+    public void redirectParticles(EffectRenderer instance) {
+        this.threadpool.execute(() -> {
+            this.effectRenderer.updateEffects();
+        });
+    }
+
 
     @Inject(method = "displayGuiScreen", at = @At("RETURN"), cancellable = true)
     public void displayGuiScreenInject(GuiScreen guiScreenIn, CallbackInfo ci) {
@@ -164,6 +180,53 @@ public abstract class MixinMinecraft {
     @Inject(method = "shutdown", at = @At("HEAD"), cancellable = true)
     public void onShutdown(CallbackInfo ci) {
         LeapFrog.fileManager.save();
+    }
+
+    // Splash screen vvvvv
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/IReloadableResourceManager;registerReloadListener(Lnet/minecraft/client/resources/IResourceManagerReloadListener;)V", ordinal = 1))
+    public void languageManagerStartUp(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/IReloadableResourceManager;registerReloadListener(Lnet/minecraft/client/resources/IResourceManagerReloadListener;)V", ordinal = 2))
+    public void soundStartUp(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/IReloadableResourceManager;registerReloadListener(Lnet/minecraft/client/resources/IResourceManagerReloadListener;)V", ordinal = 3))
+    public void fontRendererObjStartUp(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;checkGLError(Ljava/lang/String;)V", shift = At.Shift.BEFORE))
+    public void mouseObjStartUp(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/ProgressManager$ProgressBar;step(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 0))
+    public void step1(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/ProgressManager$ProgressBar;step(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 1))
+    public void step2(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/ProgressManager$ProgressBar;step(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 3))
+    public void step3(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/ProgressManager$ProgressBar;step(Ljava/lang/String;)V", shift = At.Shift.BEFORE, ordinal = 4))
+    public void step4(CallbackInfo ci) {
+        SplashScreen.continueCount();
+    }
+
+    @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/ProgressManager;pop(Lnet/minecraftforge/fml/common/ProgressManager$ProgressBar;)V", shift = At.Shift.BEFORE))
+    public void pop1(CallbackInfo ci) {
+        SplashScreen.continueCount();
     }
 
     @Overwrite

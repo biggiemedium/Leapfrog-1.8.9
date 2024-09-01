@@ -1,3 +1,4 @@
+
 package dev.px.leapfrog.Client.Module.Render;
 
 import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
@@ -32,10 +33,9 @@ import org.lwjgl.util.vector.Vector4f;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Module.ModuleInterface(name = "Target HUD", type = Type.Visual, description = "Additional information for PVP")
 public class TargetHUD extends Module {
@@ -46,6 +46,7 @@ public class TargetHUD extends Module {
 
     private Setting<TrackingMode> trackingMode = create(new Setting<>("Tracking", TrackingMode.Right));
     private Setting<Boolean> killAuraOnly = create(new Setting<>("Kill Aura Target Only", true));
+    private Setting<Integer> targetAmount = create(new Setting<>("Target Amount", 1, 0, 10, v -> !killAuraOnly.getValue()));
     //private Setting<Boolean> currentTarget = create(new Setting<>("Current Target", true, v -> killAuraOnly.getValue()));
     private Setting<Integer> range = create(new Setting<>("Range", 8, 1, 25));
     private Setting<Float> scale = create(new Setting<>("Scale", 1f, 0.1f, 2f));
@@ -95,14 +96,16 @@ public class TargetHUD extends Module {
             targets.clear();
             entityPositions.clear();
 
+            List<EntityPlayer> potentialTargets = new ArrayList<>();
+
             for (Entity entity : mc.theWorld.loadedEntityList) {
                 if (entity instanceof EntityPlayer) {
                     EntityPlayer entityPlayer = (EntityPlayer) entity;
                     if (!killAuraOnly.getValue() || isKillAuraTarget(entityPlayer)) {
-                        if(mc.thePlayer.getDistance(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ) > range.getValue()) {
+                        if (mc.thePlayer.getDistance(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ) > range.getValue()) {
                             continue;
                         }
-                        targets.add(entityPlayer);
+                        potentialTargets.add(entityPlayer);
                         Vector4f vector = ESPUtil.getEntityPositionsOn2D(entity);
                         entityPositions.put(entityPlayer, vector);
 
@@ -112,6 +115,13 @@ public class TargetHUD extends Module {
                 }
             }
 
+            potentialTargets.sort(Comparator.comparingDouble(p -> mc.thePlayer.getDistance(p.posX, p.posY, p.posZ)));
+
+            int limit = Math.min(targetAmount.getValue(), potentialTargets.size());
+            for (int i = 1; i < limit; i++) {
+                EntityPlayer player = potentialTargets.get(i);
+                targets.add(player);
+            }
             for (EntityPlayer player : fadeAnimations.keySet()) {
                 if (!targets.contains(player)) {
                     fadeAnimations.get(player).setState(false);

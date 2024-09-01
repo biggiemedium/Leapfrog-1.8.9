@@ -44,6 +44,12 @@ public class MoveUtil {
         mc.thePlayer.motionZ = 0;
     }
 
+    public static void stopMotion() {
+        mc.thePlayer.motionX = 0;
+        mc.thePlayer.motionY = 0;
+        mc.thePlayer.motionZ = 0;
+    }
+
     public static double jumpBoostMotion(double motionY) {
         if (mc.thePlayer.isPotionActive(Potion.jump)) {
             return motionY + (mc.thePlayer.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;

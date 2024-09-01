@@ -33,6 +33,7 @@ public class MixinNetHandlerPlayClient {
 
     @Shadow private boolean doneLoadingTerrain;
 
+
     @ModifyArgs(method = "handleJoinGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkManager;sendPacket(Lnet/minecraft/network/Packet;)V"))
     public void setArgs(Args args) {
         if(LeapFrog.moduleManager.getModule(ClientSpoofer.class).isToggled()) {
@@ -41,12 +42,15 @@ public class MixinNetHandlerPlayClient {
                 case Vanilla:
                 args.set(0, new C17PacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString("vanilla")));
                 break;
+                /*
                 case Forge:
                     args.set(0, new C17PacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString(ClientBrandRetriever.getClientModName())));
                 break;
                 case Lunar:
                     args.set(0, new C17PacketCustomPayload("REGISTER", (new PacketBuffer(Unpooled.buffer())).writeString("Lunar-Client")));
                 break;
+
+                 */
             }
         }
     }

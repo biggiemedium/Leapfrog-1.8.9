@@ -7,6 +7,7 @@ import dev.px.leapfrog.API.Util.Entity.EntityUtil;
 import dev.px.leapfrog.API.Util.Math.TimerUtil;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
+import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.entity.Entity;
@@ -14,6 +15,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.activity.ActivityRequiredException;
+import java.util.List;
 
 @Module.ModuleInterface(name = "Kill aura", type = Type.Combat, description = "Auto targets enemies with sword")
 public class KillAura extends Module {
@@ -24,10 +26,9 @@ public class KillAura extends Module {
 
     private Entity target = null;
 
-    private Setting<Boolean> players = create(new Setting<>("Players", true));
-    private Setting<Boolean> invisibles = create(new Setting<>("Invisible", true, v -> players.getValue()));
-    private Setting<Boolean> hostiles = create(new Setting<>("Hostiles", false));
-    private Setting<Boolean> passive = create(new Setting<>("Passives", false));
+    private Setting<AttackMode> targetMode = create(new Setting<>("Target Mode", AttackMode.Single));
+    private Setting<Boolean> invisibles = create(new Setting<>("Invisible", true));
+    private Setting<Float> range = create(new Setting<>("Range", 4.0f, 0.0f, 10.0f));
 
     // CPS
     private Setting<Integer> minCPS = create(new Setting<>("Min CPS", 6, 0, 20));
@@ -45,6 +46,10 @@ public class KillAura extends Module {
 
     private TimerUtil attackTimer = new TimerUtil();
 
+    private enum AttackMode {
+        Single,
+        Multiple
+    }
     @Override
     public void onEnable() {
         super.onEnable();
@@ -60,9 +65,26 @@ public class KillAura extends Module {
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
         switch (event.getStage()) {
             case Pre:
-                this.target = getTarget();
                 if(minCPS.getValue() > maxCPS.getValue()) {
                     minCPS.setValue(minCPS.getValue() - 1);
+                }
+                List<EntityPlayer> targets = LeapFrog.targetManager.getTargets(range.getValue());
+                if(targets == null || targets.isEmpty()) {
+                    this.target = null;
+                    return;
+                }
+
+                switch (targetMode.getValue()) {
+                    case Single:
+                        this.target = targets.get(0);
+                        break;
+                    case Multiple:
+                        targets.removeIf(target -> mc.thePlayer.getDistanceSq(target.posX, target.posY, target.posZ) > range.getValue());
+
+                        if (!targets.isEmpty()) {
+                            targets.forEach(this::attack);
+                        }
+                        break;
                 }
 
                 break;
@@ -72,51 +94,16 @@ public class KillAura extends Module {
         }
     });
 
+    private void attack(EntityPlayer player) {
+
+    }
+
     @EventHandler
     private Listener<Render3DEvent> render3DEventListener = new Listener<>(event -> {
         if(target != null) {
 
         }
     });
-
-
-    private Entity getTarget() {
-        if(mc.theWorld.loadedEntityList.isEmpty()) {
-            return null;
-        }
-        for(Entity e : mc.theWorld.loadedEntityList) {
-            if(e == null) {
-                continue;
-            }
-            if(e == mc.thePlayer) {
-                continue;
-            }
-
-            if(!players.getValue() && e instanceof EntityPlayer) {
-                continue;
-            }
-
-            if(!hostiles.getValue() && e instanceof EntityMob) {
-                continue;
-            }
-
-            if(!passive.getValue() && EntityUtil.isPassive(e)) {
-                continue;
-            }
-
-            if(e.isDead) {
-                continue;
-            }
-
-            if(mc.thePlayer.getDistance(e.posX, e.posY, e.posZ) > 8) {
-                continue;
-            }
-
-            return e;
-        }
-
-        return null;
-    }
 
     private enum RenderMode {
         Circle

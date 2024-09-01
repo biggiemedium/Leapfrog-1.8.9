@@ -3,7 +3,7 @@ package dev.px.leapfrog.Client.Manager.Other;
 import dev.px.leapfrog.API.Event.Input.KeyPressEvent;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.API.Wrapper;
-import dev.px.leapfrog.Client.GUI.ClickGUI.ClickGUI;
+import dev.px.leapfrog.Client.GUI.ClickGUI.CompactGUI.ClickGUI;
 import dev.px.leapfrog.Client.GUI.HUD.UI.GuiHUDEditor;
 import dev.px.leapfrog.Client.GUI.NewGUI.FreeFlowGUI;
 import dev.px.leapfrog.Client.Module.Module;

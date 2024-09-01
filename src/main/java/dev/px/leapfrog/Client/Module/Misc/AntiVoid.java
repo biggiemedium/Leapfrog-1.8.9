@@ -6,6 +6,7 @@ import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
+import dev.px.leapfrog.API.Util.Math.MoveUtil;
 import dev.px.leapfrog.API.Util.Math.Vectors.Vec3d;
 import dev.px.leapfrog.API.Util.Network.PacketUtil;
 import dev.px.leapfrog.ASM.Listeners.IMixinC03PacketPlayer;
@@ -31,6 +32,8 @@ public class AntiVoid extends Module {
     }
 
     private Setting<Mode> mode = create(new Setting<>("Mode", Mode.NCP));
+    private Setting<Integer> distance = create(new Setting<>("Distance", 5, 0, 10, v -> mode.getValue() == Mode.Vulcan));
+    private boolean teleported = false;
 
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
@@ -45,6 +48,18 @@ public class AntiVoid extends Module {
                     }
                 }
                 break;
+                case Vulcan:
+                    if(mc.thePlayer.fallDistance > distance.getValue()) {
+                        event.setY(event.getY() - event.getY() % 0.015625);
+                        event.setOnGround(true);
+                        mc.thePlayer.motionY = -0.08D;
+                        MoveUtil.resetMotion();
+                    }
+                    if(teleported) {
+                        MoveUtil.resetMotion();
+                        teleported = false;
+                    }
+                    break;
             }
         }
     });
@@ -60,11 +75,14 @@ public class AntiVoid extends Module {
 
     @EventHandler
     private Listener<PlayerTeleportEvent> teleportEventListener = new Listener<>(event -> { // S08
-
+        if(mc.thePlayer.fallDistance > distance.getValue()) {
+            this.teleported = true;
+        }
     });
 
     private enum Mode {
-        NCP
+        NCP,
+        Vulcan
     }
 
 }

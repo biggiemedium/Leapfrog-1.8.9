@@ -140,6 +140,7 @@ public class RenderUtil {
         GlStateManager.color(r, g, b, alpha);
     }
 
+
     public static void fakeCircleGlow(float posX, float posY, float radius, Color color, float maxAlpha) {
         setAlphaLimit(0);
         GL11.glShadeModel(GL11.GL_SMOOTH);

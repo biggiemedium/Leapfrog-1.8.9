@@ -4,7 +4,7 @@ import dev.px.leapfrog.API.Event.Event;
 
 public class PlayerMoveEvent extends Event {
 
-    private double x, y, z;
+    public double x, y, z;
 
     public PlayerMoveEvent(double x, double y, double z) {
         this.x = x;

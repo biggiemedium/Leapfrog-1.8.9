@@ -12,14 +12,40 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 
+import java.lang.reflect.Method;
 import java.security.SecureRandom;
 
 public class PlayerUtil {
 
     private static Minecraft mc = Minecraft.getMinecraft();
 
+    /**
+     * @see Minecraft
+     */
+    public static void clickMouse() {
+        try {
+            Method method = Minecraft.class.getDeclaredMethod("clickMouse");
+            method.setAccessible(true);
+            method.invoke(mc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @return if player is moving
+     */
     public static boolean isMoving() {
         return mc.thePlayer.moveForward != 0 || mc.thePlayer.moveStrafing != 0;
+    }
+
+    /**
+     * Gets the block relative to the player from the offset
+     *
+     * @return block relative to the player
+     */
+    public static Block blockRelativeToPlayer(final double offsetX, final double offsetY, final double offsetZ) {
+        return mc.theWorld.getBlockState(new BlockPos(mc.thePlayer).add(offsetX, offsetY, offsetZ)).getBlock();
     }
 
     public static boolean isFalseFlaggable(EntityPlayer player) {

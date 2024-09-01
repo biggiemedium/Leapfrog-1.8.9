@@ -3,9 +3,12 @@ package dev.px.leapfrog.API.Gui;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
+import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
+import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.GLSLSandboxShader;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.API.Util.Render.Texture;
+import dev.px.leapfrog.Client.GUI.AltManager.AltManagerGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -73,6 +76,8 @@ public class CustomMainMenu extends GuiScreen {
         GL11.glEnd();
         GL20.glUseProgram(0);
         //texture.renderT((sr.getScaledWidth() / 2) - 25, y - 50, 50, 50);
+        FontUtil.regular40.drawString("LeapFrog Client", (sr.getScaledWidth() / 2) - (FontUtil.regular40.getStringWidth("LeapFrog Client") / 2), y - 50, new Color(255, 255, 255, 255).getRGB());
+        RoundedShader.drawRound((int) (sr.getScaledWidth() / 2) - (int)  ((FontUtil.regular40.getStringWidth("LeapFrog Client") / 2) + 5), y - (int) (50 - (FontUtil.regular40.getHeight() + 5)), (int) (FontUtil.regular40.getStringWidth("LeapFrog Client") + 10), 1, 4, new Color(255, 255, 255, 255));
         super.drawScreen(mouseX, mouseY, partialTicks);
         //FontRenderer.sans40_bold.drawString("LeapFrog", this.width / 2 - FontRenderer.sans40_bold.getStringWidth("LeapFrog"), y - FontRenderer.sans40_bold.getHeight(), -1);
     }
@@ -92,7 +97,7 @@ public class CustomMainMenu extends GuiScreen {
             mc.displayGuiScreen(new GuiModList(this));
         }
         if(button.id == 69) {
-
+            mc.displayGuiScreen(new AltManagerGui(this));
         }
 
         if(button.id == 4) {
@@ -108,15 +113,18 @@ public class CustomMainMenu extends GuiScreen {
     public static class MenuButton extends GuiButton  {
 
         private Animation hoverAnimation;
+        private Animation colorAnimation;
 
         public MenuButton(int buttonId, int x, int y, int width, int height, String buttonText) {
             super(buttonId, x, y, width, height, buttonText);
             this.hoverAnimation = new Animation(300, false, Easing.LINEAR);
+            this.colorAnimation = new Animation(1500, false, Easing.LINEAR);
         }
 
         public MenuButton(int buttonId, int x, int y, String buttonText) {
             super(buttonId, x, y, 200, 20, buttonText);
             this.hoverAnimation = new Animation(300, false, Easing.LINEAR);
+            this.colorAnimation = new Animation(1500, false, Easing.LINEAR);
         }
 
         @Override
@@ -129,6 +137,9 @@ public class CustomMainMenu extends GuiScreen {
                         this.yPosition + (height / 2D) - (FontRenderer.sans24_bold.getHeight() / 2), -1);
                 RoundedShader.drawRoundOutline(xPosition, yPosition, width, height, 4, 1,
                         this.hovered ? new Color(200, 200, 200, 100) : new Color(255, 255, 255, 25), new Color(255, 255, 255, 225));
+                if(this.hovered) {
+                   // RoundedShader.drawRound();
+                }
                 hoverAnimation.setState(this.hovered);
             }
         }

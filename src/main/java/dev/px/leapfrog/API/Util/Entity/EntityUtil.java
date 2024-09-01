@@ -9,10 +9,23 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 
 public class EntityUtil {
 
     private static Minecraft mc = Minecraft.getMinecraft();
+
+    public static boolean isBlockUnderEntity(double height, Entity entity) {
+        for (int offset = 0; offset < height; offset += 2) {
+            final AxisAlignedBB bb = entity.getEntityBoundingBox().offset(0, -offset, 0);
+
+            if (!mc.theWorld.getCollidingBoundingBoxes(entity, bb).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static boolean isPassive(Entity entity) {
 

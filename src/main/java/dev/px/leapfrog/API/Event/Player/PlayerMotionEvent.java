@@ -4,7 +4,7 @@ import dev.px.leapfrog.API.Event.Event;
 
 public class PlayerMotionEvent extends Event {
 
-    private double x, y, z;
+    public double x, y, z;
     private float yaw, pitch;
     private boolean onGround;
 

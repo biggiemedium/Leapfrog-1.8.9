@@ -1,3 +1,4 @@
+
 package dev.px.leapfrog.Client.Module.Ghost;
 
 import dev.px.leapfrog.API.Event.Event;
@@ -58,16 +59,16 @@ public class AutoClicker extends Module {
             }
             if (timer.passed(1000 / ThreadLocalRandom.current().nextInt(minSpeed.getValue(), maxSpeed.getValue() + 1))) {
                 if (mc.gameSettings.keyBindAttack.isKeyDown()) {
-                // autoblock
-                if (mc.thePlayer.getHeldItem() != null && (mc.thePlayer.getHeldItem().getItem() instanceof ItemTool || mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)) {
-                    if(mc.thePlayer.isBlocking() && noBlocking.getValue()) {
-                        return;
-                    } else if (autoBlock.getValue() && mc.objectMouseOver.entityHit != null && mc.objectMouseOver.entityHit.isEntityAlive()){
-                        if (mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword && blockTimer.passed(100)) {
-                            mc.thePlayer.getCurrentEquippedItem().useItemRightClick(mc.theWorld, mc.thePlayer);
-                            blockTimer.reset();
+                    // autoblock
+                    if (mc.thePlayer.getHeldItem() != null && (mc.thePlayer.getHeldItem().getItem() instanceof ItemTool || mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)) {
+                        if(mc.thePlayer.isBlocking() && noBlocking.getValue()) {
+                            return;
+                        } else if (autoBlock.getValue() && mc.objectMouseOver.entityHit != null && mc.objectMouseOver.entityHit.isEntityAlive()){
+                            if (mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword && blockTimer.passed(100)) {
+                                mc.thePlayer.getCurrentEquippedItem().useItemRightClick(mc.theWorld, mc.thePlayer);
+                                blockTimer.reset();
+                            }
                         }
-                    }
 
                         if (mc.objectMouseOver.entityHit != null) {
                             mc.thePlayer.swingItem();

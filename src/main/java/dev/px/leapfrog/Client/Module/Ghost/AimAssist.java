@@ -34,11 +34,11 @@ public class AimAssist extends Module {
     private Setting<Boolean> fov = create(new Setting<>("FOV", true));
     // vertical
     private Setting<Boolean> vertical = create(new Setting<>("Vertical", true));
-    private Setting<Float> vSpeed = create(new Setting<>("Vertical Speed",  0.4f, 0.1f, 10.0f, v -> vertical.getValue()));
+    private Setting<Float> vSpeed = create(new Setting<>("Vertical Speed",  0.4f, 0.1f, 8f, v -> vertical.getValue()));
 
     // horizontal
     private Setting<Boolean> horizontal = create(new Setting<>("Horizontal", true));
-    private Setting<Float> hSpeed = create(new Setting<>("Horizontal Speed",  0.4f, 0.1f, 10.0f, v -> horizontal.getValue()));
+    private Setting<Float> hSpeed = create(new Setting<>("Horizontal Speed",  0.4f, 0.1f, 8f, v -> horizontal.getValue()));
 
     private EntityPlayer target;
 

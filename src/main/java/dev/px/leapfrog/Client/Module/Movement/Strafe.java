@@ -37,6 +37,9 @@ public class Strafe extends Module {
     // NCP
     private Setting<Boolean> NCPTimer = create(new Setting<>("NCP Timer", false, v -> mode.getValue() == Mode.NCP));
 
+    // Vulcan
+    private Setting<Boolean> vulcanTimer = create(new Setting<>("Vulcan Timer", false, v -> mode.getValue() == Mode.VulcanTimer));
+
     private double speed = 0.0D;
     private int stage = 0;
     private double jumpY = 0;
@@ -48,6 +51,9 @@ public class Strafe extends Module {
         switch (mode.getValue()) {
             case NCP:
 
+                break;
+            case VulcanTimer:
+                vulcanTimer(event);
                 break;
         }
     });
@@ -73,6 +79,9 @@ public class Strafe extends Module {
                     break;
                 case WatchDog:
                     watchDog(event);
+                    break;
+                case VulcanTimer:
+                    vulcanTimer(event);
                     break;
             }
         } else {
@@ -202,6 +211,38 @@ public class Strafe extends Module {
         }
     }
 
+    private void vulcanTimer(PlayerMoveEvent event) {
+        if (MoveUtil.isMoving()) {
+            if (mc.thePlayer.onGround) {
+                if (vulcanTimer.getValue()) {
+                    ((IMixinMinecraft) mc).timer().timerSpeed = 0.9f;
+                }
+                mc.thePlayer.jump();
+                event.y = mc.thePlayer.motionY = 0.42f;
+                MoveUtil.strafe(MoveUtil.getBaseMoveSpeed() * (mc.thePlayer.isPotionActive(Potion.moveSpeed) ? 1.9 : 2.1));
+            } else if (LeapFrog.positionManager.getOffGroundTicks() == 5) {
+                if (vulcanTimer.getValue() && mc.thePlayer.fallDistance < 1) {
+                    ((IMixinMinecraft) mc).timer().timerSpeed = 1.25f;
+                }
+                event.y = mc.thePlayer.motionY = -0.42f;
+            } else {
+                if (((IMixinMinecraft) mc).timer().timerSpeed == 1.3f && mc.thePlayer.fallDistance > 1) {
+                    ((IMixinMinecraft) mc).timer().timerSpeed = 1;
+                }
+            }
+        } else {
+            ((IMixinMinecraft) mc).timer().timerSpeed = 1;
+        }
+    }
+
+    private void vulcanTimer(PlayerMotionEvent event) {
+        if(MoveUtil.isMoving()) {
+            if (mc.thePlayer.onGround) {
+                mc.thePlayer.jump();
+            }
+        }
+    }
+
 
     @Override
     public void onDisable() {
@@ -224,6 +265,7 @@ public class Strafe extends Module {
         Verus,
         Vulcan,
         VulcanTenacity,
+        VulcanTimer,
         WatchDog
     }
 }

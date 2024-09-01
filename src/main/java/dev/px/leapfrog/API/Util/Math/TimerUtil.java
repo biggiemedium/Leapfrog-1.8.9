@@ -12,6 +12,10 @@ public class TimerUtil {
         return this.getTime(System.nanoTime() - this.time) >= ms;
     }
 
+    public boolean passed(double ms) {
+        return this.getTime(System.nanoTime() - this.time) >= ms;
+    }
+
     public void reset() {
         this.time = System.nanoTime();
     }

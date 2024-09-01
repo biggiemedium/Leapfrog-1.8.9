@@ -7,7 +7,6 @@ import dev.px.leapfrog.Client.Module.Misc.*;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Movement.*;
 import dev.px.leapfrog.Client.Module.Render.*;
-import scala.actors.Debug;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +20,7 @@ public class ModuleManager {
         Add(new TestModule());
         Add(new FastBow());
         Add(new KillAura());
+        Add(new TargetStrafe());
         Add(new Velocity());
 
         // Ghost
@@ -29,14 +29,16 @@ public class ModuleManager {
         Add(new AntiJumpDelay());
         Add(new AntiMiss());
         Add(new AutoClicker());
-        Add(new Eagle());
         Add(new Disabler());
         Add(new FastPlace());
         Add(new Hitbox());
+        Add(new Reach());
+        Add(new SafeBridge());
 
         // Misc
         Add(new AntiVoid());
         Add(new AutoInventory());
+        Add(new ChestStealer());
         Add(new ClientSpoofer());
         Add(new Debugger());
         Add(new FakePlayer());
@@ -63,10 +65,12 @@ public class ModuleManager {
         Add(new FPSBooster());
         Add(new FullBright());
         Add(new HotbarModification());
+        Add(new HUD());
         Add(new ItemPhysics());
         Add(new NameTags());
         Add(new NoRender());
         Add(new NoShake());
+        Add(new Notifications());
         Add(new TargetHUD());
         Add(new ThanosSnapEffect());
 

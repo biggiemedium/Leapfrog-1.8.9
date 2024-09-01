@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.GUI.HUD;
 
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
+import dev.px.leapfrog.API.Module.Toggleable;
 import dev.px.leapfrog.API.Util.Math.GridSystem;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
@@ -22,41 +23,39 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 
-public class Element {
+public class Element extends Toggleable {
 
     private String name, description;
     private float x, y, width, height;
     private float dragX, dragY;
     private boolean dragging, scaling;
-    private boolean visible;
     private float scale;
-
-    private ArrayList<Setting<?>> settings = new ArrayList<>();
-    protected Minecraft mc = Wrapper.getMC();
-    protected MinecraftFontRenderer font = FontRenderer.sans20_bold;
+    protected MinecraftFontRenderer font = FontRenderer.sans20;
     public ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
 
     public Element(int x, int y, int width, int height) {
+        super("", "", false);
         this.name = getElement().name();
         this.description = getElement().description();
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.visible = getElement().visible();
+        this.toggled = getElement().visible();
         this.scale = 1.0f;
         this.dragging = false;
         this.scaling = false;
     }
 
     public Element(int x, int y) {
+        super("", "", false);
         this.name = getElement().name();
         this.description = getElement().description();
         this.x = x;
         this.y = y;
         this.width = (float) font.getStringWidth(getElement().name()) + 3;
         this.height = (float) font.getHeight() + 3;
-        this.visible = getElement().visible();
+        this.toggled = getElement().visible();
         this.scale = 1.0f;
         this.dragging = false;
         this.scaling = false;
@@ -122,7 +121,7 @@ public class Element {
         if(button == 1) {
             if(isMouseOver(getX(), getY(), getWidth(), getHeight(), mouseX, mouseY)) {
                 if(mc.currentScreen != null) {
-                    this.visible = !this.visible;
+                    this.toggled = !this.toggled;
                 }
             }
         }
@@ -228,14 +227,6 @@ public class Element {
 
     public void setDragging(boolean dragging) {
         this.dragging = dragging;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public float getScale() {
