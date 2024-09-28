@@ -7,8 +7,12 @@ import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.API.Util.Render.Font.FontUtil;
 import dev.px.leapfrog.API.Util.Render.Font.MinecraftFontRenderer;
+import dev.px.leapfrog.API.Util.Render.RenderUtil;
 import dev.px.leapfrog.API.Util.Render.Shaders.RoundedShader;
 import dev.px.leapfrog.API.Wrapper;
+import dev.px.leapfrog.Client.Manager.Structures.ElementManager;
+import dev.px.leapfrog.Client.Module.Module;
+import dev.px.leapfrog.Client.Module.Render.HUD;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
 import net.minecraft.client.Minecraft;
@@ -23,7 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 
-public class Element extends Toggleable {
+public class Element extends Toggleable implements Comparable<Element> {
 
     private String name, description;
     private float x, y, width, height;
@@ -83,8 +87,7 @@ public class Element extends Toggleable {
             x = dragX + mouseX;
             y = dragY + mouseY;
             FontUtil.regular12.drawString("x " + getX() + " y " + getY(), getX() - 2, getY() + getHeight() + 5, -1);
-            snapToGrid(LeapFrog.inputManager.getClickGUI().getHudEditor().getGrid());
-
+            snapToGrid(LeapFrog.inputManager.getClickGUI().getHudEditor().getGrid(), mouseX, mouseY);
         }
 
         RoundedShader.drawRoundOutline(getX() - 1, getY() - 1, getWidth() + 2, getHeight() + 2, 4, 0.1f, new Color(0, 0, 0, 0), new Color(255, 255, 255));
@@ -104,9 +107,8 @@ public class Element extends Toggleable {
 
     }
 
-    private void snapToGrid(GridSystem grid) {
-        this.x = (int) (Math.round((float) x / grid.getDistance()) * grid.getDistance());
-        this.y = (int) (Math.round((float) y / grid.getDistance()) * grid.getDistance());
+    private void snapToGrid(GridSystem grid, int mouseX, int mouseY) {
+        // fix
     }
 
     public void mouseClicked(int mouseX, int mouseY, int button) {
@@ -235,6 +237,11 @@ public class Element extends Toggleable {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    @Override
+    public int compareTo(Element o) {
+        return this.name.compareTo(o.name);
     }
 
     @Retention(RetentionPolicy.RUNTIME)

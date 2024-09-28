@@ -1,7 +1,9 @@
 package dev.px.leapfrog.API.Util.System;
 
 import dev.px.leapfrog.API.Module.Setting.Bind;
+import dev.px.leapfrog.API.Module.Toggleable;
 import dev.px.leapfrog.API.Util.Render.Color.AccentColor;
+import dev.px.leapfrog.Client.GUI.HUD.Element;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import dev.px.leapfrog.LeapFrog;
@@ -126,7 +128,50 @@ public class FileUtil {
         }
     }
 
+    public static void saveElements(File directory) {
+        try {
+            File f = new File(directory, "Elements.txt");
+            BufferedWriter out = new BufferedWriter(new FileWriter(f));
+            for (Element t : LeapFrog.elementManager.getElements()) {
+                try {
+                    if (!t.getName().matches("null")) {
+                        out.write(t.getName() + ":" + t.isToggled() + ":" + t.getX() + ":" + t.getY());
+                        out.write("\r\n");
+                    }
+                } catch(Exception e) {}
+            }
+            out.close();
 
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static void loadElement(File directory) {
+        File f = new File(directory, "Elements.txt");
+        if (!f.exists()) {
+            LeapFrog.LOGGER.error("Elements.txt not found at: " + f.getAbsolutePath());
+            return;
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(f));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(":");
+                if(parts.length == 4) {
+                    Element e = LeapFrog.elementManager.getElement(parts[0].trim());
+                    if(e != null) {
+                        e.setToggled(Boolean.parseBoolean(parts[1].trim()));
+                        e.setX(Float.parseFloat(parts[2].trim()));
+                        e.setY(Float.parseFloat(parts[3].trim()));
+                    }
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private static <T> T parseValue(Setting<T> setting, String value) {
         if (setting.getValue() instanceof Boolean) {

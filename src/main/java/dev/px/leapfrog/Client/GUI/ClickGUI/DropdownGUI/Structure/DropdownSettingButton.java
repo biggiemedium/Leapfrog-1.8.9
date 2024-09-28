@@ -17,4 +17,11 @@ public abstract class DropdownSettingButton<T> implements Component {
         this.setting = setting;
     }
 
+    public DropdownSettingButton(float x, float y, float width, float height, Setting<T> setting) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.setting = setting;
+    }
 }

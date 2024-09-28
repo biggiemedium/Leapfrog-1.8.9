@@ -5,6 +5,7 @@ import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Util.Math.DustBox;
 import dev.px.leapfrog.ASM.Listeners.IMixinSkinManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;

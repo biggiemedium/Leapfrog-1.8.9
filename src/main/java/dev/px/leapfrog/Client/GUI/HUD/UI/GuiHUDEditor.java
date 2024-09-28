@@ -4,6 +4,7 @@ import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Util.Math.ADT.Pair;
 import dev.px.leapfrog.API.Util.Math.GridSystem;
 import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Animation;
+import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Direction;
 import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Impl.EaseBackIn;
 import dev.px.leapfrog.API.Util.Render.Color.ColorUtil;
 import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
@@ -34,7 +35,7 @@ public class GuiHUDEditor extends GuiScreen {
     public GuiHUDEditor(boolean backToGui) {
         this.backToGui = backToGui;
         this.sr = new ScaledResolution(Minecraft.getMinecraft());
-        this.grid = new GridSystem(sr.getScaledWidth(), sr.getScaledHeight(), 1, 20);
+        this.grid = new GridSystem(sr.getScaledWidth(), sr.getScaledHeight(), 0.5f, 10);
         this.frame = new ElementFrame("HUD Editor", 50, 50, 105, 15, animations);
     }
 
@@ -42,17 +43,22 @@ public class GuiHUDEditor extends GuiScreen {
     public void initGui() {
         super.initGui();
         this.grid = new GridSystem(sr.getScaledWidth(), sr.getScaledHeight(), LeapFrog.moduleManager.getModuleByClass(HUD.class).snapStrength.getValue(), LeapFrog.moduleManager.getModuleByClass(HUD.class).gridDistance.getValue());
+        animations.use((fade, opening) -> {
+            fade.setDirection(Direction.FORWARDS);
+            opening.setDirection(Direction.FORWARDS);
+        });
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        frame.render(mouseX, mouseY);
         for(Element e : LeapFrog.elementManager.getElements()) {
             if(e.isToggled()) {
                 e.editMode(mouseX, mouseY);
                 e.onRender(new Render2DEvent(partialTicks));
             }
         }
-        frame.render(mouseX, mouseY);
+        grid.render();
 
         // chatGPT :)
         int boxWidth = 35;

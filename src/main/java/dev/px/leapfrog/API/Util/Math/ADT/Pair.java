@@ -1,5 +1,7 @@
 package dev.px.leapfrog.API.Util.Math.ADT;
 
+import java.util.function.BiConsumer;
+
 public class Pair<K, V> {
 
     private K key;
@@ -28,6 +30,10 @@ public class Pair<K, V> {
 
     public static <K, V> Pair<K, V> of(K key, V value) {
         return new Pair<>(key, value);
+    }
+
+    public void use(BiConsumer<? super K, ? super V> func) {
+        func.accept(key, value);
     }
 
     @Override

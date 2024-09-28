@@ -25,8 +25,6 @@ public class LeapFrog {
 
     /*
     - Notifcation system
-    - Improve HUD Editor screen
-    - Rotation, anticheat, speed, position manager
     - Fix Keybinding
     - Fix Reach
      */
@@ -55,6 +53,8 @@ public class LeapFrog {
     public static FileManager fileManager;
     public static ConfigManager configManager;
     public static PositionManager positionManager;
+    public static SocialManager socialManager;
+    public static AccountManager accountManager;
 
     public static CustomMainMenu menu;
 
@@ -78,12 +78,15 @@ public class LeapFrog {
         capeManager = new CapeManager();
         serverManager = new ServerManager();
         notificationManager  = new NotificationManager();
+        socialManager = new SocialManager();
         //discordManager = new DiscordManager(); // MultiThread Manager must come before discord manager
         //discordManager.start();
         targetManager = new TargetManager();
         fileManager = new FileManager();
         configManager = new ConfigManager();
+        accountManager = new AccountManager();
         positionManager = new PositionManager();
+
         // way down
         inputManager = new InputManager(); // put this after everything bc it calls on ColorManager, Module Manager, Settings Manager, Element Manager
     }
@@ -97,7 +100,6 @@ public class LeapFrog {
             //discordManager.shutDown();
             threadManager.shutDown();
             try { configManager.saveConfigs(); } catch (IOException e) { e.printStackTrace(); }
-
         }));
     }
 }

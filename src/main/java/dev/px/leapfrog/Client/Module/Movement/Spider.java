@@ -66,6 +66,11 @@ public class Spider extends Module {
         }
     });
 
+    @Override
+    public String arrayDetails() {
+        return this.mode.getValue().name();
+    }
+
     private enum Mode {
         MMC,
         Vulcan,

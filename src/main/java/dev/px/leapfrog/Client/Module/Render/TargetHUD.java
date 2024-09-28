@@ -117,7 +117,7 @@ public class TargetHUD extends Module {
 
             potentialTargets.sort(Comparator.comparingDouble(p -> mc.thePlayer.getDistance(p.posX, p.posY, p.posZ)));
 
-            int limit = Math.min(targetAmount.getValue(), potentialTargets.size());
+            int limit = Math.min(targetAmount.getValue() + 1, potentialTargets.size());
             for (int i = 1; i < limit; i++) {
                 EntityPlayer player = potentialTargets.get(i);
                 targets.add(player);

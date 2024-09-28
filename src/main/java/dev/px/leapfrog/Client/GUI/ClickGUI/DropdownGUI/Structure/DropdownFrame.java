@@ -3,6 +3,9 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.DropdownGUI.Structure;
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Math.ADT.Pair;
 import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Animation;
+import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Direction;
+import dev.px.leapfrog.API.Util.Render.Animation.TenacityAnimations.Impl.EaseOutSine;
+import net.minecraft.client.gui.ScaledResolution;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ public class DropdownFrame implements Component {
     public int dragX, dragY;
     public ArrayList<DropdownButton> dropdownButtons;
     private Pair<Animation, Animation> animations;
+    public float maxHeight = 300;
 
     public DropdownFrame(String name, int x, int y, int width, int height, Pair<Animation, Animation> animations) {
         this.name = name;
@@ -27,7 +31,8 @@ public class DropdownFrame implements Component {
     }
 
     public void render(int mouseX, int mouseY) {
-
+        ScaledResolution sr = new ScaledResolution(mc);
+        this.maxHeight = 2 * sr.getScaledHeight() / 3f;
     }
 
     public void onClick(int mouseX, int mouseY, int button) throws IOException {

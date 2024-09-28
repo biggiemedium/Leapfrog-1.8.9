@@ -41,4 +41,19 @@ public class BlockUtil {
         return (block.getMaterial().isSolid() || !block.isTranslucent() || block.isFullBlock());
     }
 
+    public static ArrayList<BlockPos> getBlockInSphere(Block block, int range) {
+        ArrayList<BlockPos> pos = new ArrayList<>();
+
+        for(int x = -range; x < range; x++) {
+            for(int y = -range; y < range; y++) {
+                for(int z = -range; z < range; z++) {
+                    if(mc.theWorld.getBlockState(new BlockPos(x, y, z)).getBlock() == block) {
+                        pos.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+        }
+
+        return pos;
+    }
 }

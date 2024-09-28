@@ -48,6 +48,9 @@ public class Strafe extends Module {
 
     @EventHandler
     private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
+        if(mc.thePlayer.isInWater() || mc.thePlayer.isInLava()) {
+            return;
+        }
         switch (mode.getValue()) {
             case NCP:
 
@@ -61,6 +64,9 @@ public class Strafe extends Module {
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
         if(event.getStage() == Event.Stage.Pre) {
+            if(mc.thePlayer.isInWater() || mc.thePlayer.isInLava()) {
+                return;
+            }
             switch (mode.getValue()) {
                 case Vanilla:
                     vanilla(event);
@@ -255,6 +261,11 @@ public class Strafe extends Module {
     public void onEnable() {
         super.onEnable();
         NCPTicks = 0;
+    }
+
+    @Override
+    public String arrayDetails() {
+        return this.mode.getValue().name();
     }
 
     private enum Mode {

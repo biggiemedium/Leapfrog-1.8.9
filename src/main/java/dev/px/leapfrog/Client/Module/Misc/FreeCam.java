@@ -28,64 +28,34 @@ public class FreeCam extends Module {
 
     }
 
-    private Setting<Float> speed = create(new Setting<>("Speed", 1F, 1F, 10F));
-
-    private double oldX, oldY, oldZ;
-    private float oldYaw, oldPitch;
-    private EntityOtherPlayerMP player;
-
     @Override
     public void onEnable() {
-        if (mc.thePlayer == null || mc.theWorld == null) return;
-        mc.thePlayer.noClip = true;
-        this.oldX = mc.thePlayer.posX;
-        this.oldY = mc.thePlayer.posY;
-        this.oldZ = mc.thePlayer.posZ;
-        this.oldYaw = mc.thePlayer.rotationYaw;
-        this.oldPitch = mc.thePlayer.rotationPitch;
-        (player = new EntityOtherPlayerMP(mc.theWorld, mc.thePlayer.getGameProfile())).clonePlayer(mc.thePlayer, true);
-        player.setPosition(this.mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-        player.rotationYawHead = this.mc.thePlayer.rotationYaw;
-        player.rotationPitch = this.mc.thePlayer.rotationPitch;
-        player.setSneaking(this.mc.thePlayer.isSneaking());
-        mc.theWorld.addEntityToWorld(-1337, player);
+        if (mc.thePlayer != null) {
+            mc.thePlayer.capabilities.allowFlying = true;
+        }
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        if (mc.thePlayer == null || mc.theWorld == null) return;
-        mc.thePlayer.noClip = false;
-        mc.thePlayer.capabilities.isFlying = false;
-        mc.thePlayer.setPositionAndRotation(this.oldX, this.oldY, this.oldZ, this.oldYaw, this.oldPitch);
-        if (player != null) {
-            mc.theWorld.removeEntity(player);
-            player = null;  // Reset player to null after removing
+        if (mc.thePlayer != null) {
+            mc.thePlayer.capabilities.allowFlying = false;
+            mc.thePlayer.capabilities.isFlying = false;
         }
         super.onDisable();
     }
 
     @EventHandler
     private Listener<PacketSendEvent> sendEventListener = new Listener<>(event -> {
-        if (event.getPacket() instanceof C0APacketAnimation
-                || event.getPacket() instanceof C03PacketPlayer
-                || event.getPacket() instanceof C02PacketUseEntity
-                || event.getPacket() instanceof C0BPacketEntityAction
-                || event.getPacket() instanceof C08PacketPlayerBlockPlacement) {
+        if (event.getPacket() instanceof C03PacketPlayer) {
             event.cancel();
         }
     });
 
     @EventHandler
-    private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
-        if (event.getStage() == Event.Stage.Pre) {
-            mc.thePlayer.motionY = 0.0D + (mc.gameSettings.keyBindJump.isKeyDown() ? speed.getValue() : 0.0D) - (mc.gameSettings.keyBindSneak.isKeyDown() ? speed.getValue() : 0.0D);
-            MoveUtil.setMoveSpeed(speed.getValue());
-        }
-    });
-
-    @EventHandler
     private Listener<WorldBlockAABBEvent> aabbEventListener = new Listener<>(event -> {
-        event.setBoundingBox(null);
+        if(mc.thePlayer != null) {
+            event.cancel();
+        }
     });
 }

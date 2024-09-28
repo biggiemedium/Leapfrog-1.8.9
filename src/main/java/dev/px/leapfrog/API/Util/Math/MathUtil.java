@@ -79,4 +79,9 @@ public class MathUtil {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.floatValue();
     }
+
+    public static <T extends Number> void setArrayValue(T[] list, T value, int index) {
+        list[index] = value;
+    }
+
 }

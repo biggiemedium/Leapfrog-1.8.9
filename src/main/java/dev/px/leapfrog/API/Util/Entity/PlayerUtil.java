@@ -5,6 +5,7 @@ import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
@@ -29,6 +30,19 @@ public class PlayerUtil {
             method.invoke(mc);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sends a click to Minecraft legitimately
+     */
+    public static void sendClick(final int button, final boolean state) {
+        final int keyBind = button == 0 ? mc.gameSettings.keyBindAttack.getKeyCode() : mc.gameSettings.keyBindUseItem.getKeyCode();
+
+        KeyBinding.setKeyBindState(keyBind, state);
+
+        if (state) {
+            KeyBinding.onTick(keyBind);
         }
     }
 
@@ -113,5 +127,21 @@ public class PlayerUtil {
             }
         }
         return onLiquid;
+    }
+
+    public static float getSpeedKMH() {
+        double deltaX = mc.thePlayer.posX - mc.thePlayer.prevPosX;
+        double deltaZ = mc.thePlayer.posZ - mc.thePlayer.prevPosZ;
+
+        float distance = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
+
+        double floor = Math.floor(( distance/1000.0f ) / ( 0.05f/3600.0f ));
+
+        String formatter = String.valueOf(floor);
+
+        if (!formatter.contains("."))
+            formatter += ".0";
+
+        return Float.valueOf(formatter);
     }
 }

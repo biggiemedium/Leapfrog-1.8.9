@@ -35,6 +35,10 @@
     "Render.MixinRenderLivingEntity",
     "Render.MixinRenderGlobal",
     "Render.MixinRenderTNTPrimed",
+    "Render.MixinTileChestEntityRenderer",
+    "Render.MixinRenderPlayer",
+    "Render.MixinLayerArmorBase",
+    "Render.MixinTileEntityItemStackRenderer",
     "World.MixinBlock",
     "Multiplayer.MixinPlayerControllerMP",
     "Util.MixinMovementInputFromOptions"

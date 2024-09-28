@@ -8,14 +8,14 @@ import java.net.URISyntaxException;
 public class NetworkUtil {
 
     public static void openLink(String url) {
-        if(Desktop.isDesktopSupported()){
+        if(Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             try {
                 desktop.browse(new URI(url));
             } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             Runtime runtime = Runtime.getRuntime();
             try {
                 runtime.exec("xdg-open " + url);

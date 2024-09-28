@@ -28,6 +28,7 @@ public class FileManager {
         FileUtil.loadSettings(preferences);
         FileUtil.loadTheme(preferences);
         FileUtil.loadPreferences(preferences);
+        FileUtil.loadElement(preferences);
     }
 
     public void save() {
@@ -35,6 +36,7 @@ public class FileManager {
         FileUtil.saveSettings(preferences);
         FileUtil.saveTheme(preferences);
         FileUtil.savePreferences(preferences);
+        FileUtil.saveElements(preferences);
     }
 
     public File getDirectory() {

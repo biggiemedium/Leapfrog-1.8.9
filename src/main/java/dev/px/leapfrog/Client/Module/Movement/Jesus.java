@@ -144,4 +144,9 @@ public class Jesus extends Module {
         karhu
     }
 
+    @Override
+    public String arrayDetails() {
+        return this.mode.getValue().name();
+    }
+
 }

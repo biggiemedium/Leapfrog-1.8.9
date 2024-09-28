@@ -113,4 +113,9 @@ public class SafeBridge extends Module {
     private boolean isOffsetBBEmpty(double x, double y, double z) {
         return mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(x, y, z)).isEmpty();
     }
+
+    @Override
+    public String arrayDetails() {
+        return this.mode.getValue().name();
+    }
 }

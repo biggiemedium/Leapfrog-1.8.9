@@ -122,4 +122,9 @@ public class Velocity extends Module {
         Packet
     }
 
+    @Override
+    public String arrayDetails() {
+        return this.mode.getValue().name();
+    }
+
 }

@@ -19,13 +19,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -83,6 +83,57 @@ public abstract class MixinMinecraft {
     @Inject(method = "displayGuiScreen", at = @At("RETURN"), cancellable = true)
     public void displayGuiScreenInject(GuiScreen guiScreenIn, CallbackInfo ci) {
 
+    }
+
+    @Inject(method = "setInitialDisplayMode", at = @At("HEAD"), cancellable = true)
+    public void onDisplay(CallbackInfo ci) {
+        try {
+            Display.setFullscreen(false);
+        if (fullscreen) {
+            if (LeapFrog.settingsManager != null && LeapFrog.settingsManager.WINDOWMODIFICATIONS.getValue()) {
+                System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+            } else {
+                Display.setFullscreen(true);
+                DisplayMode displaymode = Display.getDisplayMode();
+                Minecraft.getMinecraft().displayWidth = Math.max(1, displaymode.getWidth());
+                Minecraft.getMinecraft().displayHeight = Math.max(1, displaymode.getHeight());
+            }
+        } else {
+            if (LeapFrog.settingsManager != null && LeapFrog.settingsManager.WINDOWMODIFICATIONS.getValue()) {
+                System.setProperty("org.lwjgl.opengl.Window.undecorated", "false");
+            } else {
+                Display.setDisplayMode(new DisplayMode(displayWidth, displayHeight));
+            }
+        }
+
+        Display.setResizable(false);
+        Display.setResizable(true);
+
+        ci.cancel();
+        } catch (LWJGLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Inject(method = "toggleFullscreen", at = @At(value = "INVOKE", remap = false, target = "Lorg/lwjgl/opengl/Display;setVSyncEnabled(Z)V", shift = At.Shift.AFTER))
+    private void toggleFullscreen(CallbackInfo ci) throws LWJGLException {
+        if (LeapFrog.settingsManager != null && LeapFrog.settingsManager.WINDOWMODIFICATIONS.getValue()) {
+            if (fullscreen) {
+                System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+                Display.setDisplayMode(Display.getDesktopDisplayMode());
+                Display.setLocation(0, 0);
+                Display.setFullscreen(false);
+            } else {
+                System.setProperty("org.lwjgl.opengl.Window.undecorated", "false");
+                Display.setDisplayMode(new DisplayMode(displayWidth, displayHeight));
+            }
+        } else {
+            Display.setFullscreen(fullscreen);
+            System.setProperty("org.lwjgl.opengl.Window.undecorated", "false");
+        }
+
+        Display.setResizable(false);
+        Display.setResizable(true);
     }
 
     @Inject(method = "clickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingItem()V", shift = At.Shift.BEFORE), cancellable = true)

@@ -19,6 +19,8 @@ public class MixinEntity {
 
     @Shadow public float rotationYaw;
 
+    @Shadow public float rotationPitch;
+
     @Inject(method = "applyEntityCollision", at = @At("HEAD"), cancellable = true)
     public void applyEntityCollisionEvent(Entity entity, CallbackInfo ci) {
         if(entity == Minecraft.getMinecraft().thePlayer) {

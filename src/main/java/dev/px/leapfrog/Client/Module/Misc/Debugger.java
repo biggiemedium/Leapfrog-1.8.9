@@ -1,22 +1,33 @@
 package dev.px.leapfrog.Client.Module.Misc;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
+import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
 import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
+import dev.px.leapfrog.API.Event.Render.Render2DEvent;
+import dev.px.leapfrog.API.Module.Setting.Bind;
 import dev.px.leapfrog.API.Module.Setting.Link;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.API.Util.Math.MoveUtil;
+import dev.px.leapfrog.API.Util.Math.TimerUtil;
 import dev.px.leapfrog.API.Util.Render.ChatUtil;
+import dev.px.leapfrog.API.Util.Render.Font.FontRenderer;
 import dev.px.leapfrog.ASM.Listeners.IMixinS12PacketEntityVelocity;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import jdk.nashorn.internal.runtime.Debug;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Module.ModuleInterface(name = "Debugger", type = Type.Misc, description = "Shows transaction ID's and more")
 public class Debugger extends Module {
@@ -30,6 +41,10 @@ public class Debugger extends Module {
     private Setting<Boolean> windowID = create(new Setting<>("Window ID", false));
     private Setting<Boolean> velocity = create(new Setting<>("Velocity", true));
     private Setting<Boolean> s08Packet = create(new Setting<>("S08 Lagback", true));
+
+    private Setting<Boolean> recorder = create(new Setting<>("Recorder", false));
+    private Setting<Integer> time = create(new Setting<>("Record Time", 5, 0, 20));
+    private Setting<Boolean> speed = create(new Setting<>("Speed Recorder", false, v -> recorder.getValue()));
 
     private Setting<Boolean> c02Packet = create(new Setting<>("C02 Use Entity", false));
     private Setting<Boolean> c02PacketCancel = create(new Setting<>("Cancel C02", false, visible -> c02Packet.getValue()));
@@ -81,6 +96,56 @@ public class Debugger extends Module {
 
     private Setting<Boolean> c12Packet = create(new Setting<>("C12 Player Try Use Item", false));
     private Setting<Boolean> c12PacketCancel = create(new Setting<>("Cancel C12", false, visible -> c12Packet.getValue()));
+
+    private ScaledResolution sr = new ScaledResolution(mc);
+    private boolean wasRecording = false;
+    private TimerUtil speedTimer = new TimerUtil();
+    private ArrayList<Float> speedList = new ArrayList<>();
+
+    @EventHandler
+    private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
+        if(event.getStage() == Event.Stage.Pre) {
+            if (recorder.getValue() && !wasRecording) {
+                speedTimer.reset();
+                wasRecording = true;
+            }
+
+            if (!recorder.getValue() && wasRecording) {
+                wasRecording = false;
+                speedList.clear();
+            }
+
+            if (recorder.getValue()) {
+                if (speed.getValue()) {
+                    if (speedTimer.passed(time.getValue() * 1000)) {
+                        if (!speedList.isEmpty()) {
+                            ChatUtil.sendClientSideMessage("Fastest speed: " + Collections.max(speedList) + " Slowest speed: " + Collections.min(speedList));
+                        }
+                        speedTimer.reset();
+                        speedList.clear();
+                        recorder.setValue(false);
+                        wasRecording = false;
+                    } else {
+                        speedList.add(MoveUtil.getMotionSpeed());
+                    }
+                }
+            }
+        }
+    });
+
+    @EventHandler
+    private Listener<Render2DEvent> render2DEventListener = new Listener<>(event -> {
+        if(recorder.getValue()) {
+            int totalTime = time.getValue() * 1000;
+            long elapsedTime = speedTimer.getTime();
+            long remainingTime = totalTime - elapsedTime;
+            if (remainingTime < 0) {
+                remainingTime = 0;
+            }
+            long secondsRemaining = remainingTime / 1000;
+            FontRenderer.sans22.drawString("Time remaining: " + secondsRemaining + "s", sr.getScaledWidth() / 2, sr.getScaledHeight() / 2, -1);
+        }
+    });
     /**
      * https://www.youtube.com/watch?v=aE69eCmhRRM&t=68s
      * How to detect AntiCheat

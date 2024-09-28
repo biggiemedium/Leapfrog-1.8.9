@@ -1,6 +1,7 @@
 package dev.px.leapfrog.Client.Module.Ghost;
 
 import dev.px.leapfrog.API.Event.Player.PlayerAttackEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerReachEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -21,4 +22,21 @@ public class Reach extends Module {
 
     });
 
+    @EventHandler
+    private Listener<PlayerReachEvent> reachEventListener = new Listener<>(event -> {
+        if(this.toggled) {
+            event.setRange(reachDistance.getValue());
+            event.cancel();
+        }
+    });
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+    }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+    }
 }

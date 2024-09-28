@@ -1,5 +1,6 @@
 package dev.px.leapfrog.API.Util.Math;
 
+import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
@@ -18,6 +19,7 @@ public class MoveUtil {
 
     private static Minecraft mc = Minecraft.getMinecraft();
     public static final double JUMP_HEIGHT = 0.42F;
+    public static final double GRAVITY_SPEED = 0.0784000015258789;
 
     /**
      * Gets the players predicted jump motion the specified amount of ticks ahead
@@ -72,6 +74,26 @@ public class MoveUtil {
         yaw = (float) Math.toRadians(yaw);
         mc.thePlayer.motionX = -MathHelper.sin(yaw) * speed;
         mc.thePlayer.motionZ = MathHelper.cos(yaw) * speed;
+    }
+
+    public static void setSpeed(boolean teleport, double value) {
+        double yaw = getDirection(mc.thePlayer.rotationYaw);
+        double x = -Math.sin(yaw) * value;
+        double z = Math.cos(yaw) * value;
+        if (teleport) {
+            mc.thePlayer.setPosition(mc.thePlayer.posX + x, mc.thePlayer.posY, mc.thePlayer.posZ + z);
+        } else {
+            mc.thePlayer.motionZ = z;
+            mc.thePlayer.motionX = x;
+        }
+    }
+
+    public static void setSpeed(double value, PlayerMoveEvent e) {
+        double yaw = getDirection(mc.thePlayer.rotationYaw);
+        double x = -Math.sin(yaw) * value;
+        double z = Math.cos(yaw) * value;
+        e.setX(x);
+        e.setZ(z);
     }
 
     /**

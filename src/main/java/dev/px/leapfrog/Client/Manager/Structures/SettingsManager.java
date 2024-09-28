@@ -17,6 +17,7 @@ public class SettingsManager {
     public Setting<Boolean> SCOREBOARD;
     public Setting<Boolean> TNTTIMER;
     public Setting<Boolean> HACKERDETECTOR;
+    public Setting<Boolean> PLAYERLIGHTING;
 
     public SettingsManager() {
         this.preferences = new ArrayList<>();
@@ -37,6 +38,8 @@ public class SettingsManager {
                 .setDescription("Displays TNT Timer coundown above entity"));
         HACKERDETECTOR = Add(new Setting("Hacker Detector", true)
                 .setDescription("Finds other hackers in your lobby"));
+        PLAYERLIGHTING = Add(new Setting("Player Lighting", true)
+                .setDescription("Removes Entity Lighting"));
     }
 
     public <T> Setting Add(Setting preference) {

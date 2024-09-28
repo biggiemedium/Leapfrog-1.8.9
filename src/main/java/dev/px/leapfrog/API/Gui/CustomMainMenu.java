@@ -35,7 +35,6 @@ public class CustomMainMenu extends GuiScreen {
 
     public CustomMainMenu() {
         try {
-            //this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/background.fsh");
             this.backgroundShader = new GLSLSandboxShader("/assets/minecraft/Leapfrog/Shaders/MenuShaders/wave.fsh");
             this.texture = new Texture(new ResourceLocation("Leapfrog/Images/Froggy.png"));
         } catch (IOException e) {

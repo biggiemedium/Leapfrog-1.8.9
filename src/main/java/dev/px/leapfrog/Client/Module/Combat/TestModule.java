@@ -1,64 +1,50 @@
 package dev.px.leapfrog.Client.Module.Combat;
 
-import com.google.common.base.Predicates;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
-import dev.px.leapfrog.API.Event.Network.PacketSendEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerAttackEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMoveEvent;
-import dev.px.leapfrog.API.Event.World.WorldBlockAABBEvent;
+import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Module.Setting.BetweenInteger;
 import dev.px.leapfrog.API.Module.Type;
+import dev.px.leapfrog.API.Util.Math.MathUtil;
 import dev.px.leapfrog.API.Util.Math.MoveUtil;
 import dev.px.leapfrog.API.Util.Math.TimerUtil;
+import dev.px.leapfrog.API.Util.Math.Vectors.Vec3d;
 import dev.px.leapfrog.API.Util.Render.*;
 import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
-import net.minecraft.block.BlockWeb;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Items;
-import net.minecraft.item.*;
-import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.util.*;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.potion.Potion;
+import org.lwjgl.opengl.GL11;
 
-import java.util.List;
-import java.util.Random;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Module.ModuleInterface(name = "Test Module", type = Type.Combat, description = "Balls")
 public class TestModule extends Module {
 
-    public Setting<Mode> mode = create(new Setting<>("Mode", Mode.AAC));
-
-    private Setting<Boolean> fall = create(new Setting<>("Web Fall", false));
-    private Setting<Boolean> webspeed = create(new Setting<>("Web Speed", false));
-    private Setting<Float> delay = create(new Setting<>("Delay", 1f, 0f, 10f));
-    private Setting<Integer> range = create(new Setting<>("Range", 5, 0, 10));
+    public Setting<Mode> mode = create(new Setting<>("Mode", Mode.NCP));
+    private Setting<Float> littleNumber = create(new Setting<>("Little number", 100f, 0f, 500f));
+    private Setting<Float> speedSetting = create(new Setting<>("Speed", 4.0f, 0.0f, 10.0f));
 
     private Setting<BetweenInteger<Integer>> betweenIntegerSetting = create(new Setting<>("Between Test", new BetweenInteger<Integer>(6, 10)));
 
-    private final boolean notInTheAir = true;
-    private final boolean notDuringMove = false;
-    private final boolean notDuringRegeneration = false;
-    private final boolean stopInput = false;
-
-    private Framebuffer stencilFramebuffer = new Framebuffer(1, 1, false);
     private double speed;
     private int ticks;
 
-    private C08PacketPlayerBlockPlacement placePacket;
+    private int packet;
+    private boolean fixed;
 
+    private TimerUtil time = new TimerUtil();
 
     @Override
     public void onEnable() {
@@ -69,19 +55,6 @@ public class TestModule extends Module {
     }
 
     @EventHandler
-    private Listener<WorldBlockAABBEvent> aabbEventListener = new Listener<>(event -> {
-        if(fall.getValue()) {
-            if(event.getBlock() instanceof BlockWeb) {
-                int x = event.getBlockPos().getX();
-                int y = event.getBlockPos().getY();
-                int z = event.getBlockPos().getZ();
-
-                event.setBoundingBox(new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1));
-            }
-        }
-    });
-
-    @EventHandler
     private Listener<PacketReceiveEvent> packetrEventListener = new Listener<>(event -> {
         if(event.getPacket() instanceof S08PacketPlayerPosLook) {
             ChatUtil.sendClientSideMessage(ChatFormatting.RED + "Warning: " + ChatFormatting.RESET + "You flagged the anti-cheat!");
@@ -90,159 +63,106 @@ public class TestModule extends Module {
 
     @EventHandler
     private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
+        if(mode.getValue() == Mode.Watchdog_FastSpeed) {
+            if (!MoveUtil.isMoving() || mc.thePlayer.isCollidedHorizontally) speed = 0;
+            MoveUtil.setSpeed(MoveUtil.isMoving() ? Math.max(MoveUtil.getBaseMoveSpeed(), MoveUtil.getMotionSpeed()) : 0, event);
+        } else if(mode.getValue() == Mode.Watchdog_groundSpeed) {
 
-    });
-
-    @SubscribeEvent
-    public void onKey(InputEvent event) {
-        if (Keyboard.getEventKey() == Keyboard.KEY_G) {
-
-        }
-    }
-
-    @EventHandler
-    private Listener<PacketSendEvent> packetsEventListener = new Listener<>(event -> {
-
-    });
-
-    @EventHandler
-    private Listener<PacketReceiveEvent> packetsEventListener2 = new Listener<>(event -> {
-        if (event.getPacket() instanceof S12PacketEntityVelocity) {
-
+        } else if(mode.getValue() == Mode.Watchdog_lowSpeed) {
+            if (!MoveUtil.isMoving() || mc.thePlayer.isCollidedHorizontally) speed = 0;
+            final double value = MoveUtil.isMoving() ? Math.max(MoveUtil.getBaseMoveSpeed(), MoveUtil.getMotionSpeed()) : 0,
+                    yaw = MoveUtil.getDirection(mc.thePlayer.rotationYaw),
+                    x = -Math.sin(yaw) * value,
+                    z = Math.cos(yaw) * value;
+            //e.setX(x);
+            //e.setZ(z);
+            event.setX(x - (x - event.getX()) * (1.0 - 80F / 100));
+            event.setZ(z - (z - event.getZ()) * (1.0 - 80F / 100));
+            MoveUtil.setSpeed(MoveUtil.isMoving() ? Math.max(MoveUtil.getBaseMoveSpeed(), MoveUtil.getBaseMoveSpeed()) : 0, event);
         }
     });
-
-    private Random random = new Random();
-    private final TimerUtil timer = new TimerUtil();
 
     @EventHandler
     private Listener<PlayerMotionEvent> motionEventListener = new Listener<>(event -> {
-        if (event.getStage() == Event.Stage.Pre) {
-            boolean usingItem = mc.thePlayer.isUsingItem() && mc.thePlayer.getCurrentEquippedItem() != null && MoveUtil.isMoving();
-            if (usingItem &&
-                    !(mc.thePlayer.posY % 0.015625 == 0) && mc.thePlayer.ticksExisted % 2 == 0) {
-                event.setY(event.getY() + 0.05);
-                event.setOnGround(false);
+        if(mode.getValue() == Mode.Watchdog_FastSpeed) {
+            if (mc.thePlayer.onGround) {
+                if (MoveUtil.isMoving()) {
+                    if (mc.gameSettings.keyBindJump.isKeyDown()) return;
+                    mc.thePlayer.jump();
+                    MoveUtil.setSpeed(false, MoveUtil.getBaseMoveSpeed() * 1.5);
+                    if (ticks > 0) MoveUtil.setMoveSpeed(MoveUtil.getBaseMoveSpeed() * 1.77);
+                    ticks++;
+                }
+            } else if (MoveUtil.isMoving()) {
+                if (mc.thePlayer.motionY > 0.05 && mc.thePlayer.motionY < 0.15) mc.thePlayer.motionY = (float) -0.01;
+                if (mc.thePlayer.motionY > -0.07 && mc.thePlayer.motionY < 0.) mc.thePlayer.motionY = (float) -0.09;
             }
-        }
-    });
-
-    private boolean isHoldingSword() {
-        ItemStack heldItem = mc.thePlayer.getHeldItem();
-        return heldItem != null && heldItem.getItem() instanceof ItemSword && mc.gameSettings.keyBindUseItem.isPressed();
-    }
-
-    private int findGoldenAppleSlot() {
-        for (int i = 0; i < 9; i++) {
-            ItemStack itemStack = mc.thePlayer.inventory.getStackInSlot(i);
-            if (itemStack != null && itemStack.getItem() == Items.golden_apple) {
-                return i; // Return the slot index where the golden apple is found
+            if (!MoveUtil.isMoving()) {
+                speed = 0;
             }
-        }
-        return -1; // Return -1 if no golden apple is found
-    }
-
-    private void sendFakeEatingPackets(int slot) {
-        int currentItem = mc.thePlayer.inventory.currentItem;
-        mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(slot));
-        mc.thePlayer.sendQueue.addToSendQueue(new C08PacketPlayerBlockPlacement(
-                mc.thePlayer.getHeldItem()
-        ));
-        mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(currentItem));
-    }
-
-    public MovingObjectPosition rayCast(float yaw, float pitch, final double range, final float expand) {
-        float partialTicks = ((IMixinMinecraft) mc).timer().renderPartialTicks;
-        Entity entity = mc.getRenderViewEntity();
-        MovingObjectPosition objectMouseOver;
-
-        if (entity != null && mc.theWorld != null) {
-            objectMouseOver = rayTraceCustom(entity, range, yaw, pitch);
-            double d1 = range;
-            final Vec3 vec3 = entity.getPositionEyes(partialTicks);
-
-            if (objectMouseOver != null) {
-                d1 = objectMouseOver.hitVec.distanceTo(vec3);
+        } else if(mode.getValue() == Mode.Watchdog_groundSpeed) {
+            if (mc.thePlayer.onGround && MoveUtil.isMoving()) {
+                if (ticks < 15) {
+                    ((IMixinMinecraft) mc).timer().timerSpeed = speedSetting.getValue();
+                    ticks++;
+                } else if (ticks < 22) {
+                    ((IMixinMinecraft) mc).timer().timerSpeed = 1;
+                    ticks++;
+                } else {
+                    ticks = 0;
+                }
+            } else {
+                ((IMixinMinecraft) mc).timer().timerSpeed = 1.0f;
+                ticks = 0;
             }
-
-            final Vec3 vec31 = getVectorForRotation(yaw, pitch);
-            final Vec3 vec32 = vec3.addVector(vec31.xCoord * range, vec31.yCoord * range, vec31.zCoord * range);
-            Entity pointedEntity = null;
-            Vec3 vec33 = null;
-            final float f = 1.0F;
-            final List<Entity> list = mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * range, vec31.yCoord * range, vec31.zCoord * range).expand(f, f, f), Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
-            double d2 = d1;
-
-            for (final Entity entity1 : list) {
-                final float f1 = entity1.getCollisionBorderSize() + expand;
-                final AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f1, f1, f1);
-                final MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
-
-                if (axisalignedbb.isVecInside(vec3)) {
-                    if (d2 >= 0.0D) {
-                        pointedEntity = entity1;
-                        vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
-                        d2 = 0.0D;
+            if (!MoveUtil.isMoving()) {
+                speed = 0;
+            }
+        } else if(mode.getValue() == Mode.Watchdog_lowSpeed) {
+            event.setYaw((float) Math.toDegrees(MoveUtil.getDirection(mc.thePlayer.rotationYaw)));
+            boolean doLowHop = !this.mc.thePlayer.isPotionActive(Potion.jump) &&
+                    this.mc.thePlayer.fallDistance <= 0.75F &&
+                    !this.mc.thePlayer.isCollidedHorizontally;
+            if (mc.thePlayer.onGround) {
+                if (MoveUtil.isMoving()) {
+                    mc.thePlayer.jump();
+                    if (!this.mc.thePlayer.isPotionActive(Potion.jump)) mc.thePlayer.motionY = 0.4;
+                    MoveUtil.setSpeed(false, MoveUtil.getBaseMoveSpeed() * 1.65);
+                    if (ticks > 0 && ticks % 2 == 0) {
+                        MoveUtil.setSpeed(false, MoveUtil.getBaseMoveSpeed() * 1.72);
                     }
-                } else if (movingobjectposition != null) {
-                    final double d3 = vec3.distanceTo(movingobjectposition.hitVec);
-
-                    if (d3 < d2 || d2 == 0.0D) {
-                        pointedEntity = entity1;
-                        vec33 = movingobjectposition.hitVec;
-                        d2 = d3;
-                    }
+                    ticks++;
+                }
+            } else if (MoveUtil.isMoving() && doLowHop) {
+                final double groundOffset = round(this.mc.thePlayer.posY - (int) this.mc.thePlayer.posY, 3, 0.0001);
+                if (groundOffset == round(0.4, 3, 0.0001)) {
+                    mc.thePlayer.motionY = 0.32;
+                } else if (groundOffset == round(0.71, 3, 0.0001)) {
+                    mc.thePlayer.motionY = 0.04;
+                } else if (groundOffset == round(0.75, 3, 0.0001)) {
+                    mc.thePlayer.motionY = -0.2;
+                } else if (groundOffset == round(0.55, 3, 0.0001)) {
+                    mc.thePlayer.motionY = -0.15;
+                } else if (groundOffset == round(0.41, 3, 0.0001)) {
+                    mc.thePlayer.motionY = -0.2;
                 }
             }
-
-            if (pointedEntity != null && (d2 < d1 || objectMouseOver == null)) {
-                objectMouseOver = new MovingObjectPosition(pointedEntity, vec33);
-            }
-
-            return objectMouseOver;
-        }
-
-        return null;
-    }
-
-    private final Vec3 getVectorForRotation(float p_getVectorForRotation_1_, float p_getVectorForRotation_2_) {
-        float f = MathHelper.cos(-p_getVectorForRotation_2_ * 0.017453292F - 3.1415927F);
-        float f1 = MathHelper.sin(-p_getVectorForRotation_2_ * 0.017453292F - 3.1415927F);
-        float f2 = -MathHelper.cos(-p_getVectorForRotation_1_ * 0.017453292F);
-        float f3 = MathHelper.sin(-p_getVectorForRotation_1_ * 0.017453292F);
-        return new Vec3((double)(f1 * f2), (double)f3, (double)(f * f2));
-    }
-
-    public MovingObjectPosition rayTraceCustom(Entity player, double blockReachDistance, float yaw, float pitch) {
-        final Vec3 vec3 = player.getPositionEyes(1.0F);
-        final Vec3 vec31 = getVectorForRotation(yaw, pitch);
-        final Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
-        return mc.theWorld.rayTraceBlocks(vec3, vec32, false, false, true);
-    }
-
-    private S12PacketEntityVelocity adjustVelocityToFacingDirection(S12PacketEntityVelocity packet) {
-        float yaw = mc.thePlayer.rotationYaw;
-        double yawRadians = Math.toRadians(yaw);
-        double directionX = -Math.sin(yawRadians);
-        double directionZ = Math.cos(yawRadians);
-        double originalVelocityX = packet.getMotionX() / 8000.0;
-        double originalVelocityZ = packet.getMotionZ() / 8000.0;
-        double magnitude = Math.sqrt(originalVelocityX * originalVelocityX + originalVelocityZ * originalVelocityZ);
-        double newVelocityX = directionX * magnitude;
-        double newVelocityZ = directionZ * magnitude;
-        int adjustedMotionX = (int) (newVelocityX * 8000);
-        int adjustedMotionZ = (int) (newVelocityZ * 8000);
-        return new S12PacketEntityVelocity(packet.getEntityID(), adjustedMotionX, packet.getMotionY(), adjustedMotionZ);
-    }
-
-
-
-    @EventHandler
-    private Listener<PlayerAttackEvent> attackEventListener = new Listener<>(event -> {
-        if(event.getEntity() != null) {
-
+            if (!MoveUtil.isMoving()) speed = 0;
         }
     });
+
+    public static double round(double value, int scale, double inc) {
+        final double halfOfInc = inc / 2.0;
+        final double floored = Math.floor(value / inc) * inc;
+
+        if (value >= floored + halfOfInc)
+            return new BigDecimal(Math.ceil(value / inc) * inc)
+                    .setScale(scale, RoundingMode.HALF_UP)
+                    .doubleValue();
+        else return new BigDecimal(floored)
+                .setScale(scale, RoundingMode.HALF_UP)
+                .doubleValue();
+    }
 
     @Override
     public void onDisable() {
@@ -256,15 +176,86 @@ public class TestModule extends Module {
         ticks = 0;
 
         MoveUtil.resetMotion();
+        String s;
     }
 
     private enum Mode {
-        AAC,
-        Grim,
-        NCP
+        NCP,
+        Watchdog_FastSpeed,
+        Watchdog_groundSpeed,
+        Watchdog_lowSpeed,
+        Watchdog_mini2Speed,
+        Watchdog_minSpeed,
+        Watchdog_SemiStrafe,
+        Watchdog_Speed
     }
 
+    private ArrayList<Particle> particles = new ArrayList<>();
 
+    @EventHandler
+    private Listener<Render3DEvent> render3DEventListener = new Listener<>(event -> {
+        this.particles.forEach(particle -> particle.update());
+        this.particles.removeIf(particle -> particle.remove);
+        this.particles.forEach(particle -> particle.render());
+    });
+
+    @EventHandler
+    private Listener<PlayerAttackEvent> attackEventListener = new Listener<>(event -> {
+        if(event.getEntity() != mc.thePlayer) {
+            Particle p = new Particle(new Vec3d(event.getEntity().posX, event.getEntity().posY + event.getEntity().getEyeHeight(), event.getEntity().posZ), "Hit!");
+            this.particles.add(p);
+        }
+    });
+
+    private class Particle {
+
+        private Vec3d position;
+        private TimerUtil timer;
+        private boolean remove;
+        private int time;
+        private double verticalSpeed;
+        private String text;
+
+        public Particle(Vec3d position, String text) {
+            this.position = position;
+            this.timer = new TimerUtil();
+            this.timer.reset();
+            this.time = ThreadLocalRandom.current().nextInt(1000, 3001);
+            this.remove = false;
+            this.verticalSpeed = 0.02 + Math.random() * 0.03;
+            this.text = text;
+        }
+
+        public void update() {
+            if(this.timer.passed(time)) {
+                this.remove = true;
+            }
+
+            position = position.addVector(0, verticalSpeed, 0);
+            verticalSpeed *= 0.98;
+        }
+
+        public void render() {
+            GL11.glPushMatrix();
+            GL11.glTranslated(position.xCoord, position.yCoord, position.zCoord);
+
+            Vec3d cameraPosition = new Vec3d(mc.getRenderViewEntity().getPositionEyes(1.0f).xCoord, mc.getRenderViewEntity().getPositionEyes(1.0f).yCoord, mc.getRenderViewEntity().getPositionEyes(1.0f).zCoord);
+            Vec3d lookDirection = cameraPosition.subtract(position).normalize();
+
+            float yaw = (float) Math.toDegrees(Math.atan2(lookDirection.zCoord, lookDirection.xCoord)) - 90;
+            float pitch = (float) Math.toDegrees(Math.atan2(lookDirection.yCoord, Math.hypot(lookDirection.xCoord, lookDirection.zCoord)));
+            GL11.glRotatef(-yaw, 0.0f, 1.0f, 0.0f);
+            GL11.glRotatef(pitch, 1.0f, 0.0f, 0.0f);
+
+            float scaleFactor = 0.01f; // Adjust this
+
+            GL11.glScalef(scaleFactor, scaleFactor, scaleFactor);
+            Minecraft.getMinecraft().fontRendererObj.drawString(text, 0, 0, 0xFFFFFFFF);
+
+            GL11.glPopMatrix();
+        }
+
+    }
 
 
 }

@@ -36,7 +36,10 @@ public class ModuleManager {
         Add(new SafeBridge());
 
         // Misc
+        Add(new AntiDesync());
+        Add(new AntiFireball());
         Add(new AntiVoid());
+        Add(new AutoArmor());
         Add(new AutoInventory());
         Add(new ChestStealer());
         Add(new ClientSpoofer());
@@ -54,6 +57,7 @@ public class ModuleManager {
         Add(new Jesus());
         Add(new NoSlow());
         Add(new PacketSneak());
+        Add(new Scaffold());
         Add(new Spider());
         Add(new Strafe());
 

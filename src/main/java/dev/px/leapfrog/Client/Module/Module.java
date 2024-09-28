@@ -1,5 +1,6 @@
 package dev.px.leapfrog.Client.Module;
 
+import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Module.Setting.Bind;
 import dev.px.leapfrog.API.Module.Toggleable;
 import dev.px.leapfrog.API.Module.Type;
@@ -7,7 +8,9 @@ import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.Client.GUI.Notifications.Notification;
 import dev.px.leapfrog.Client.Module.Render.Notifications;
 import dev.px.leapfrog.LeapFrog;
+import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listenable;
+import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraftforge.common.MinecraftForge;
@@ -116,6 +119,15 @@ public class Module extends Toggleable implements Listenable, Comparable<Module>
         this.settings.add(hudSetting);
         return hudSetting;
     }
+
+    public String arrayDetails() {
+        return "";
+    }
+
+    @EventHandler
+    private Listener<Render2DEvent> render2DEventListener = new Listener<>(event -> {
+        arrayDetails();
+    });
 
     public String getName() {
         return name;

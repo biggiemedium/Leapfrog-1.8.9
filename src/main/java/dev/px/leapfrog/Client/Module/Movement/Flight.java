@@ -82,4 +82,9 @@ public class Flight extends Module {
         NCP
     }
 
+    @Override
+    public String arrayDetails() {
+        return this.mode.getValue().name();
+    }
+
 }

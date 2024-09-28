@@ -96,6 +96,20 @@ public class GLUtils {
         GlStateManager.enableDepth();
     }
 
+    public static void setup2DRendering(boolean blend) {
+        if (blend) {
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        }
+        GlStateManager.disableTexture2D();
+    }
+
+    public static void end2DRendering() {
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
+
+
     public static void setup2DRendering(Runnable f) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

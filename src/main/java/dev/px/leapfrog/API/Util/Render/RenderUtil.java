@@ -59,42 +59,6 @@ public class RenderUtil {
         return new double[] { pX, pY, pZ };
     }
 
-    public static void drawRect(double x, double y, double width, double height, int color) {
-        double d4;
-
-        if (x < width) {
-            d4 = x;
-            x = width;
-            width = d4;
-        }
-
-        if (y < height) {
-            d4 = y;
-            y = height;
-            height = d4;
-        }
-
-        float f = (float) (color >> 24 & 255) / 255.0F;
-        float f1 = (float) (color >> 16 & 255) / 255.0F;
-        float f2 = (float) (color >> 8 & 255) / 255.0F;
-        float f3 = (float) (color & 255) / 255.0F;
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(f1, f2, f3, f);
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(x, height, 0.0D).endVertex();
-        worldrenderer.pos(width, height, 0.0D).endVertex();
-        worldrenderer.pos(width, y, 0.0D).endVertex();
-        worldrenderer.pos(x, y, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-    }
-
     public static void drawRect(float x, float y, float width, float height, Color color) {
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -165,6 +129,58 @@ public class RenderUtil {
         GlStateManager.alphaFunc(GL11.GL_GREATER, (float) (limit * .01));
     }
 
+    public static void drawGradientOutline(float x, float y, float wdith, float height, float width, float radius, int color, int color2, int color3, int color4) {
+
+        GlStateManager.enableBlend();
+        color(-1);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11. GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+
+        GL11.glPushAttrib(0);
+        GL11.glScaled(0.5D, 0.5D, 0.5D);
+        x *= 2.0D;
+        y *= 2.0D;
+        wdith *= 2.0D;
+        height *= 2.0D;
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        color(color);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GL11.glLineWidth(width);
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+
+        int i;
+        for (i = 0; i <= 90; i += 3) {
+            GL11.glVertex2d(x + radius + Math.sin(i * Math.PI / 180.0D) * radius * -1.0D, y + radius + Math.cos(i * Math.PI / 180.0D) * radius * -1.0D);
+        }
+        color(color2);
+        for (i = 90; i <= 180; i += 3) {
+            GL11.glVertex2d(x + radius + Math.sin(i * Math.PI / 180.0D) * radius * -1.0D, (y + height) - radius + Math.cos(i * Math.PI / 180.0D) * radius * -1.0D);
+        }
+        color(color3);
+        for (i = 0; i <= 90; i += 3) {
+            GL11.glVertex2d((x + wdith) - radius + Math.sin(i * Math.PI / 180.0D) * radius, (y + height) - radius + Math.cos(i * Math.PI / 180.0D) * radius);
+        }
+        color(color4);
+        for (i = 90; i <= 180; i += 3) {
+            GL11.glVertex2d((x + wdith) - radius + Math.sin(i * Math.PI / 180.0D) * radius, y + radius + Math.cos(i * Math.PI / 180.0D) * radius);
+        }
+        GL11.glEnd();
+        GL11.glLineWidth(1);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glScaled(2.0D, 2.0D, 2.0D);
+        GL11.glPopAttrib();
+
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        GL11.glShadeModel(GL11.GL_FLAT);
+        color(-1);
+    }
 
     public static void drawBlurredShadow(float x, float y, float width, float height, int blurRadius, Color color) {
         GL11.glPushMatrix();
