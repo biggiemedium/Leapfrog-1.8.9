@@ -28,10 +28,8 @@ public class TargetStrafe extends Module {
 
     @EventHandler
     private Listener<PlayerMoveEvent> moveEventListener = new Listener<>(event -> {
-        if(LeapFrog.moduleManager.getModuleByClass(KillAura.class).getCurrentTarget() == null) {
-            return;
-        }
-        this.strafe(event, MoveUtil.getBaseMoveSpeed(), LeapFrog.moduleManager.getModuleByClass(KillAura.class).getCurrentTarget(), range.getValue());
+
+        //this.strafe(event, MoveUtil.getBaseMoveSpeed(), LeapFrog.moduleManager.getModuleByClass(KillAura.class).getCurrentTarget(), range.getValue());
     });
 
     private void strafe(PlayerMoveEvent event, double speed, Entity entity, double range) {

@@ -25,6 +25,7 @@ public class ElementManager {
        Add(new PingElement());
        Add(new RadarElement());
        Add(new SpeedElement());
+       Add(new SpotifyElement());
        Add(new TestElement());
        Add(new TimeElement());
        Add(new WatermarkElement());

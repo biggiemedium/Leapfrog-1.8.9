@@ -16,6 +16,7 @@ public class ModuleManager {
     private ArrayList<Module> modules = new ArrayList<>();
 
     public ModuleManager() {
+        Add(new AutoPot());
         Add(new ExtraKnockBack());
         Add(new TestModule());
         Add(new FastBow());

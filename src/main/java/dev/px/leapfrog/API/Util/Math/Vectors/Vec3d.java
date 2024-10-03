@@ -300,4 +300,15 @@ public class Vec3d {
         return new Vec3d((double)(f1 * f2), (double)f3, (double)(f * f2));
     }
 
+    public double getX() {
+        return xCoord;
+    }
+
+    public double getY() {
+        return yCoord;
+    }
+
+    public double getZ() {
+        return zCoord;
+    }
 }

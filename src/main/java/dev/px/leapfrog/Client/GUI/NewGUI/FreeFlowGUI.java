@@ -35,7 +35,7 @@ public class FreeFlowGUI extends GuiScreen {
     private ScreenHandler currentScreen;
 
     private Animation spotifyAnimation = new Animation(300,(LeapFrog.spotifyManager.getAPI() != null && LeapFrog.spotifyManager.getAPI().isPlaying()), Easing.LINEAR);
-    private SpotifyHandler spotifyHandler;
+    //private SpotifyHandler spotifyHandler;
 
     public FreeFlowGUI() {
         this.x = 100;
@@ -46,7 +46,7 @@ public class FreeFlowGUI extends GuiScreen {
         this.dragging = false;
         this.closeAnimation = new Animation(250, true, Easing.TENACITY_EASEBACKIN);
 
-        this.spotifyHandler = new SpotifyHandler(getX(), getY() - 25, getWidth(), 25, new Color(23, 23, 23));
+        //this.spotifyHandler = new SpotifyHandler(getX(), getY() - 25, getWidth(), 25, new Color(23, 23, 23));
         this.screens = new ArrayList<>();
 
         this.screens.add(new ModuleScreen(getX() + 100, getY(), getWidth() - 100, getHeight(), this, ScreenHandler.ScreenType.Game));
@@ -90,10 +90,10 @@ public class FreeFlowGUI extends GuiScreen {
         RoundedShader.drawRound(getX(), getY(), getWidth(), 25, 4, new Color(28, 28, 28));
 
         // Spotify bar
-        spotifyHandler.setX(getX());
-        spotifyHandler.setY(getY() + getHeight() - 25);
-        spotifyHandler.setHeight(30);
-        spotifyHandler.render(mouseX, mouseY);
+        //spotifyHandler.setX(getX());
+        //spotifyHandler.setY(getY() + getHeight() - 25);
+        //spotifyHandler.setHeight(30);
+        //spotifyHandler.render(mouseX, mouseY);
 
         // white bar dividing stuff
         RenderUtil.drawRect(getX() + 80, getY() + 1, 0.4f, getHeight() - 1, new Color(190, 190, 190));
@@ -146,7 +146,7 @@ public class FreeFlowGUI extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        this.spotifyHandler.onClick(mouseX, mouseY, mouseButton);
+        //this.spotifyHandler.onClick(mouseX, mouseY, mouseButton);
 
         int offsetY = 0;
         for(ScreenHandler s : screens) {

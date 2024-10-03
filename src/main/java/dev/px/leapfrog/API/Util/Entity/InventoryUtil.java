@@ -54,6 +54,15 @@ public class InventoryUtil {
                 WHITELISTED_ITEMS.contains(item);
     }
 
+    public static Item getHeldItem() {
+        if (mc.thePlayer == null || mc.thePlayer.getCurrentEquippedItem() == null) return null;
+        return mc.thePlayer.getCurrentEquippedItem().getItem();
+    }
+
+    public static boolean isHoldingSword() {
+        return getHeldItem() instanceof ItemSword;
+    }
+
     public static boolean goodPotion(int id) {
         return GOOD_POTIONS.containsKey(id);
     }

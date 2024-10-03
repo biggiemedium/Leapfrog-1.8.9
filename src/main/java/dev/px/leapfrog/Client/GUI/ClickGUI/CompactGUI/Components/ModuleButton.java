@@ -3,6 +3,7 @@ package dev.px.leapfrog.Client.GUI.ClickGUI.CompactGUI.Components;
 import dev.px.leapfrog.API.Module.Setting.BetweenInteger;
 import dev.px.leapfrog.API.Module.Setting.Bind;
 import dev.px.leapfrog.API.Module.Setting.Link;
+import dev.px.leapfrog.API.Module.Setting.Slot;
 import dev.px.leapfrog.API.Util.Listener.Component;
 import dev.px.leapfrog.API.Util.Render.Animation.Animation;
 import dev.px.leapfrog.API.Util.Render.Animation.Easing;
@@ -74,6 +75,11 @@ public class ModuleButton implements Component {
                 }
                 if(s.getValue() instanceof Link) {
                     LinkButton b = new LinkButton(this, getX(), getY() + offsetY, s);
+                    this.settingButtons.add(b);
+                    offsetY += b.getHeight();
+                }
+                if(s.getValue() instanceof Slot) {
+                    SlotButton b = new SlotButton(this, getX(), getY() + offsetY, s);
                     this.settingButtons.add(b);
                     offsetY += b.getHeight();
                 }

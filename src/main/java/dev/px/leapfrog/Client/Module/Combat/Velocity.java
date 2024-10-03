@@ -25,8 +25,10 @@ public class Velocity extends Module {
     private Setting<Mode> mode = create(new Setting<>("Mode", Mode.HurtTick));
     private boolean cancel = false;
 
-    private Setting<Integer> horizontal = create(new Setting<>("Horizontal", 100, 0, 100, v -> mode.getValue() == Mode.Packet));
-    private Setting<Integer> vertical = create(new Setting<>("Vertical", 100, 0, 100, v -> mode.getValue() == Mode.Packet));
+    private Setting<Integer> horizontal = create(new Setting<>("Packet Horizontal", 100, 0, 100, v -> mode.getValue() == Mode.Packet));
+    private Setting<Integer> vertical = create(new Setting<>("Packet Vertical", 100, 0, 100, v -> mode.getValue() == Mode.Packet));
+    private Setting<Integer> vulcanHorizontal = create(new Setting<>("Vulcan Horizontal", 100, 0, 100, v -> mode.getValue() == Mode.Vulcan));
+    private Setting<Integer> vulcanVertical = create(new Setting<>("Vulcan Vertical", 100, 0, 100, v -> mode.getValue() == Mode.Vulcan));
 
 
     @EventHandler
@@ -53,6 +55,11 @@ public class Velocity extends Module {
                 event.cancel();
             }
             break;
+            case Vulcan:
+                if (event.getPacket() instanceof C0FPacketConfirmTransaction && mc.thePlayer.hurtTime > 0) {
+                    event.cancel();
+                }
+                break;
         }
     });
 
@@ -66,16 +73,6 @@ public class Velocity extends Module {
                             //event.cancel();
                         }
                 }
-                break;
-
-            case Grim:
-                if(event.getPacket() instanceof S12PacketEntityVelocity) {
-                    S12PacketEntityVelocity packet = (S12PacketEntityVelocity) event.getPacket();
-                    if(packet.getEntityID() == mc.thePlayer.getEntityId()) {
-                        event.cancel();
-                    }
-                }
-
                 break;
             case NCP:
                 if(event.getPacket() instanceof S12PacketEntityVelocity) {
@@ -106,6 +103,22 @@ public class Velocity extends Module {
                     }
                 }
                 break;
+            case Vulcan:
+                if (event.getPacket() instanceof S12PacketEntityVelocity) {
+                    if (mc.thePlayer == null) return;
+                    if (((S12PacketEntityVelocity) event.getPacket()).getEntityID() == mc.thePlayer.getEntityId()) {
+                        if (vulcanHorizontal.getValue() == 0 && vulcanHorizontal.getValue() == 0) {
+                            event.cancel();
+                            return;
+                        }
+
+                        ((IMixinS12PacketEntityVelocity) event.getPacket()).setMotionX(vulcanHorizontal.getValue() / 100);
+                        ((IMixinS12PacketEntityVelocity) event.getPacket()).setMotionY(vulcanVertical.getValue() / 100);
+                        ((IMixinS12PacketEntityVelocity) event.getPacket()).setMotionZ(vulcanHorizontal.getValue() / 100);
+
+                    }
+                }
+                break;
         }
     });
 
@@ -116,10 +129,10 @@ public class Velocity extends Module {
 
     private enum Mode {
         HurtTick,
-        Grim,
         NCP,
         C0F,
-        Packet
+        Packet,
+        Vulcan
     }
 
     @Override

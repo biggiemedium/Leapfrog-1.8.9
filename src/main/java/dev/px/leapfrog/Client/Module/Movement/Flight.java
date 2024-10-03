@@ -50,6 +50,13 @@ public class Flight extends Module {
                         }
                     }
                     break;
+                case Vulcan2:
+                    if (mc.thePlayer.fallDistance > 0.15) {
+                        event.setOnGround(true);
+                        mc.thePlayer.motionY = 0;
+                        mc.thePlayer.fallDistance = 0;
+                    }
+                    break;
             }
         } else {
             switch (mode.getValue()) {
@@ -78,6 +85,7 @@ public class Flight extends Module {
 
     private enum Mode {
         Vulcan,
+        Vulcan2,
         NoFall,
         NCP
     }

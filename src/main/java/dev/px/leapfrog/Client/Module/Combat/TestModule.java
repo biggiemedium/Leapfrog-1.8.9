@@ -176,7 +176,6 @@ public class TestModule extends Module {
         ticks = 0;
 
         MoveUtil.resetMotion();
-        String s;
     }
 
     private enum Mode {

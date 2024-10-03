@@ -1,13 +1,12 @@
 package dev.px.leapfrog.Client.Manager.Player;
 
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerTickEvent;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listenable;
 import me.zero.alpine.fork.listener.Listener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -26,7 +25,7 @@ public class TargetManager implements Listenable {
     }
 
     @EventHandler
-    private Listener<PlayerUpdateEvent> updateEventListener = new Listener<>(event -> {
+    private Listener<PlayerTickEvent> updateEventListener = new Listener<>(event -> {
         if (mc.thePlayer.ticksExisted % 100 == 0) {
             LeapFrog.threadManager.submitRunnable(this::updateTargets);
         }

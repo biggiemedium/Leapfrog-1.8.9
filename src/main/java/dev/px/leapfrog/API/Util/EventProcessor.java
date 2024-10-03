@@ -1,23 +1,19 @@
 package dev.px.leapfrog.API.Util;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import dev.px.leapfrog.API.Account.Account;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Network.PacketReceiveEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerSendChatEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerTeleportEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerTickEvent;
 import dev.px.leapfrog.API.Event.Render.Overlays.RenderFireOverlayEvent;
 import dev.px.leapfrog.API.Event.Render.Render2DEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Event.Render.RenderPlayerLighting;
 import dev.px.leapfrog.API.Module.Setting.Bind;
 import dev.px.leapfrog.API.Module.Toggleable;
-import dev.px.leapfrog.API.Util.Render.ChatUtil;
 import dev.px.leapfrog.Client.GUI.AltManager.AltManagerGui;
 import dev.px.leapfrog.Client.GUI.HUD.Element;
 import dev.px.leapfrog.Client.GUI.HUD.UI.GuiHUDEditor;
-import dev.px.leapfrog.Client.Manager.Structures.AccountManager;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Render.HUD;
 import dev.px.leapfrog.Client.Module.Setting;
@@ -44,8 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EventProcessor implements Listenable {
 
@@ -123,7 +117,7 @@ public class EventProcessor implements Listenable {
             return;
         }
 
-        PlayerUpdateEvent e = new PlayerUpdateEvent(Event.Stage.Pre);
+        PlayerTickEvent e = new PlayerTickEvent(Event.Stage.Pre);
         LeapFrog.EVENT_BUS.post(e);
         LeapFrog.EVENT_BUS.post(event);
     }

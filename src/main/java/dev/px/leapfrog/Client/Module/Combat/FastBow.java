@@ -2,7 +2,6 @@ package dev.px.leapfrog.Client.Module.Combat;
 
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
 import dev.px.leapfrog.Client.Module.Module;
@@ -14,7 +13,6 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 
 @Module.ModuleInterface(name = "Fast Bow", type = Type.Combat, description = "Makes you shoot bow faster")

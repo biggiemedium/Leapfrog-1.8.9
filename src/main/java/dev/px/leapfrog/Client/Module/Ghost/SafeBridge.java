@@ -3,9 +3,7 @@ package dev.px.leapfrog.Client.Module.Ghost;
 import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
 import dev.px.leapfrog.API.Event.Player.PlayerMoveInputEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Module.Type;
-import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
 import me.zero.alpine.fork.listener.EventHandler;
@@ -14,7 +12,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBed;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.BlockPos;
 
@@ -36,10 +33,10 @@ public class SafeBridge extends Module {
     }
     @Override
     public void onDisable() {
+        super.onDisable();
         if(mc.thePlayer.isSneaking()) {
             mc.thePlayer.setSneaking(false);
         }
-        super.onDisable();
     }
 
     @Override

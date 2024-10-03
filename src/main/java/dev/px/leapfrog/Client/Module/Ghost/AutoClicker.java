@@ -1,30 +1,16 @@
 
 package dev.px.leapfrog.Client.Module.Ghost;
 
-import dev.px.leapfrog.API.Event.Event;
 import dev.px.leapfrog.API.Event.Input.ClickMouseEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerMotionEvent;
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Entity.PlayerUtil;
-import dev.px.leapfrog.API.Util.Game.InputUtil;
 import dev.px.leapfrog.API.Util.Math.MathUtil;
 import dev.px.leapfrog.API.Util.Math.TimerUtil;
-import dev.px.leapfrog.ASM.Listeners.IMixinMinecraft;
-import dev.px.leapfrog.Client.Module.Misc.Timer;
 import dev.px.leapfrog.Client.Module.Module;
 import dev.px.leapfrog.Client.Module.Setting;
-import dev.px.leapfrog.LeapFrog;
 import me.zero.alpine.fork.listener.EventHandler;
 import me.zero.alpine.fork.listener.Listener;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 

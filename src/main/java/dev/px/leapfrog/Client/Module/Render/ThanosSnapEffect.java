@@ -1,6 +1,6 @@
 package dev.px.leapfrog.Client.Module.Render;
 
-import dev.px.leapfrog.API.Event.Player.PlayerUpdateEvent;
+import dev.px.leapfrog.API.Event.Player.PlayerTickEvent;
 import dev.px.leapfrog.API.Event.Render.Render3DEvent;
 import dev.px.leapfrog.API.Module.Type;
 import dev.px.leapfrog.API.Util.Render.ThanosSnapRenderer;
@@ -40,7 +40,7 @@ public class ThanosSnapEffect extends Module {
     }
 
     @EventHandler
-    private Listener<PlayerUpdateEvent> tickEvent = new Listener<>(event -> {
+    private Listener<PlayerTickEvent> tickEvent = new Listener<>(event -> {
         if(snap != null) {
             snap.onTick(snapMode.getValue().getMode(), speed.getValue(), blending.getValue());
         }
