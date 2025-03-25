@@ -1,6 +1,7 @@
 <div align="center">
   <h1>Leapfrog Client</h1>
   <p><i>A Minecraft utility mod created for educational purposes</i></p>
+  <p><strong>Discontinued: Dec 15th, 2024</strong></p>
 </div>
 
 ## Overview
@@ -37,8 +38,12 @@ This repository contains code written during my learning journey. It demonstrate
   </p>
 </div>
 
-Old client I have disbandoned. this was an attempt to undertand bypassing/ basic anti cheat
-
 ![2025-02-19_17 25 54](https://github.com/user-attachments/assets/68e89d3c-c7cb-475f-97a9-6dd937580f77)
 
 ![2025-02-19_17 25 05](https://github.com/user-attachments/assets/8d3da61c-8b39-464d-81fb-6d5517317ed9)
+
+<div align="center">
+  <p><i>Created by <a href="https://github.com/biggiemedium">biggiemedium</a> as a learning project</i></p>
+</div>
+
+
